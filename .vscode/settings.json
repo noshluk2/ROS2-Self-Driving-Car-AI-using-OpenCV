@@ -1,0 +1,34 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/luqman/ros2_workspace/install/turtlesim_interface/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/tracks_gazebo_worlds/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/py_service/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/my_robot_tutorials/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/mr_rehri/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/basic_rera/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/autonomous_rover/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/BAZU/lib/python3.8/site-packages",
+        "/home/luqman/slam_ws/install/basic_rera/lib/python3.8/site-packages",
+        "/home/luqman/extra_ros_ws/install/ros2controlcli/lib/python3.8/site-packages",
+        "/home/luqman/extra_ros_ws/install/ros2_control_test_nodes/lib/python3.8/site-packages",
+        "/home/luqman/extra_ros_ws/install/controller_manager/lib/python3.8/site-packages",
+        "/home/luqman/extra_ros_ws/install/controller_manager_msgs/lib/python3.8/site-packages",
+        "/opt/ros/foxy/lib/python3.8/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/luqman/ros2_workspace/install/turtlesim_interface/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/tracks_gazebo_worlds/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/py_service/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/my_robot_tutorials/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/mr_rehri/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/basic_rera/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/autonomous_rover/lib/python3.8/site-packages",
+        "/home/luqman/ros2_workspace/install/BAZU/lib/python3.8/site-packages",
+        "/home/luqman/slam_ws/install/basic_rera/lib/python3.8/site-packages",
+        "/home/luqman/extra_ros_ws/install/ros2controlcli/lib/python3.8/site-packages",
+        "/home/luqman/extra_ros_ws/install/ros2_control_test_nodes/lib/python3.8/site-packages",
+        "/home/luqman/extra_ros_ws/install/controller_manager/lib/python3.8/site-packages",
+        "/home/luqman/extra_ros_ws/install/controller_manager_msgs/lib/python3.8/site-packages",
+        "/opt/ros/foxy/lib/python3.8/site-packages"
+    ]
+}

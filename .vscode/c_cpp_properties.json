@@ -1,0 +1,32 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/luqman/ros2_workspace/install/turtlesim_interface/include/**",
+        "/home/luqman/extra_ros_ws/install/velocity_controllers/include/**",
+        "/home/luqman/extra_ros_ws/install/transmission_interface/include/**",
+        "/home/luqman/extra_ros_ws/install/ros2_control_test_assets/include/**",
+        "/home/luqman/extra_ros_ws/install/ros2_control_demo_hardware/include/**",
+        "/home/luqman/extra_ros_ws/install/position_controllers/include/**",
+        "/home/luqman/extra_ros_ws/install/joint_trajectory_controller/include/**",
+        "/home/luqman/extra_ros_ws/install/joint_state_broadcaster/include/**",
+        "/home/luqman/extra_ros_ws/install/gripper_controllers/include/**",
+        "/home/luqman/extra_ros_ws/install/effort_controllers/include/**",
+        "/home/luqman/extra_ros_ws/install/forward_command_controller/include/**",
+        "/home/luqman/extra_ros_ws/install/diff_drive_controller/include/**",
+        "/home/luqman/extra_ros_ws/install/controller_manager/include/**",
+        "/home/luqman/extra_ros_ws/install/controller_interface/include/**",
+        "/home/luqman/extra_ros_ws/install/hardware_interface/include/**",
+        "/home/luqman/extra_ros_ws/install/controller_manager_msgs/include/**",
+        "/opt/ros/foxy/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}

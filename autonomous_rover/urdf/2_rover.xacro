@@ -1,0 +1,34 @@
+
+<?xml version="1.0"?>
+<robot name="rover" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+ <xacro:include filename="$(find autonomous_rover)/urdf/2_rover_helper.xacro" />
+ <xacro:include filename="$(find autonomous_rover)/urdf/2_rover_gazebo_materials.xacro" />
+
+<link name="odom_link"/>
+
+<xacro:Shapes name="chassis" position_of_joint_from_parent_rpy="0 0 0" position_of_joint_from_parent_xyz="0.0 0.0 0.15"  
+              mass="5" parent="odom" box_size=".7 0.7 0.1"  color="grey"/>
+<!-- 
+<xacro:Shapes name="camera" position_of_joint_from_parent_rpy="0 0 0" position_of_joint_from_parent_xyz="0.0 0.0 0.15"  
+              mass="5" parent="chassis" box_size="0.1 0.1 0.1"  color="blue"/>
+
+<xacro:Shapes name="lidar" position_of_joint_from_parent_rpy="0 0 0" position_of_joint_from_parent_xyz="0.0 0.0 0.15"  
+              mass="5" parent="chassis" box_size="0.1 0.3 0.5"  color="orange"/>
+
+
+
+<xacro:Wheel name="left_front"  position_of_joint_from_parent_xyz="0.25 -0.4 0.0" position_of_joint_from_parent_rpy= "1.57 0.0 0.0"
+              color ="red" mass="2"/>
+<xacro:Wheel name="right_front"  position_of_joint_from_parent_xyz="0.25 0.4 0.0" position_of_joint_from_parent_rpy= "1.57 0.0 0.0"
+              color ="red" mass="2"/>
+<xacro:Wheel name="left_back"  position_of_joint_from_parent_xyz="-0.25 -0.4 0.0" position_of_joint_from_parent_rpy= "1.57 0.0 0.0"
+              color ="red" mass="2"/>
+<xacro:Wheel name="right_back"  position_of_joint_from_parent_xyz="-0.25 0.4 0.0" position_of_joint_from_parent_rpy= "1.57 0.0 0.0"
+              color ="red" mass="2"/> -->
+
+
+
+
+
+</robot>

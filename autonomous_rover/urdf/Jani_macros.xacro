@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- //////////////////////////////////////////////////// -->
+                        <!--BOX LINKS AND JOINT-->
+<!-- ////////////////////////////////////////////////////////////-->
+
+  <!-- wheel property -->
+<xacro:property name="wheel_radius" value="0.055"/>
+<xacro:property name="wheel_width" value="0.022"/>
+<xacro:property name="wheel_height" value="0.11"/>
+<xacro:property name="wheel_mass" value=".2"/>
+
+
+<!-- AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
+  
+  <xacro:macro name="Shapes" params="name position_of_joint_from_parent_xyz body_to_joint_xyz body_to_joint_rpy color position_of_joint_from_parent_rpy meshfile parent  mass scale  ">
+    <link name="${name}_link">
+
+         <inertial>
+            <mass value="${mass}" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="0.004" ixy="0.001" ixz="0" iyy="0.006" iyz="0" izz="0.007" />
+    </inertial>
+
+      <collision><origin rpy= "0 0 0" xyz= "0 0 0"/>
+        <geometry>
+          <mesh filename="${meshfile}"  scale ="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+
+      <visual>
+      <origin rpy= "${body_to_joint_rpy}" xyz= "${body_to_joint_xyz}"/>
+        <geometry>
+          <mesh filename="${meshfile}" scale ="0.001 0.001 0.001" />
+        </geometry>
+        <material name="${color}"/>
+      </visual>
+    </link>
+
+    <joint name="${name}_joint" type="fixed">
+      <parent link= "${parent}_link"/>
+      <child link= "${name}_link"/>
+      <origin rpy="${position_of_joint_from_parent_rpy}" xyz="${position_of_joint_from_parent_xyz}"/>
+    </joint>
+     <gazebo reference="${name}_link">
+        <turnGravityOff>false</turnGravityOff>
+     </gazebo>
+  </xacro:macro>
+   
+  <!-- //////////////////////////////////////////////////// -->
+                        <!--Wheel LINKS AND JOINT-->
+<!-- ////////////////////////////////////////////////////////////-->
+
+
+    <xacro:macro name="Wheel" params="name position_of_joint_from_parent_xyz  color  meshfile mass scale  body_to_joint_xyz body_to_joint_rpy ">
+      <link name="${name}_wheel">
+          
+
+          <collision>
+          <origin rpy= "${body_to_joint_rpy}" xyz= "${body_to_joint_xyz}"/>
+              <geometry>
+                <mesh filename="${meshfile}" scale ="0.001 0.001 0.001" />
+              </geometry> 
+          </collision>
+          
+         <inertial>
+            <mass value="${mass}" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="0.004" ixy="0.001" ixz="0" iyy="0.006" iyz="0" izz="0.007" />
+          </inertial>
+
+          <visual>
+          <origin rpy= "${body_to_joint_rpy}" xyz= "${body_to_joint_xyz}"/>
+            <geometry>
+              <mesh filename="${meshfile}" scale ="0.001 0.001 0.001" />
+            </geometry>
+            <material name="${color}"/>
+          </visual>
+      </link>
+      <joint name="${name}_wheel_joint" type="continuous">
+      <!-- origin is all bout orientation + position relativeto the (0,0) -->
+              <origin rpy="0 0 3.14" xyz="${position_of_joint_from_parent_xyz}"/>
+              <child link="${name}_wheel"/>
+ <!-- axis is to defind on which axis body will rotate -> value 1 activates the corresponding axis -->
+              <axis xyz="1 0 0"/>
+              <parent link="base_link"/>
+              <limit effort="10000" velocity="1000"/>
+              <joint_properties damping="1.0" friction="5.0"/>
+      </joint>
+    </xacro:macro>
+
+
+</robot>

@@ -1,0 +1,11 @@
+- Your robot is a rover with 4 wheels
+    - 2 front wheels  , 2 rear wheels 
+    - You emphasize on the Inertial, collision values and showed them issues
+    - Your made a urdf
+    - Your made a xacros,macros,materials (organized)
+- You showed them a meshed rover with your car and told them ros is not picking it up ( issue to be solved)
+
+- you added all sensors --> camera, lidar
+- You Wrote a script to drive the robot in circle
+- You wrote controllers for you robot
+

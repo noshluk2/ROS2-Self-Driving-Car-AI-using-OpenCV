@@ -1,0 +1,26 @@
+[1.291s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'list', '-p', '--base-paths', '/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV']
+[1.292s] DEBUG:colcon:Parsed command line arguments: Namespace(base_paths=['/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV'], build_base='build', ignore_user_meta=False, log_base=None, log_level=None, main=<bound method ListVerb.main of <colcon_package_information.verb.list.ListVerb object at 0x7f61f0419640>>, metas=['./colcon.meta'], names_only=False, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, packages_up_to_regex=None, paths=None, paths_only=True, topological_graph=False, topological_graph_density=False, topological_graph_dot=False, topological_graph_dot_cluster=False, topological_graph_dot_include_skipped=False, topological_graph_legend=False, topological_order=False, verb_extension=<colcon_package_information.verb.list.ListVerb object at 0x7f61f0419640>, verb_name='list', verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7f61f0469c40>)
+[1.409s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[1.409s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[1.409s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[1.409s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[1.409s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[1.410s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV'
+[1.410s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extensions ['ignore', 'ignore_ament_install']
+[1.410s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extension 'ignore'
+[1.410s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extension 'ignore_ament_install'
+[1.411s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extensions ['colcon_pkg']
+[1.411s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extension 'colcon_pkg'
+[1.411s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extensions ['colcon_meta']
+[1.411s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extension 'colcon_meta'
+[1.411s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extensions ['ros']
+[1.411s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extension 'ros'
+[1.437s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extensions ['cmake', 'python']
+[1.437s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extension 'cmake'
+[1.437s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extension 'python'
+[1.437s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extensions ['python_setup_py']
+[1.437s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV) by extension 'python_setup_py'
+[1.437s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV/log) by extensions ['ignore', 'ignore_ament_install']
+[1.437s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV/log) by extension 'ignore'
+[1.438s] Level 1:colcon.colcon_core.package_identification:_identify(/home/luqman/courses/ROS2_TSC/ROS2-Self-Driving-Car-AI-using-OpenCV/log) ignored
+[1.438s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
