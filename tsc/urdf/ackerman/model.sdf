@@ -101,7 +101,7 @@
         </surface>
       </collision>
     </link>
-    <link name='l_base_0'>
+    <link name='l_camera'>
       <inertial>
         <mass>1</mass>
         <inertia>
@@ -114,11 +114,33 @@
         </inertia>
         <pose>0 0 0 0 -0 0</pose>
       </inertial>
-      <pose>-0.002706 0.265709 1.04433 1.5e-05 -1e-06 0.000199</pose>
+      <pose>-0.03671 0.654713 0.985335 -1e-06 -1.5e-05 1.55205</pose>
       <gravity>1</gravity>
       <self_collide>0</self_collide>
       <kinematic>0</kinematic>
       <enable_wind>0</enable_wind>
+      <sensor name='camera1' type='camera'>
+        <update_rate>60</update_rate>
+        <visualize>1</visualize>
+        <camera name='head'>
+          <horizontal_fov>1.39626</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>300</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0</mean>
+            <stddev>0.007</stddev>
+          </noise>
+        </camera>
+        <plugin name='camera_controller' filename='libgazebo_ros_camera.so'/>
+      </sensor>
       <visual name='visual'>
         <pose>0 0 0 0 -0 0</pose>
         <geometry>
@@ -313,7 +335,7 @@
         </inertia>
         <pose>0 0 0 0 -0 0</pose>
       </inertial>
-      <pose>-0.751949 -0.908631 0.002626 -0 -0 -3.14055</pose>
+      <pose>-0.751949 -0.908631 0.002626 0 0 -3.14055</pose>
       <self_collide>0</self_collide>
       <enable_wind>0</enable_wind>
       <kinematic>0</kinematic>
@@ -702,8 +724,8 @@
     </link>
     <joint name='j_camera' type='fixed'>
       <parent>l_upper_body</parent>
-      <child>l_base_0</child>
-      <pose>0 0 0 0 -0 0</pose>
+      <child>l_camera</child>
+      <pose>0 0 0 0 -0 1.57</pose>
       <physics>
         <ode>
           <limit>
@@ -864,11 +886,16 @@
     </joint>
     <static>0</static>
     <allow_auto_disable>1</allow_auto_disable>
-    <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'>
+    <plugin name='skid_steer_drive' filename='libgazebo_ros_diff_drive.so'>
+      <num_wheel_pairs>2</num_wheel_pairs>
       <left_joint>j_w_lb</left_joint>
       <right_joint>j_w_rb</right_joint>
-      <wheel_separation>1.25</wheel_separation>
-      <wheel_diameter>0.6</wheel_diameter>
+      <left_joint>j_w_lf</left_joint>
+      <right_joint>j_w_rf</right_joint>
+      <wheel_separation>2.5</wheel_separation>
+      <wheel_separation>2.5</wheel_separation>
+      <wheel_diameter>0.7</wheel_diameter>
+      <wheel_diameter>0.7</wheel_diameter>
       <max_wheel_torque>20</max_wheel_torque>
       <max_wheel_acceleration>1.0</max_wheel_acceleration>
       <publish_odom>1</publish_odom>
