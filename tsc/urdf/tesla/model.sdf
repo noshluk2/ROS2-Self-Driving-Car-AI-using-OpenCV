@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <sdf version='1.7'>
-  <model name='ackerman'>
+  <model name='tesla'>
     <link name='l_base'>
       <inertial>
         <mass>1</mass>

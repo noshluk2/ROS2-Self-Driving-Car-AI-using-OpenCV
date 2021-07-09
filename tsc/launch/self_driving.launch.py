@@ -9,7 +9,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 def generate_launch_description():
    # main package path
   package_dir=get_package_share_directory('tsc')
-  world_file = os.path.join(package_dir,'car_plugins.world')
+  world_file = os.path.join(package_dir,'self_driving.world')
   pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
   
   return LaunchDescription([

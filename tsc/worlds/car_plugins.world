@@ -357,7 +357,31 @@
             </contact>
           </surface>
         </collision>
-   </link>
+        
+        <sensor name='camera1' type='camera'>
+          <update_rate>60</update_rate>
+          <visualize>1</visualize>
+          <camera name='head'>
+            <horizontal_fov>1.39626</horizontal_fov>
+            <image>
+              <width>640</width>
+              <height>480</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.02</near>
+              <far>300</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.007</stddev>
+            </noise>
+          </camera>
+          <plugin name='camera_controller' filename='libgazebo_ros_camera.so'/>
+        </sensor>
+
+      </link>  <!- the point where camera link is ending ->
 
       <link name='l_upper_body'>
         <inertial>
@@ -1025,6 +1049,26 @@
       <allow_auto_disable>1</allow_auto_disable>
 
       
+      <plugin name='skid_steer_drive' filename='libgazebo_ros_diff_drive.so'>
+        <num_wheel_pairs>2</num_wheel_pairs>
+        <left_joint>j_w_lb</left_joint>
+        <right_joint>j_w_rb</right_joint>
+        <left_joint>j_w_lf</left_joint>
+        <right_joint>j_w_rf</right_joint>
+        <wheel_separation>2.5</wheel_separation>
+        <wheel_separation>2.5</wheel_separation>
+        <wheel_diameter>0.7</wheel_diameter>
+        <wheel_diameter>0.7</wheel_diameter>
+        <max_wheel_torque>20</max_wheel_torque>
+        <max_wheel_acceleration>1.0</max_wheel_acceleration>
+        <publish_odom>1</publish_odom>
+        <publish_odom_tf>1</publish_odom_tf>
+        <publish_wheel_tf>1</publish_wheel_tf>
+        <odometry_frame>odom_demo</odometry_frame>
+        <robot_base_frame>chassis</robot_base_frame>
+      </plugin>
+
+
       <pose>-0.249777 -0.024835 0.400373 2.2e-05 -2.9e-05 0.013201</pose>
     </model>
   </world>
