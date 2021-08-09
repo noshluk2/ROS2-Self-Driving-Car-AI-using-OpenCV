@@ -1,7 +1,7 @@
 from setuptools import setup
 import os
 from glob import glob
-package_name = 'tsc'
+package_name = 'prius_sdc'
 
 setup(
     name=package_name,
@@ -11,11 +11,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-
-        (os.path.join('share', package_name), glob('worlds/*.world')),
         (os.path.join('share', package_name), glob('launch/*')),
     ],
-
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='luqman',
@@ -25,8 +22,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'video_saver = tsc.video_save:main',
-
         ],
     },
 )
