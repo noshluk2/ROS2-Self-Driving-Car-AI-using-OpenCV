@@ -1,0 +1,177 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+
+  <model name="traffic_light_2">
+    <static>true</static>
+
+    <link name="traffic_stand_link">
+
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>/home/luqman/test_blender_models/lights_2/materials/meshes/traffic_light.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>/home/luqman/test_blender_models/lights_2/materials/meshes/traffic_light.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+
+    </link>
+
+
+    
+    <link name='Red_light_source'>
+<!-- =============================================== -->
+      <pose>-0.62 0 2.4 1.57 0 0</pose>
+
+      <light name='red' type='spot'>
+        <pose>0 0 0.0 1.57 0 0</pose>
+        <attenuation>
+          <range>30</range>
+          <linear>0.05</linear>
+        </attenuation>
+        <diffuse>0.5 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <spot>
+          <inner_angle>0.3</inner_angle>
+          <outer_angle>0.35</outer_angle>
+          <falloff>1</falloff>
+        </spot>
+        <direction>0 0 -1</direction>
+      </light>
+
+      <visual name='red'>
+        <geometry>
+          <cylinder>
+            <radius>0.25</radius>
+            <length>0.1</length>
+          </cylinder>
+          <sphere>
+            <radius>0.4</radius>
+          </sphere>
+        </geometry>
+        <transparency>0.6</transparency>
+        <material>
+          <ambient>0.5 1 1 1</ambient>
+          <diffuse>0.5 1 1 1</diffuse>
+          <specular>1 1 1 1</specular>
+          <emissive>1 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+<!-- =============================================== -->
+<link name='Yellow_light_source'>
+<pose>-1.15 0 2.4 1.57 0 0</pose>
+
+<light name='yellow' type='spot'>
+  <pose>0 0 0.0 1.57 0 0</pose>
+  <attenuation>
+    <range>30</range>
+    <linear>0.05</linear>
+  </attenuation>
+  <diffuse>0.5 1 1 1</diffuse>
+  <specular>1 1 1 1</specular>
+  <spot>
+    <inner_angle>0.3</inner_angle>
+    <outer_angle>0.35</outer_angle>
+    <falloff>1</falloff>
+  </spot>
+  <direction>0 0 -1</direction>
+</light>
+
+<visual name='yellow'>
+  <geometry>
+    <cylinder>
+      <radius>0.25</radius>
+      <length>0.1</length>
+    </cylinder>
+    <sphere>
+      <radius>0.4</radius>
+    </sphere>
+  </geometry>
+  <transparency>0.6</transparency>
+
+  <material>
+    <ambient>1 1 1 1</ambient>
+    <diffuse>0.5 1 1 1</diffuse>
+    <specular>1 1 1 1</specular>
+    <emissive>1 1 0 1 </emissive>
+  </material>
+
+</visual>
+</link>
+<!-- =============================================== -->
+<!-- =============================================== -->
+<link name='Green_light_source'>
+  <pose>-1.66 0 2.4 1.57 0 0</pose>
+  
+  <light name='green' type='spot'>
+    <pose>0 0 0.0 1.57 0 0</pose>
+    <attenuation>
+      <range>30</range>
+      <linear>0.05</linear>
+    </attenuation>
+    <diffuse>0.5 1 1 1</diffuse>
+    <specular>1 1 1 1</specular>
+    <spot>
+      <inner_angle>0.3</inner_angle>
+      <outer_angle>0.35</outer_angle>
+      <falloff>1</falloff>
+    </spot>
+    <direction>0 0 -1</direction>
+  </light>
+  
+  <visual name='green'>
+    <geometry>
+      <cylinder>
+        <radius>0.25</radius>
+        <length>0.1</length>
+      </cylinder>
+      <sphere>
+        <radius>0.4</radius>
+      </sphere>
+    </geometry>
+    <transparency>0.6</transparency>
+    <material>
+      <ambient>6 1 1 1</ambient>
+      <diffuse>4 1 1 1</diffuse>
+      <specular>1 1 1 1</specular>
+      <emissive>0 1 0 1</emissive>
+    </material>
+  </visual>
+  </link>
+  <!-- =============================================== -->
+
+
+    <plugin name='light_control' filename='libLedPlugin.so'>
+      <enable>true</enable>
+      <light>
+        <id>Red_light_source/red</id>
+        <duration>10</duration>
+        <interval>20</interval>
+        <enable>true</enable>
+      </light>
+      <light>
+        <id>Yellow_light_source/yellow</id>
+        <duration>1</duration>
+        <interval>2000</interval>
+        <enable>true</enable>
+      </light>
+      <light>
+        <id>Green_light_source/green</id>
+        <duration>10</duration>
+        <interval>10</interval>
+        <enable>true</enable>
+      </light>
+
+      </plugin>
+
+  </model>
+
+</sdf>
