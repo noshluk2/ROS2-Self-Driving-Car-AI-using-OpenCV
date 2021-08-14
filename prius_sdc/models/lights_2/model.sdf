@@ -28,8 +28,8 @@
     
     <link name='Red_light_source'>
 <!-- =============================================== -->
-      <pose>-0.62 0 2.4 1.57 0 0</pose>
-
+      
+      <pose>-1.66 0 2.4 1.57 0 0</pose>
       <light name='red' type='spot'>
         <pose>0 0 0.0 1.57 0 0</pose>
         <attenuation>
@@ -109,7 +109,7 @@
 <!-- =============================================== -->
 <!-- =============================================== -->
 <link name='Green_light_source'>
-  <pose>-1.66 0 2.4 1.57 0 0</pose>
+  <pose>-0.62 0 2.4 1.57 0 0</pose>
   
   <light name='green' type='spot'>
     <pose>0 0 0.0 1.57 0 0</pose>
@@ -139,8 +139,8 @@
     </geometry>
     <transparency>0.6</transparency>
     <material>
-      <ambient>6 1 1 1</ambient>
-      <diffuse>4 1 1 1</diffuse>
+      <ambient>1 1 1 1</ambient>
+      <diffuse>1 1 1 1</diffuse>
       <specular>1 1 1 1</specular>
       <emissive>0 1 0 1</emissive>
     </material>
@@ -160,7 +160,7 @@
       <light>
         <id>Yellow_light_source/yellow</id>
         <duration>1</duration>
-        <interval>2000</interval>
+        <interval>100</interval>
         <enable>true</enable>
       </light>
       <light>

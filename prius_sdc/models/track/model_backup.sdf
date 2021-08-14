@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="a_custom_track">
+    <static>true</static>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>/home/luqman/test_blender_models/track/materials/meshes/complete_circuit.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>/home/luqman/test_blender_models/track/materials/scripts</uri>
+            <uri>/home/luqman/test_blender_models/track/materials/textures</uri>
+            <name>road/Diffuse</name>
+          </script>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>/home/luqman/test_blender_models/track/materials/meshes/complete_circuit.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>
