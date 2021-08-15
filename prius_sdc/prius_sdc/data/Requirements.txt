@@ -1,0 +1,3 @@
+pip install git+https://github.com/paulgavrikov/visualkeras
+pip install Pillow
+pip install quiver_engine
