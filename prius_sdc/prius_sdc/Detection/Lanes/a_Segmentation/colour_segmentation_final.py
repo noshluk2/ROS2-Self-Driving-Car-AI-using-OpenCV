@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 import time
-import config
+from  ....config import config
 
-from Detection.Lanes.Morph_op import BwareaOpen,RetLargestContour_OuterLane,Ret_LowestEdgePoints
+from ..Morph_op import BwareaOpen,RetLargestContour_OuterLane,Ret_LowestEdgePoints
 
 HLS=0
 src=0

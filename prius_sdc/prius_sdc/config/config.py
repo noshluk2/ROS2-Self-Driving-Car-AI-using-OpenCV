@@ -2,6 +2,7 @@
 #Control Variables for 3c_threaded_Mod4
 import os
 import cv2
+print("old")
 
 detect = 1 # Set to 1 for Lane detection
 

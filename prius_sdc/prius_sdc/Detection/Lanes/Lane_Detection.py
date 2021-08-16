@@ -1,18 +1,20 @@
-import config
-import cv2
+
+
+from ...config import config
 # ****************************************************  DETECTION ****************************************************
 # ****************************************************    LANES   ****************************************************
 
 # >>>>>>>>>>>>>>>>>>>>>>>> STAGE 1 [IMPORTS] <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-from Detection.Lanes.a_Segmentation.colour_segmentation_final import Segment_Colour
-# >>>>>>>>>>>>>>>>>>>>>>>> STAGE 2 [IMPORTS] <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-from Detection.Lanes.b_Estimation.Our_EstimationAlgo import Estimate_MidLane
+from .a_Segmentation.colour_segmentation_final import Segment_Colour
 
+# >>>>>>>>>>>>>>>>>>>>>>>> STAGE 2 [IMPORTS] <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+from .b_Estimation.Our_EstimationAlgo import Estimate_MidLane
 # >>>>>>>>>>>>>>>>>>>>>>>> STAGE 3 [IMPORTS] <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-from Detection.Lanes.c_Cleaning.CheckifYellowLaneCorrect_RetInnerBoundary import GetYellowInnerEdge
-from Detection.Lanes.c_Cleaning.ExtendLanesAndRefineMidLaneEdge import ExtendShortLane
+from .c_Cleaning.CheckifYellowLaneCorrect_RetInnerBoundary import GetYellowInnerEdge
+from .c_Cleaning.ExtendLanesAndRefineMidLaneEdge import ExtendShortLane
 # >>>>>>>>>>>>>>>>>>>>>>>> STAGE 4 [IMPORTS] <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-from Detection.Lanes.d_LaneInfo_Extraction.GetStateInfoandDisplayLane import FetchInfoAndDisplay
+from .d_LaneInfo_Extraction.GetStateInfoandDisplayLane import FetchInfoAndDisplay
+
 
 
 def Detect_Lane(img):

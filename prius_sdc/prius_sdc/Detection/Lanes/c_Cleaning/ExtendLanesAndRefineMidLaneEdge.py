@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
-import config
-from Detection.Lanes.utilities import Cord_Sort
+from ....config import config
+from ..utilities import Cord_Sort
 
 def ExtendShortLane(MidLane,Mid_cnts,Outer_cnts,OuterLane):
 

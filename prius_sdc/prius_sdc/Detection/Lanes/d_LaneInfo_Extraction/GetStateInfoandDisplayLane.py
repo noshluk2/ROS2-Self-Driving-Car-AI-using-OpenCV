@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
-import config
-from Detection.Lanes.utilities import Cord_Sort,findlaneCurvature
+from ....config import config
+from ..utilities import Cord_Sort,findlaneCurvature
 
 def EstimateNonMidMask(MidEdgeROi):
 	Mid_Hull_Mask = np.zeros((MidEdgeROi.shape[0], MidEdgeROi.shape[1], 1), dtype=np.uint8)

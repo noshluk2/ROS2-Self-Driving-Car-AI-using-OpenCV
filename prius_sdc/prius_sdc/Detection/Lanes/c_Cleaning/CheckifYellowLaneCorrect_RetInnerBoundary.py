@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
-import config
-from Detection.Lanes.utilities import findLineParameter,findlaneCurvature,Distance_,Cord_Sort
+from ....config import config
+from ..utilities import findLineParameter,findlaneCurvature,Distance_,Cord_Sort
 
 
 def IsPathCrossingMid(Midlane,Mid_cnts,Outer_cnts):
