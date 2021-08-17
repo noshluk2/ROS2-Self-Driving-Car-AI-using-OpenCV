@@ -27,7 +27,7 @@ class Video_feed_in(Node):
         
     def process_data(self, data): 
         frame = self.bridge.imgmsg_to_cv2(data) # performing conversion
-        img = frame[0:640,402:1267] 
+        img = frame[0:640,238:1042] 
         img = cv2.resize(img,(320,240))
         img_orig = img.copy()
         distance, Curvature = Detect_Lane(img)
@@ -41,7 +41,7 @@ class Video_feed_in(Node):
         elif ( (self.prev_Mode =="Tracking") and (Mode=="Detection") and (Tracked_class=="left_turn") ):
             print("Left Activated")
             print("config.Activat_LeftTurn ",config.Activat_LeftTurn)
-            if ((self.Left_turn_iterations % 2 ) ==0):
+            if ( ((self.Left_turn_iterations % 24 ) ==0) and (self.Left_turn_iterations>25) ):
                 self.Frozen_Curvature = self.Frozen_Curvature -1 # Move left by 1 degree 
             if(self.Left_turn_iterations==100):
                 print("Left DeActivated")
