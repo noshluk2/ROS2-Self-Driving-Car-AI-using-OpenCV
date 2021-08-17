@@ -5,6 +5,7 @@ import os
 from .config import config
 from .Detection.Lanes.Lane_Detection import Detect_Lane
 from .Detection.Signs.SignDetectionApi import detect_Signs
+from .Detection.Signs.a_Localization.TLD import detect_TrafficLight
 from .Control.special import Drive_Car
 
 from rclpy.node import Node 
@@ -30,6 +31,9 @@ class Video_feed_in(Node):
         img = frame[0:640,238:1042] 
         img = cv2.resize(img,(320,240))
         img_orig = img.copy()
+        frame_draw = img.copy()
+        Traffic_State = detect_TrafficLight(img,frame_draw)
+
         distance, Curvature = Detect_Lane(img)
         Mode , Tracked_class = detect_Signs(img_orig,img)
         if ( (self.prev_Mode =="Detection") and (Mode=="Tracking") and (Tracked_class=="left_turn") ):
