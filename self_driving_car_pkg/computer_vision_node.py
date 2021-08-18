@@ -32,8 +32,7 @@ class Video_feed_in(Node):
         self.Frozen_Curvature=0
 
     def send_cmd_vel(self):
-        print("")
-        # self.publisher.publish(self.velocity)
+        self.publisher.publish(self.velocity)
         
     def process_data(self, data): 
         frame = self.bridge.imgmsg_to_cv2(data,'bgr8') # performing conversion
@@ -70,8 +69,13 @@ class Video_feed_in(Node):
         a=interp(a,[30,120],[0.5,-0.5])
         b=interp(b,[50,90],[1,2])
         print("\n\nA = ",a,"   B = ", b,"\n\n")
-        self.velocity.linear.x =b
         self.velocity.angular.z=a
+        if(Traffic_State == "Stop"):
+            self.velocity.linear.x =0.0
+        else:
+            self.velocity.linear.x =b
+
+        cv2.putText(img,Traffic_State,(20,20),cv2.FONT_HERSHEY_COMPLEX,2,255)
         cv2.imshow("Frame",img)
         cv2.waitKey(1)
         
