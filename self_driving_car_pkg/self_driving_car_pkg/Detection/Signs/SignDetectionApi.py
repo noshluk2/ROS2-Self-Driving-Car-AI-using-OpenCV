@@ -209,7 +209,7 @@ def detect_Signs(frame,frame_draw):
         # 1. Load CNN model
         global model
         #model = load_model(os.path.abspath("data/saved_model_Ros2.h5"),compile=False)
-        model = load_model("/home/luqman/ros2_workspace/src/prius_sdc/prius_sdc/data/saved_model_Ros2_5_Sign.h5",compile=False)
+        model = load_model(os.path.abspath("/home/luqman/ros2_workspace/src/self_driving_car_pkg/self_driving_car_pkg/data/saved_model_Ros2_5_Sign.h5"),compile=False)
 
         # summarize model.
         model.summary()

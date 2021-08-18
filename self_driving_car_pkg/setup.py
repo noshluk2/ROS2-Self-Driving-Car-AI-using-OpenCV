@@ -14,12 +14,16 @@ detec_l_c_module="self_driving_car_pkg/Detection/Lanes/c_Cleaning"
 detec_l_d_module="self_driving_car_pkg/Detection/Lanes/d_LaneInfo_Extraction"
 
 
+detec_s_a_module="self_driving_car_pkg/Detection/Signs/a_Localization"
+detec_s_b_module="self_driving_car_pkg/Detection/Signs/b_Classification"
+detec_s_c_module="self_driving_car_pkg/Detection/Signs/c_Tracking"
+
 package_name = 'self_driving_car_pkg'
 
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name,detec_l_d_module,detec_l_c_module,detec_l_b_module,config_module,det_l_module,det_s_module,data_module,control_module,detec_l_a_module],
+    packages=[package_name,detec_s_a_module,detec_s_b_module,detec_s_c_module,detec_l_d_module,detec_l_c_module,detec_l_b_module,config_module,det_l_module,det_s_module,data_module,control_module,detec_l_a_module],
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),

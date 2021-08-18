@@ -8,7 +8,7 @@
   <license>TODO: License declaration</license>
 
   <depend>rclpy</depend>
-<exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
@@ -18,6 +18,15 @@
   <export>
     <build_type>ament_python</build_type>
 
+<!-- Giving path to the package main directory ONLY -->
+      <gazebo_ros gazebo_model_path="${prefix}/meshes"/>   
+      <gazebo_ros gazebo_resource_path="${prefix}/textures" />        
+
+      <!-- Other paths can also be defined -->
+      <!-- <gazebo_ros  gazebo_media_path="${prefix}" />
+      <gazebo_ros gazebo_plugin_path="${prefix}"/>    
+      <gazebo_ros gazebo_model_path="${prefix}" />     -->      
+      
 
   </export>
 </package>

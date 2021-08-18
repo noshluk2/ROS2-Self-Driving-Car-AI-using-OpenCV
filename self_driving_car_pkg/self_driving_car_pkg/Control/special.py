@@ -7,8 +7,6 @@ if run_car:
 else:
     car_speed=0
 
-
-from ..config import config
 import cv2
 
 

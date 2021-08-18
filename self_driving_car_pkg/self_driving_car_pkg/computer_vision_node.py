@@ -1,13 +1,12 @@
 import cv2
 from numpy import interp
-import numpy as np
 import os
 
 from .config import config
 from .Detection.Lanes.Lane_Detection import Detect_Lane
 from .Detection.Signs.SignDetectionApi import detect_Signs
+from .Detection.Signs.a_Localization.TLD import detect_TrafficLight
 from .Control.special import Drive_Car
-
 
 from geometry_msgs.msg import Twist
 from rclpy.node import Node 
@@ -18,7 +17,6 @@ import rclpy
 
 
 class Video_feed_in(Node):
-
     def __init__(self):
 
         super().__init__('video_subscriber')
@@ -34,13 +32,17 @@ class Video_feed_in(Node):
         self.Frozen_Curvature=0
 
     def send_cmd_vel(self):
-        self.publisher.publish(self.velocity)
-
+        print("")
+        # self.publisher.publish(self.velocity)
+        
     def process_data(self, data): 
         frame = self.bridge.imgmsg_to_cv2(data,'bgr8') # performing conversion
-        img = frame[0:640,402:1267] 
+        img = frame[0:640,238:1042] 
         img = cv2.resize(img,(320,240))
         img_orig = img.copy()
+        frame_draw = img.copy()
+        Traffic_State = detect_TrafficLight(img,frame_draw)
+
         distance, Curvature = Detect_Lane(img)
         Mode , Tracked_class = detect_Signs(img_orig,img)
         if ( (self.prev_Mode =="Detection") and (Mode=="Tracking") and (Tracked_class=="left_turn") ):
@@ -52,7 +54,7 @@ class Video_feed_in(Node):
         elif ( (self.prev_Mode =="Tracking") and (Mode=="Detection") and (Tracked_class=="left_turn") ):
             print("Left Activated")
             print("config.Activat_LeftTurn ",config.Activat_LeftTurn)
-            if ((self.Left_turn_iterations % 2 ) ==0):
+            if ( ((self.Left_turn_iterations % 24 ) ==0) and (self.Left_turn_iterations>25) ):
                 self.Frozen_Curvature = self.Frozen_Curvature -1 # Move left by 1 degree 
             if(self.Left_turn_iterations==100):
                 print("Left DeActivated")
