@@ -3,3 +3,7 @@ prius_sdc/prius_sdc/config/__pycache__/__init__.cpython-36.pyc
 prius_sdc/prius_sdc/Detection/__pycache__/__init__.cpython-36.pyc
 prius_sdc/prius_sdc/Detection/Lanes/__pycache__/__init__.cpython-36.pyc
 prius_sdc/prius_sdc/Detection/Lanes/__pycache__/Lane_Detection.cpython-36.pyc
+*.pyc
+self_driving_car_pkg/self_driving_car_pkg/Detection/Signs/a_Localization/__pycache__/UsingHough_2.cpython-36.pyc
+self_driving_car_pkg/self_driving_car_pkg/Detection/Signs/a_Localization/__pycache__/UsingHough.cpython-36.pyc
+self_driving_car_pkg/self_driving_car_pkg/Detection/Signs/a_Localization/__pycache__/UsingHough.cpython-36.pyc
