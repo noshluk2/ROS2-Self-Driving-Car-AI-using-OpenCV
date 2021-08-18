@@ -1,8 +1,6 @@
-import os # for getting absolute filepath to mitigate cross platform inconsistensies
 import cv2
-import time
 import numpy as np
-import config
+from ....config import config
 import math
 
 detected_circle = 0 #Set this to current dataset images size so that new images number starts from there and dont overwrite
@@ -12,7 +10,7 @@ display_images = True
 Traffic_State = "None"
 prevTraffic_State = 0
 
-debug_mode = False
+debug_mode = True
 def dist(a,b):
     return int( math.sqrt( ( (a[1]-b[1])**2 ) + ( (a[0]-b[0])**2 ) ) )
 
@@ -20,9 +18,9 @@ def Circledetector(gray,cimg,frame_draw,HLS):
     frame_draw_special= frame_draw.copy()
     global Traffic_State,prevTraffic_State
     # 2. Apply the HoughCircles to detect the circular regions in the Image        
-    NumOfVotesForCircle = 16 #parameter 1 MinVotes needed to be classified as circle
+    NumOfVotesForCircle = 20 #parameter 1 MinVotes needed to be classified as circle
     CannyHighthresh = 200 # High threshold value for applying canny
-    mindDistanBtwnCircles = 5 # kept as sign will likely not be overlapping
+    mindDistanBtwnCircles = 3 # kept as sign will likely not be overlapping
     max_rad = 150 # smaller circles dont have enough votes so only maxRadius need to be controlled 
                     # As signs are right besides road so they will eventually be in view so ignore circles larger than said limit
     circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1,mindDistanBtwnCircles,param1=CannyHighthresh,param2=NumOfVotesForCircle,minRadius=5,maxRadius=max_rad)
@@ -44,7 +42,7 @@ def Circledetector(gray,cimg,frame_draw,HLS):
                         center_cmp =(int(j[0]),int(j[1]))
                         radius_cmp = j[2] + 5
                         point_Dist = dist( ( center[0],center[1] ) , ( center_cmp[0],center_cmp[1] ) )
-                        print("Distance between [ center = ", center, "center_cmp = ",center_cmp, " ] is  = ",point_Dist)
+                        print("center = ",center, "center_cmp = ",center_cmp, " Computed Dist = ",point_Dist)
                         if ( (point_Dist>10) and (point_Dist<60) and ( abs(center[0]-center_cmp[0]) < 50 ) ):
                             #close enough
                             # draw the outer circle
@@ -107,83 +105,43 @@ def Circledetector(gray,cimg,frame_draw,HLS):
             cv2.imshow(cimg_str,frame_draw)
             if (Traffic_State !=prevTraffic_State):
                 print ("TrafficLightUpdate = ",TrafficLightUpdate)
-                if debug_mode:
-                    cv2.waitKey(0)
+                # if debug_mode:
+                #     cv2.waitKey(0)
             prevTraffic_State = Traffic_State
     return Traffic_State
 
 HLS=0
 src=0
-
-Hue_Low_G = 56#66
-Hue_High_G =66#66
-Lit_Low_G = 66
-Sat_Low_G = 23
-
-Hue_Low_R = 0#66
-Hue_High_R = 8#66
-Lit_Low_R = 33
-Sat_Low_R = 23
+Hue_Low = 56#66
+Lit_Low = 66
+Sat_Low = 23
 
 def OnHueLowChange(val):
-    global Hue_Low_G
-    Hue_Low_G = val
-    MaskExtract()
-def OnHueHighChange(val):
-    global Hue_High_G
-    Hue_High_G = val
+    global Hue_Low
+    Hue_Low = val
     MaskExtract()
 def OnLitLowChange(val):
-    global Lit_Low_G
-    Lit_Low_G = val
+    global Lit_Low
+    Lit_Low = val
     MaskExtract()
 def OnSatLowChange(val):
-    global Sat_Low_G
-    Sat_Low_G = val
-    MaskExtract()
-
-
-def OnHueLowChange_R(val):
-    global Hue_Low_R
-    Hue_Low_R = val
-    MaskExtract()
-def OnHueHighChange_R(val):
-    global Hue_High_R
-    Hue_High_R = val
-    MaskExtract()
-def OnLitLowChange_R(val):
-    global Lit_Low_R
-    Lit_Low_R = val
-    MaskExtract()
-def OnSatLowChange_R(val):
-    global Sat_Low_R
-    Sat_Low_R = val
+    global Sat_Low
+    Sat_Low = val
     MaskExtract()
 
 def MaskExtract():
-    mask_Green   = clr_segment(HLS,(Hue_Low_G  ,Lit_Low_G   ,Sat_Low_G  ),(Hue_High_G       ,255,255))
-    mask_Red   = clr_segment(HLS,(Hue_Low_R  ,Lit_Low_R   ,Sat_Low_R  ),(Hue_High_R       ,255,255))
-
-    MASK = cv2.bitwise_or(mask_Green,mask_Red)
-    MASK_Binary = MASK != 0
-
-    dst = src * (MASK_Binary[:,:,None].astype(src.dtype))
+    mask   = clr_segment(HLS,(Hue_Low  ,Lit_Low   ,Sat_Low  ),(255       ,255,255))
+    mask_ = mask != 0
+    dst = src * (mask_[:,:,None].astype(src.dtype))
     if debug_mode:
         cv2.imshow("mask",dst)
-        cv2.imshow("mask_R",dst)
     return dst
 
 if debug_mode:
     cv2.namedWindow("mask")
-    cv2.namedWindow("mask_R")
-    cv2.createTrackbar("Hue_L","mask",Hue_Low_G,255,OnHueLowChange)
-    cv2.createTrackbar("Hue_H","mask",Hue_High_G,255,OnHueHighChange)
-    cv2.createTrackbar("Lit_L","mask",Lit_Low_G,255,OnLitLowChange)
-    cv2.createTrackbar("Sat_L","mask",Sat_Low_G,255,OnSatLowChange)
-    cv2.createTrackbar("Hue_L_red","mask_R",Hue_Low_R,255,OnHueLowChange_R)
-    cv2.createTrackbar("Hue_H_red","mask_R",Hue_High_R,255,OnHueHighChange_R)
-    cv2.createTrackbar("Lit_L_red","mask_R",Lit_Low_R,255,OnLitLowChange_R)
-    cv2.createTrackbar("Sat_L_red","mask_R",Sat_Low_R,255,OnSatLowChange_R)    
+    cv2.createTrackbar("Hue_L","mask",Hue_Low,255,OnHueLowChange)
+    cv2.createTrackbar("Lit_L","mask",Lit_Low,255,OnLitLowChange)
+    cv2.createTrackbar("Sat_L","mask",Sat_Low,255,OnSatLowChange)  
 
 def clr_segment(HSL,lower_range,upper_range):
     
@@ -200,20 +158,22 @@ def clr_segment(HSL,lower_range,upper_range):
 
 def detect_TrafficLight(frame,frame_draw):
     
-    # 0. To be accessed in Script Functions without explicitly passing as an Argument
     global HLS,src
     src = frame.copy()
     
     # 1. Converting frame to HLS ColorSpace
     HLS = cv2.cvtColor(frame,cv2.COLOR_BGR2HLS)#2 msc
-    # 2. Extracting Mask of Only Red And Color Regions
+
+    #mask = clr_segment(HLS,(Hue_Low  ,Lit_Low   ,Sat_Low  ),(255       ,255,255))
     frame_ROI = MaskExtract()
+    Lightness = HLS[:,:,1]
     if debug_mode:
-        Lightness = HLS[:,:,1]
         cv2.imshow("Lightness",Lightness)
-    # 1. Cvt frame_ROI to grayscale
+
+    # 1. Cvt frame to grayscale
+    #gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     gray = cv2.cvtColor(frame_ROI,cv2.COLOR_BGR2GRAY)
+
     # Localizing Potetial Candidates and Classifying them in SignDetection    
     Traffic_State = Circledetector(gray.copy(),frame.copy(),frame_draw,HLS)
-
     return Traffic_State
