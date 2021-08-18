@@ -1,8 +1,6 @@
 import os # for getting absolute filepath to mitigate cross platform inconsistensies
 import cv2
-import time
 import numpy as np
-import config
 import math
 
 detected_circle = 0 #Set this to current dataset images size so that new images number starts from there and dont overwrite
@@ -12,7 +10,7 @@ display_images = True
 Traffic_State = "None"
 prevTraffic_State = 0
 
-debug_mode = False
+debug_mode = True
 def dist(a,b):
     return int( math.sqrt( ( (a[1]-b[1])**2 ) + ( (a[0]-b[0])**2 ) ) )
 
@@ -107,8 +105,8 @@ def Circledetector(gray,cimg,frame_draw,HLS):
             cv2.imshow(cimg_str,frame_draw)
             if (Traffic_State !=prevTraffic_State):
                 print ("TrafficLightUpdate = ",TrafficLightUpdate)
-                if debug_mode:
-                    cv2.waitKey(0)
+                # if debug_mode:
+                #     cv2.waitKey(0)
             prevTraffic_State = Traffic_State
     return Traffic_State
 
