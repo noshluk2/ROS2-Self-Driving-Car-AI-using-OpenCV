@@ -71,7 +71,7 @@ class Video_feed_in(Node):
         print("\n\nA = ",a,"   B = ", b,"\n\n")
         self.velocity.angular.z=a
         if(Traffic_State == "Stop"):
-            self.velocity.linear.x =0.0
+            self.velocity.linear.x =0.0 # Noob luqman
         else:
             self.velocity.linear.x =b
 
