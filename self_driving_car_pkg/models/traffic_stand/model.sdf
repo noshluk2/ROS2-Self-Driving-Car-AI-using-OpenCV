@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+
+  <model name="taffic_stand">
+    <static>true</static>
+
+    <link name="traffic_stand_link">
+
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://traffic_stand/meshes/traffic_light.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://traffic_stand/meshes/traffic_light.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+
+    </link>
+
+
+   
+    <static>1</static>
+    <allow_auto_disable>1</allow_auto_disable>
+  </model>
+
+</sdf>

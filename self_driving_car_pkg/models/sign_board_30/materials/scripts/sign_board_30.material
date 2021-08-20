@@ -1,0 +1,15 @@
+material sign_board_30/Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture 30.png
+        filtering anistropic
+        max_anisotropy 16
+      }
+    }
+  }
+}
