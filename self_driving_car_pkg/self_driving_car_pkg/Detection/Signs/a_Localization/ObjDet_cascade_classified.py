@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-from a_Localization.TLD import detect_TrafficLight
-from c_Tracking.OpticalFlow_adv import SignTracking
+from .TLD import detect_TrafficLight
+from ..c_Tracking.OpticalFlow_adv import SignTracking
 
 class TrafficLightDetector:
 
@@ -13,7 +13,8 @@ class TrafficLightDetector:
 
     #Variable set outside __init__ belong to the class. 
     # They're shared by all instances.
-    TrafficLight_cascade_str = "self_driving_car_pkg/data/TrafficLight_cascade.xml"
+    TrafficLight_cascade_str="/home/luqman/ros2_workspace/src/self_driving_car_pkg/self_driving_car_pkg/data/TrafficLight_cascade.xml"
+    # TrafficLight_cascade_str = "self_driving_car_pkg/data/TrafficLight_cascade.xml"
     TrafficLight_cascade = cv2.CascadeClassifier()
     #-- 1. Load the cascades
     if not TrafficLight_cascade.load(cv2.samples.findFile(TrafficLight_cascade_str)):
@@ -57,7 +58,7 @@ class TrafficLightDetector:
                 # Start Tracking
                 TrafficLightFound = True
                 cv2.imshow('[Fetch_TL_State] (3) Traffic Light With State', img_draw)
-                cv2.waitKey(0)
+                # cv2.waitKey(0)
                 break
             TL_iteration +=1
 
@@ -190,7 +191,7 @@ def Testing():
 
             # 2. Display frame and wait for keypress
             cv2.imshow("frame",frame_draw)
-            k = cv2.waitKey(20)        
+            k = cv2.waitKey(1)        
 
         else:
             break

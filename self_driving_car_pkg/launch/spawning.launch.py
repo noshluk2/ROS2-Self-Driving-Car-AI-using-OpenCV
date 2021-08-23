@@ -18,18 +18,18 @@ def generate_launch_description():
 
 
     return LaunchDescription([
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
-            ),
-            
-        ),
 
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
-            ),
-        ),
-
+          Node(
+            package='self_driving_car_pkg',
+            executable='spawner_node',
+            name='sdf_spawner2',
+            output='screen',
+            arguments=[sign_stop_sdf,"sign_stop",str(5),str(0),str(0)]),
+        Node(
+            package='self_driving_car_pkg',
+            executable='spawner_node',
+            name='sdf_spawner3',
+            output='screen',
+            arguments=[sign_turn_sdf,"sign_turn",str(0),str(15),str(0)]),
 
     ])

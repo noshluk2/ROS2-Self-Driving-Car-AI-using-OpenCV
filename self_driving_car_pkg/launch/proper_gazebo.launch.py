@@ -18,24 +18,24 @@ def generate_launch_description():
 
 
     return LaunchDescription([
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
+            ),
+            
+        ),
 
-        Node(
-            package='self_driving_car_pkg',
-            executable='spawner_node',
-            name='sdf_spawner',
-            output='screen',
-            arguments=[sign_30_sdf,"sign_30",str(0),str(0),str(0)]),
-        Node(
-            package='self_driving_car_pkg',
-            executable='spawner_node',
-            name='sdf_spawner',
-            output='screen',
-            arguments=[sign_stop_sdf,"sign_30",str(5),str(0),str(0)]),
-        Node(
-            package='self_driving_car_pkg',
-            executable='spawner_node',
-            name='sdf_spawner',
-            output='screen',
-            arguments=[sign_turn_sdf,"sign_30",str(0),str(15),str(0)]),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
+            ),
+        ),
 
+#   Node(
+#             package='self_driving_car_pkg',
+#             executable='spawner_node',
+#             name='sdf_spawner1',
+#             output='screen',
+#             arguments=['/home/luqman/ros2_workspace/src/self_driving_car_pkg/models/sign_board_30/model.sdf',"sign_30",str(0),str(0),str(0)]),
+    
     ])

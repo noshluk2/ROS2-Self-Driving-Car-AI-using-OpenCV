@@ -205,7 +205,7 @@ def main():
             cv2.imshow("Tracked_ROI",signTrack.Tracked_ROI)
         # 2. Display frame and wait for keypress
         cv2.imshow("frame",frame_draw)
-        k = cv2.waitKey(20)
+        k = cv2.waitKey(1)
 
         # 3. If 'c' is pressed Proceed to intialize tracker
         if ((k ==99)):

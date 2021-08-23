@@ -95,7 +95,7 @@ def Circledetector(gray,cimg,frame_draw,HLS):
                         radius_cmp = int(j[2] + 5)
                         point_Dist = dist( ( center[0],center[1] ) , ( center_cmp[0],center_cmp[1] ) )
                         print("Distance between [ center = ", center, "center_cmp = ",center_cmp, " ] is  = ",point_Dist)
-                        if ( (point_Dist>10) and (point_Dist<60) and ( abs(center[0]-center_cmp[0]) < 50 ) and ( abs(center[1]-center_cmp[1]) < 5 ) and (abs(radius - radius_cmp)<5) and (AreCircles_Intersecting(center,center_cmp,radius,radius_cmp)<0) ):
+                        if ( (point_Dist>10) and (point_Dist<80) and ( abs(center[0]-center_cmp[0]) < 80 ) and ( abs(center[1]-center_cmp[1]) < 5 ) and (abs(radius - radius_cmp)<5) and (AreCircles_Intersecting(center,center_cmp,radius,radius_cmp)<0) ):
                             Correct_Color_Comb = Check_Color_Cmb(HLS,center,center_cmp)
                             if (Correct_Color_Comb):
                                 #close enough

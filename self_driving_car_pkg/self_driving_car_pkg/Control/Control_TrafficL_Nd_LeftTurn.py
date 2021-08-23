@@ -19,7 +19,8 @@ class TL_Control:
                     print("**************GO MODE ACTIVATED !!!!!**************")
                     self.STOP_MODE_ACTIVATED = False
                     self.GO_MODE_ACTIVATED = True
-                    self.Prev_Turn_angle = a # Save Computed Turn Angle
+                    self.Prev_Turn_angle = 0.0 # Save Computed Turn Angle
+                    #self.Prev_Turn_angle = a # Save Computed Turn Angle
 
                 elif(self.STOP_MODE_ACTIVATED):
                     print("**************STOP MODE EXECUTING !!!!!**************")

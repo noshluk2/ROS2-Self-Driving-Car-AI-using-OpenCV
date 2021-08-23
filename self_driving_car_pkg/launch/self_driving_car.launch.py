@@ -17,7 +17,12 @@ def generate_launch_description():
             cmd=['gazebo', '--verbose',world_file, '-s', 'libgazebo_ros_factory.so'],
             output='screen'),
 
-
+ Node(
+            package='self_driving_car_pkg',
+            executable='spawner_node',
+            name='sdf_spawner2',
+            output='screen',
+            arguments=[sign_stop_sdf,"sign_stop",str(5),str(0),str(0)]),
         
 
     ])
