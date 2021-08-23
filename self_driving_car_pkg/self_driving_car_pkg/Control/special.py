@@ -15,10 +15,12 @@ def beInLane(Max_Sane_dist,distance,curvature , Mode , Tracked_class):
     IncreaseTireSpeedInTurns = True
     global car_speed,prev_Mode
     if((Tracked_class!=0) and (prev_Mode == "Tracking") and (Mode == "Detection")):
-        if  (Tracked_class =="speed_sign_70"):
-            car_speed = 70
-        elif(Tracked_class =="speed_sign_80"):
-            car_speed = 80
+        if  (Tracked_class =="speed_sign_30"):
+            car_speed = 30
+        elif(Tracked_class =="speed_sign_60"):
+            car_speed = 60
+        elif(Tracked_class =="speed_sign_90"):
+            car_speed = 90
         elif(Tracked_class =="left_turn"):
             car_speed = 50
         elif(Tracked_class =="stop"):
