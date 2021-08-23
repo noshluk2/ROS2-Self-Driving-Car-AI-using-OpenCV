@@ -77,7 +77,7 @@ class TrafficLightDetector:
 signTrack = SignTracking()
 T_L_D = TrafficLightDetector()
 
-def Extract_TL_With_State(img):
+def detect_TrafficLights(img):
     # Every form of drawing will be done on this stupit image
     frame_draw = img.copy()
     Curr_TL_State = "Unknown"
