@@ -9,3 +9,5 @@ self_driving_car_pkg/self_driving_car_pkg/Detection/Signs/a_Localization/__pycac
 self_driving_car_pkg/self_driving_car_pkg/Detection/Signs/a_Localization/__pycache__/UsingHough.cpython-36.pyc
 self_driving_car_pkg/Detection/Signs/a_Localization/__pycache__/UsingHough.cpython-36.pyc
 self_driving_car_pkg/data/vids/ishara_turning.avi
+self_driving_car_pkg/data/vids/ishara_sign_conflict.avi
+self_driving_car_pkg/data/vids/new_ishara.avi
