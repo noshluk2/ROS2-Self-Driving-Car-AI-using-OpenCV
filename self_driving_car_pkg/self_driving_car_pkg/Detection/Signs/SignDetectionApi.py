@@ -78,7 +78,7 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
     
     # 3. IF Mode of SignTrack is Detection , Proceed
     if (signTrack.mode == "Detection"):
-        cv2.putText(frame_draw,"Sign Detected ==> "+str(signTrack.Tracked_class),(20,85),cv2.FONT_HERSHEY_COMPLEX,0.9,(255,255,0),1)
+        cv2.putText(frame_draw,"Sign Detected ==> "+str(signTrack.Tracked_class),(20,85),cv2.FONT_HERSHEY_COMPLEX,0.75,(255,255,0),2)
         NumOfVotesForCircle = 45 #parameter 1 MinVotes needed to be classified as circle
         CannyHighthresh = 250 # High threshold value for applying canny
         mindDistanBtwnCircles = 100 # kept as sign will likely not be overlapping
