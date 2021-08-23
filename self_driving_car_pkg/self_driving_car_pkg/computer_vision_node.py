@@ -6,7 +6,9 @@ from .config import config
 from .Detection.Lanes.Lane_Detection import Detect_Lane
 from .Detection.Signs.SignDetectionApi import detect_Signs
 from .Detection.Signs.a_Localization.TLD import detect_TrafficLight
+from .Detection.Signs.a_Localization.ObjDet_cascade_classified import Extract_TL_With_State
 from .Control.special import Drive_Car
+from .Control.Control_TrafficL_Nd_LeftTurn import TL_Control
 
 from geometry_msgs.msg import Twist
 from rclpy.node import Node 
@@ -15,7 +17,7 @@ from sensor_msgs.msg import Image
 import rclpy 
 
 
-
+TL_control = TL_Control() 
 class Video_feed_in(Node):
     def __init__(self):
 
@@ -27,6 +29,7 @@ class Video_feed_in(Node):
         self.velocity=Twist()
         self.bridge = CvBridge() # converting ros images to opencv data
         self.prev_Mode = "Detection"
+
         self.Left_turn_iterations = 0
         self.Frozen_Curvature=0
         self.Frozen_Curvature=0
@@ -39,8 +42,8 @@ class Video_feed_in(Node):
         img = frame[0:640,238:1042] 
         img = cv2.resize(img,(320,240))
         img_orig = img.copy()
-        frame_draw = img.copy()
-        Traffic_State = detect_TrafficLight(img,frame_draw)
+        #Traffic_State = detect_TrafficLight(img,frame_draw)
+        Traffic_State, CloseProximity = Extract_TL_With_State(img_orig.copy())
 
         distance, Curvature = Detect_Lane(img)
         Mode , Tracked_class = detect_Signs(img_orig,img)
@@ -69,13 +72,18 @@ class Video_feed_in(Node):
         a=interp(a,[30,120],[0.5,-0.5])
         b=interp(b,[50,90],[1,2])
         print("\n\nA = ",a,"   B = ", b,"\n\n")
-        self.velocity.angular.z=a
-        if(Traffic_State == "Stop"):
-            self.velocity.linear.x =0.0 # Noob luqman
-        else:
-            self.velocity.linear.x =b
+        #self.velocity.angular.z = a
+
+        a,b = TL_control.OBEY_TrafficLights(a,b,Traffic_State,CloseProximity)
+        print("After Obeying TrafficLights")
+        print("\n\nA = ",a,"   B = ", b,"\n\n")
+
+        self.velocity.linear.x = b        
+        self.velocity.angular.z = a
 
         cv2.putText(img,Traffic_State,(20,20),cv2.FONT_HERSHEY_COMPLEX,2,255)
+        cv2.putText(img,"Angle = "+str(a)+" , Speed = " + str(b) ,(20,40),cv2.FONT_HERSHEY_COMPLEX,2,255)
+
         cv2.imshow("Frame",img)
         cv2.waitKey(1)
         
