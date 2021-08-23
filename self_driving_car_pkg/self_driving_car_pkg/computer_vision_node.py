@@ -32,7 +32,6 @@ class Video_feed_in(Node):
 
         self.Left_turn_iterations = 0
         self.Frozen_Curvature=0
-        self.Frozen_Curvature=0
 
     def send_cmd_vel(self):
         self.publisher.publish(self.velocity)
