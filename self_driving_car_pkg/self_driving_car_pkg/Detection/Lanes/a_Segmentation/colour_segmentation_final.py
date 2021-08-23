@@ -54,10 +54,9 @@ def MaskExtract():
     mask_ = mask != 0
 
     dst = src * (mask_[:,:,None].astype(src.dtype))
-    cv2.imshow('[Segment_Colour_final] mask',dst)
-    #cv2.imwrite("D:/Had_LuQ/MidLane_edge.png",mask)
-    #cv2.imshow('mask_Y',mask_Y)
-    cv2.imshow('[Segment_Colour_final] mask_Y',dst_Y)
+    if (config.debugging_Lane and config.debugging):
+        cv2.imshow('[Segment_Colour_final] mask',dst)
+        cv2.imshow('[Segment_Colour_final] mask_Y',dst_Y)
 
 
 #cv2.namedWindow("HSL",cv2.WINDOW_NORMAL)
@@ -174,12 +173,9 @@ def Segment_Colour(frame,minArea):
 
     #cv2.imshow('Mid_ROI_mask',Mid_ROI_mask)
 
-    if(config.clr_segmentation_tuning):
+    if(config.debugging_Lane and config.debugging):
         cv2.imshow('[Segment_Colour_final] mask',mask)
         cv2.imshow('[Segment_Colour_final] mask_Y',mask_Y)
-
-        #cv2.imshow('Mid_ROI_mask',Mid_ROI_mask)
-        #cv2.imshow('Mid_edge_ROI',Mid_edge_ROI)
 
         cv2.imshow('Outer_edge_ROI',Outer_edge_ROI)
         cv2.imshow('OuterLane_Side_Seperated',OuterLane_SidesSeperated)
