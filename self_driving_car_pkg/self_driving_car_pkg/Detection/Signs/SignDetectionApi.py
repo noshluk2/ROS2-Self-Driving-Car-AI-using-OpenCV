@@ -20,7 +20,6 @@ if config.Training_CNN:
 else:
     write_data = False # not gathering data # No Training
 draw_detected = True
-display_images = False
 model_loaded = False
 model = 0
 sign_classes = ["speed_sign_30","speed_sign_60","speed_sign_90","stop","left_turn","No_Sign"] # Trained CNN Classes
@@ -167,8 +166,8 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
                             cv2.imwrite(img_name , detected_sign)
 
             
-            if display_images:
-                cimg_str = 'detected circles'
+            if config.debugging and config.debugging_Signs:
+                cimg_str = 'detected Signs'
                 cv2.imshow(cimg_str,frame_draw)
                 cv2.waitKey(1)
 
