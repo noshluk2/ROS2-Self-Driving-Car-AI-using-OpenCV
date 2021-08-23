@@ -3,7 +3,7 @@ import numpy as np
 
 from .TLD import detect_TrafficLight
 from ..c_Tracking.OpticalFlow_adv import SignTracking
-
+from ....config import config
 class TrafficLightDetector:
 
     def __init__(self):
@@ -29,7 +29,8 @@ class TrafficLightDetector:
             print("Traffic State Recived While Tracking ",Traffic_State)
             cv2.putText(img_draw,str(signTrack.CollisionIminent),(80,80),cv2.FONT_HERSHEY_SIMPLEX,1,255)
 
-            cv2.imshow('[Fetch_TL_State] (6) Traffic Light With State', img_draw)
+            if (config.debugging and config.debugging_TrafficLights):
+                cv2.imshow('[Fetch_TL_State] (6) Traffic Light With State', img_draw)
             #cv2.waitKey(0)
         return Traffic_State
 
@@ -48,7 +49,9 @@ class TrafficLightDetector:
             TL_Maybe_mask = np.zeros(gray.shape,np.uint8)
             TL_Maybe_mask[y:y+h,x:x+w] = 255
             img_ROI = cv2.bitwise_and(img,img,mask=TL_Maybe_mask)
-            cv2.imshow('[Fetch_TL_State] (1) img_ROI', img_ROI)
+
+            if (config.debugging and config.debugging_TrafficLights):
+                cv2.imshow('[Fetch_TL_State] (1) img_ROI', img_ROI)
             # Reconfirm if detected Traffic Light was the desired one
             Traffic_State = detect_TrafficLight(img_ROI,img_draw)
             if(Traffic_State!="Unknown"):
@@ -57,7 +60,8 @@ class TrafficLightDetector:
                 cv2.rectangle(img_draw, (x,y), (x+w,y+h), (0,255,0), 2)
                 # Start Tracking
                 TrafficLightFound = True
-                cv2.imshow('[Fetch_TL_State] (3) Traffic Light With State', img_draw)
+                if (config.debugging and config.debugging_TrafficLights):
+                    cv2.imshow('[Fetch_TL_State] (3) Traffic Light With State', img_draw)
                 # cv2.waitKey(0)
                 break
             TL_iteration +=1
@@ -92,10 +96,14 @@ def detect_TrafficLights(img):
         fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
         # Display FPS on frame
         cv2.putText(frame_draw, "FPS : " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
-        # 2. Display frame and wait for keypress
-        cv2.imshow("[Fetch_TL_State] (4) Tracked_ROI",signTrack.Tracked_ROI)
+        
+        if (config.debugging and config.debugging_TrafficLights):
+            # 2. Display frame and wait for keypress
+            cv2.imshow("[Fetch_TL_State] (4) Tracked_ROI",signTrack.Tracked_ROI)
         img_ROI_tracked = cv2.bitwise_and(img,img,mask=Temp_Tracked_ROI)
-        cv2.imshow('[Fetch_TL_State] (5) img_ROI_tracked_BoundedRect', img_ROI_tracked)
+        
+        if (config.debugging and config.debugging_TrafficLights):        
+            cv2.imshow('[Fetch_TL_State] (5) img_ROI_tracked_BoundedRect', img_ROI_tracked)
         Curr_TL_State = T_L_D.Get_TrafficLightState(img_ROI_tracked)
 
     # 3. If SignTrack is in Detection Proceed to intialize tracker
@@ -152,11 +160,16 @@ def Testing():
                 fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
                 # Display FPS on frame
                 cv2.putText(frame_draw, "FPS : " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
-                # 2. Display frame and wait for keypress
-                cv2.imshow("Tracked_ROI",signTrack.Tracked_ROI)
+                
+                if (config.debugging and config.debugging_TrafficLights):
+                    # 2. Display frame and wait for keypress
+                    cv2.imshow("Tracked_ROI",signTrack.Tracked_ROI)
 
                 img_ROI_tracked = cv2.bitwise_and(img,img,mask=Temp_Tracked_ROI)
-                cv2.imshow('img_ROI_tracked_BoundedRect', img_ROI_tracked)
+
+                if (config.debugging and config.debugging_TrafficLights):
+                    cv2.imshow('img_ROI_tracked_BoundedRect', img_ROI_tracked)
+                    
                 Curr_TL_State = T_L_D.Get_TrafficLightState(img_ROI_tracked)
 
             # 3. If SignTrack is in Detection Proceed to intialize tracker
