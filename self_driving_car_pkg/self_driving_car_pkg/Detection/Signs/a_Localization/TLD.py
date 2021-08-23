@@ -7,24 +7,76 @@ detected_circle = 0 #Set this to current dataset images size so that new images 
 write_data = False
 draw_detected = True
 display_images = True
-Traffic_State = "None"
+Traffic_State = "Unknown"
 prevTraffic_State = 0
 
 debug_mode = True
 def dist(a,b):
     return int( math.sqrt( ( (a[1]-b[1])**2 ) + ( (a[0]-b[0])**2 ) ) )
+def Check_Color_Cmb(HLS,center,center_cmp):
+    Correct_Color_Comb = False
+    A_hue=HLS[center[1]-1,center[0]-1,0]
+    B_hue=HLS[center_cmp[1]-1,center_cmp[0]-1,0]
+    #C_hue=HLS[int((center[1]+center_cmp[1])/2),center[0]-1,0]
+    C_hue=HLS[center[1]-1,int((center[0]+center_cmp[0])/2),0]
+
+    if( (A_hue<8) or ( (A_hue>56)and (A_hue<66) ) ):
+        # A is either red or green
+        if(A_hue<8):
+            #A is Red then B Should be green
+            if ( (B_hue>56)and (B_hue<66) ):
+                print("A is Red B is green")
+                if ((C_hue>28)and(C_hue<32)):
+                    return True
+                else:
+                    print("Mid is not yello")
+                    return Correct_Color_Comb          
+            else:
+                print("A is Red B is NOT green")
+                return Correct_Color_Comb
+        else:
+            # A is green then B should be red
+            if(B_hue<8):
+                #B is red then A should be green
+                if ( (A_hue>56)and (A_hue<66) ):
+                    print("B is Red A is green")
+                    if ((C_hue>28)and(C_hue<32)):
+                        return True
+                    else:
+                        print("Mid is not yello")
+                        return Correct_Color_Comb        
+                else:
+                    print("B is Red A is green")
+                    return Correct_Color_Comb
+    else:
+        print("A is Neither Red B NOR green")
+        return Correct_Color_Comb
+
+
+def AreCircles_Intersecting(center,center_cmp,r1,r2):
+    x1,y1=center
+    x2,y2=center_cmp
+    distSq = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);  
+    radSumSq = (r1 + r2) * (r1 + r2);  
+    if (distSq == radSumSq): 
+        return 1 
+    elif (distSq > radSumSq): 
+        return -1 
+    else: 
+        return 0 
+
 
 def Circledetector(gray,cimg,frame_draw,HLS):
     frame_draw_special= frame_draw.copy()
     global Traffic_State,prevTraffic_State
     # 2. Apply the HoughCircles to detect the circular regions in the Image        
     NumOfVotesForCircle = 16 #parameter 1 MinVotes needed to be classified as circle
-    CannyHighthresh = 200 # High threshold value for applying canny
+    CannyHighthresh = 230 # High threshold value for applying canny
     mindDistanBtwnCircles = 5 # kept as sign will likely not be overlapping
-    max_rad = 150 # smaller circles dont have enough votes so only maxRadius need to be controlled 
+    max_rad = 50 # smaller circles dont have enough votes so only maxRadius need to be controlled 
                     # As signs are right besides road so they will eventually be in view so ignore circles larger than said limit
     circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1,mindDistanBtwnCircles,param1=CannyHighthresh,param2=NumOfVotesForCircle,minRadius=5,maxRadius=max_rad)
-    TrafficLightUpdate = "Unknown"
+    TL_Update = "Unknown"
     # 3. Loop over detected Circles
     if circles is not None:
         circles = np.uint16(np.around(circles))
@@ -32,7 +84,7 @@ def Circledetector(gray,cimg,frame_draw,HLS):
         i_count=0
         for i in circles[0,:]:
             center =(int(i[0]),int(i[1]))
-            radius = i[2] + 5
+            radius = int(i[2] + 5)
             if (radius !=5):
                 global detected_circle
                 detected_circle = detected_circle + 1 
@@ -40,47 +92,53 @@ def Circledetector(gray,cimg,frame_draw,HLS):
                 for j in circles[0,:]:
                     if j_count!=i_count:
                         center_cmp =(int(j[0]),int(j[1]))
-                        radius_cmp = j[2] + 5
+                        radius_cmp = int(j[2] + 5)
                         point_Dist = dist( ( center[0],center[1] ) , ( center_cmp[0],center_cmp[1] ) )
                         print("Distance between [ center = ", center, "center_cmp = ",center_cmp, " ] is  = ",point_Dist)
-                        if ( (point_Dist>10) and (point_Dist<60) and ( abs(center[0]-center_cmp[0]) < 50 ) ):
-                            #close enough
-                            # draw the outer circle
-                            cv2.circle(frame_draw_special,(i[0],i[1]),i[2],(0,255,0),1)
-                            # draw the center of the circle
-                            cv2.circle(frame_draw_special,(i[0],i[1]),2,(0,0,255),3)
+                        if ( (point_Dist>10) and (point_Dist<60) and ( abs(center[0]-center_cmp[0]) < 50 ) and ( abs(center[1]-center_cmp[1]) < 5 ) and (abs(radius - radius_cmp)<5) and (AreCircles_Intersecting(center,center_cmp,radius,radius_cmp)<0) ):
+                            Correct_Color_Comb = Check_Color_Cmb(HLS,center,center_cmp)
+                            if (Correct_Color_Comb):
+                                #close enough
+                                # draw the outer circle
+                                cv2.circle(frame_draw_special,(i[0],i[1]),i[2],(0,255,0),1)
+                                # draw the center of the circle
+                                cv2.circle(frame_draw_special,(i[0],i[1]),2,(0,0,255),3)
 
-                            # draw the outer circle
-                            cv2.circle(frame_draw_special,(j[0],j[1]),j[2],(255,0,0),1)
-                            # draw the center of the circle
-                            cv2.circle(frame_draw_special,(j[0],j[1]),2,(0,0,255),3)
-                            if debug_mode:
-                                cv2.imshow('frame_draw_special',frame_draw_special)
-                            
-                            #If Center is Brighter
-                            if( (int(HLS[center[1],center[0],1]) - int(HLS[center_cmp[1],center_cmp[0],1])) > 10 ):
-                                # Left was Brightest [Red]
-                                if(center[0]<center_cmp[0]):
-                                    TrafficLightUpdate = "Left was Brightest [Red]"
-                                    Traffic_State="Stop"
-                                # Right was Brightest [Green]
-                                elif(center[0]>center_cmp[0]):
-                                    TrafficLightUpdate = "Right was Brightest [Green]"
-                                    Traffic_State="Go"
-
-                            #ElseIf Center_cmp is Brighter
-                            elif( ( int(HLS[center[1],center[0],1]) - int(HLS[center_cmp[1],center_cmp[0],1]) ) < -10):
-                                # Left was Darker [Green]
-                                if(center[0]<center_cmp[0]):
-                                    TrafficLightUpdate = "Left was Darker [Green]"
-                                    Traffic_State="Go"
-                                # Right was Darker [Red]
-                                elif(center[0]>center_cmp[0]):
-                                    TrafficLightUpdate = "Right was Darker [Red]"
-                                    Traffic_State="Stop"
-
-                            print("HLS[center[1],center[0],1] = ",HLS[center[1],center[0],1], "HLS[center_cmp[1],center_cmp[0],1] = ",HLS[center_cmp[1],center_cmp[0],1])
+                                # draw the outer circle
+                                cv2.circle(frame_draw_special,(j[0],j[1]),j[2],(255,0,0),1)
+                                # draw the center of the circle
+                                cv2.circle(frame_draw_special,(j[0],j[1]),2,(0,0,255),3)
+                                if debug_mode:
+                                    cv2.imshow('Traffic Light Confirmed!! [Checking State!!!]',frame_draw_special)
                                 
+                                #If Center is Brighter
+                                if( (int(HLS[center[1],center[0],1]) - int(HLS[center_cmp[1],center_cmp[0],1])) > 10 ):
+                                    # Left was Brightest [Red]
+                                    if(center[0]<center_cmp[0]):
+                                        TL_Update = "Left was Brightest [Red]"
+                                        Traffic_State="Stop"
+                                    # Right was Brightest [Green]
+                                    elif(center[0]>center_cmp[0]):
+                                        TL_Update = "Right was Brightest [Green]"
+                                        Traffic_State="Go"
+
+                                #ElseIf Center_cmp is Brighter
+                                elif( ( int(HLS[center[1],center[0],1]) - int(HLS[center_cmp[1],center_cmp[0],1]) ) < -10):
+                                    # Left was Darker [Green]
+                                    if(center[0]<center_cmp[0]):
+                                        TL_Update = "Left was Darker [Green]"
+                                        Traffic_State="Go"
+                                    # Right was Darker [Red]
+                                    elif(center[0]>center_cmp[0]):
+                                        TL_Update = "Right was Darker [Red]"
+                                        Traffic_State="Stop"
+
+                                else:
+                                    if (prevTraffic_State != "Stop"):
+                                        Traffic_State= "Unknown"#Because No Traffic light is detected and we werent looking for Go then Reset Traffic State        
+                                
+                                print("HLS[center[1],center[0],1] = ",HLS[center[1],center[0],1], "HLS[center_cmp[1],center_cmp[0],1] = ",HLS[center_cmp[1],center_cmp[0],1])
+
                         j_count=j_count+1
 
                 i_count=i_count+1
@@ -98,16 +156,21 @@ def Circledetector(gray,cimg,frame_draw,HLS):
                         cv2.circle(frame_draw,(i[0],i[1]),2,(0,0,255),3)
                         #cv2.imshow('circle',detected_sign)
 
-        
+        cv2.putText(frame_draw,str(circles.shape[1]),(40,50),cv2.FONT_HERSHEY_SIMPLEX,1,255)
         if display_images:
             cv2.putText(frame_draw, Traffic_State, (20,20), cv2.FONT_HERSHEY_SIMPLEX, 1, 255)
-            cimg_str = 'detected circles'
+            cimg_str = '[Fetch_TL_State] (2) detected circular reg'
             cv2.imshow(cimg_str,frame_draw)
-            if (Traffic_State !=prevTraffic_State):
-                print ("TrafficLightUpdate = ",TrafficLightUpdate)
-                # if debug_mode:
-                #     cv2.waitKey(0)
-            prevTraffic_State = Traffic_State
+
+        if (Traffic_State !=prevTraffic_State):
+            print("#################TRAFFIC STATE CHANGED####################")
+            print ("Traffic_State = ",Traffic_State)
+            print ("TL_Reason = ",TL_Update)
+            if debug_mode:
+                cv2.waitKey(1)
+
+        prevTraffic_State = Traffic_State
+
     return Traffic_State
 
 HLS=0
@@ -206,9 +269,9 @@ def detect_TrafficLight(frame,frame_draw):
     HLS = cv2.cvtColor(frame,cv2.COLOR_BGR2HLS)#2 msc
     # 2. Extracting Mask of Only Red And Color Regions
     frame_ROI = MaskExtract()
-    if debug_mode:
-        Lightness = HLS[:,:,1]
-        cv2.imshow("Lightness",Lightness)
+    #if debug_mode:
+        #Lightness = HLS[:,:,1]
+        #cv2.imshow("Lightness",Lightness)
     # 1. Cvt frame_ROI to grayscale
     gray = cv2.cvtColor(frame_ROI,cv2.COLOR_BGR2GRAY)
     # Localizing Potetial Candidates and Classifying them in SignDetection    
