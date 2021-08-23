@@ -17,7 +17,7 @@ from .d_LaneInfo_Extraction.GetStateInfoandDisplayLane import FetchInfoAndDispla
 
 
 
-def Detect_Lane(img):
+def detect_Lane(img):
             
         # >>>>>>>>>>>>>>>>>>>>>>>> Optimization No 2 [CROPPING] <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         img_cropped = img[config.CropHeight_resized:,:]
