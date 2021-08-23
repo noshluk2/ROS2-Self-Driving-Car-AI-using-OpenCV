@@ -1,10 +1,10 @@
 
 class TL_Control:
     def __init__(self):
-        TrafficLight_iterations = 0
-        Prev_Turn_angle = 1.5
-        GO_MODE_ACTIVATED = False
-        STOP_MODE_ACTIVATED = False
+        self.TrafficLight_iterations = 0
+        self.Prev_Turn_angle = 1.5
+        self.GO_MODE_ACTIVATED = False
+        self.STOP_MODE_ACTIVATED = False
 
     def OBEY_TrafficLights(self,a,b,Traffic_State,CloseProximity):
 
