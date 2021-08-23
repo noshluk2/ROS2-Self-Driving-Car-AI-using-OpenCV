@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import math
 import os
-
+from ....config import config
 
 
 class SignTracking:
@@ -201,11 +201,15 @@ def main():
             fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
             # Display FPS on frame
             cv2.putText(frame_draw, "FPS : " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
+            
+            if (config.debugging and config.debugging_TrafficLights):
+                # 2. Display frame and wait for keypress
+                cv2.imshow("Tracked_ROI",signTrack.Tracked_ROI)
+        
+        if (config.debugging and config.debugging_TrafficLights):
             # 2. Display frame and wait for keypress
-            cv2.imshow("Tracked_ROI",signTrack.Tracked_ROI)
-        # 2. Display frame and wait for keypress
-        cv2.imshow("frame",frame_draw)
-        k = cv2.waitKey(1)
+            cv2.imshow("frame",frame_draw)
+            k = cv2.waitKey(1)
 
         # 3. If 'c' is pressed Proceed to intialize tracker
         if ((k ==99)):

@@ -2,6 +2,7 @@ import os # for getting absolute filepath to mitigate cross platform inconsisten
 import cv2
 import numpy as np
 import math
+from ....config import config
 
 detected_circle = 0 #Set this to current dataset images size so that new images number starts from there and dont overwrite
 write_data = False
@@ -10,7 +11,6 @@ display_images = True
 Traffic_State = "Unknown"
 prevTraffic_State = 0
 
-debug_mode = True
 def dist(a,b):
     return int( math.sqrt( ( (a[1]-b[1])**2 ) + ( (a[0]-b[0])**2 ) ) )
 def Check_Color_Cmb(HLS,center,center_cmp):
@@ -108,7 +108,7 @@ def Circledetector(gray,cimg,frame_draw,HLS):
                                 cv2.circle(frame_draw_special,(j[0],j[1]),j[2],(255,0,0),1)
                                 # draw the center of the circle
                                 cv2.circle(frame_draw_special,(j[0],j[1]),2,(0,0,255),3)
-                                if debug_mode:
+                                if (config.debugging and config.debugging_TrafficLights):
                                     cv2.imshow('Traffic Light Confirmed!! [Checking State!!!]',frame_draw_special)
                                 
                                 #If Center is Brighter
@@ -159,14 +159,16 @@ def Circledetector(gray,cimg,frame_draw,HLS):
         cv2.putText(frame_draw,str(circles.shape[1]),(40,50),cv2.FONT_HERSHEY_SIMPLEX,1,255)
         if display_images:
             cv2.putText(frame_draw, Traffic_State, (20,20), cv2.FONT_HERSHEY_SIMPLEX, 1, 255)
-            cimg_str = '[Fetch_TL_State] (2) detected circular reg'
-            cv2.imshow(cimg_str,frame_draw)
+            
+            if (config.debugging and config.debugging_TrafficLights):
+                cimg_str = '[Fetch_TL_State] (2) detected circular reg'
+                cv2.imshow(cimg_str,frame_draw)
 
         if (Traffic_State !=prevTraffic_State):
             print("#################TRAFFIC STATE CHANGED####################")
             print ("Traffic_State = ",Traffic_State)
             print ("TL_Reason = ",TL_Update)
-            if debug_mode:
+            if (config.debugging and config.debugging_TrafficLights):
                 cv2.waitKey(1)
 
         prevTraffic_State = Traffic_State
@@ -229,12 +231,14 @@ def MaskExtract():
     MASK_Binary = MASK != 0
 
     dst = src * (MASK_Binary[:,:,None].astype(src.dtype))
-    if debug_mode:
+
+    if (config.debugging and config.debugging_TrafficLights):
         cv2.imshow("mask",dst)
         cv2.imshow("mask_R",dst)
+
     return dst
 
-if debug_mode:
+if (config.debugging and config.debugging_TrafficLights):
     cv2.namedWindow("mask")
     cv2.namedWindow("mask_R")
     cv2.createTrackbar("Hue_L","mask",Hue_Low_G,255,OnHueLowChange)
@@ -269,7 +273,8 @@ def detect_TrafficLight(frame,frame_draw):
     HLS = cv2.cvtColor(frame,cv2.COLOR_BGR2HLS)#2 msc
     # 2. Extracting Mask of Only Red And Color Regions
     frame_ROI = MaskExtract()
-    #if debug_mode:
+
+    #if (config.debugging and config.debugging_TrafficLights):
         #Lightness = HLS[:,:,1]
         #cv2.imshow("Lightness",Lightness)
     # 1. Cvt frame_ROI to grayscale
