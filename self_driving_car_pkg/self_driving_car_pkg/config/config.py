@@ -18,8 +18,6 @@ debugging_Lane = False
 debugging_Signs = False
 debugging_TrafficLights = False
 
-clr_segmentation_tuning = True # Set to True --> If you want to tune color segmentation parameters
-
 Detect_lane_N_Draw = True
 Training_CNN = False 
 Activat_LeftTurn=False

@@ -69,7 +69,7 @@ def MaskExtract():
 #cv2.namedWindow("Mid_ROI_mask",cv2.WINDOW_NORMAL)
 
 
-if(config.clr_segmentation_tuning):
+if(config.debugging_Lane and config.debugging):
 
     cv2.namedWindow("[Segment_Colour_final] mask")
     cv2.namedWindow("[Segment_Colour_final] mask_Y")
