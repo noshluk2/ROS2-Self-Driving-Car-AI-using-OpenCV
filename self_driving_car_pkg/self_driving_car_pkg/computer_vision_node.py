@@ -65,7 +65,7 @@ class Video_feed_in(Node):
         angle_of_car = interp(a,[0.5,-0.5],[-45,45])
         current_speed = interp(b,[1,2],[30,90])
         angle_speed_str = "[ Angle ,Speed ] = [ " + str(int(angle_of_car)) + "deg ," + str(int(current_speed)) + "mph ]"
-        cv2.putText(img,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.35,(0,0,255),1)
+        cv2.putText(img,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.4,(0,0,255),1)
 
         cv2.putText(img,"Traffic Light State = [ "+Traffic_State+" ] ",(20,60),cv2.FONT_HERSHEY_COMPLEX,0.35,255)
         #cv2.putText(img,"Angle = "+str(np.round(a,3))+" , Speed = " + str(np.round(b,3)) ,(20,80),cv2.FONT_HERSHEY_COMPLEX,0.5,255)
