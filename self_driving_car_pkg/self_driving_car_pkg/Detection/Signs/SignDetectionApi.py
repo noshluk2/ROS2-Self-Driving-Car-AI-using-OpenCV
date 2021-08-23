@@ -78,7 +78,7 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
     
     # 3. IF Mode of SignTrack is Detection , Proceed
     if (signTrack.mode == "Detection"):
-        cv2.putText(frame_draw,str(signTrack.Tracked_class),(10,80),cv2.FONT_HERSHEY_PLAIN,0.7,(255,255,255),1)
+        cv2.putText(frame_draw,"Sign Detected ==> "+str(signTrack.Tracked_class),(20,80),cv2.FONT_HERSHEY_PLAIN,0.7,(255,0,255),1)
         NumOfVotesForCircle = 45 #parameter 1 MinVotes needed to be classified as circle
         CannyHighthresh = 250 # High threshold value for applying canny
         mindDistanBtwnCircles = 100 # kept as sign will likely not be overlapping
@@ -219,7 +219,7 @@ def detect_Signs(frame,frame_draw):
 
     # Localizing Potetial Candidates and Classifying them in SignDetection
     start_signDetection = time.time()
-    cv2.putText(frame_draw,signTrack.mode,(10,10),cv2.FONT_HERSHEY_PLAIN,0.5,(255,255,255),1)
+    #cv2.putText(frame_draw,signTrack.mode,(20,10),cv2.FONT_HERSHEY_PLAIN,0.5,(255,255,255),1)
     
     SignDetection_Nd_Tracking(gray.copy(),frame.copy(),frame_draw,model)
     end_signDetection = time.time()

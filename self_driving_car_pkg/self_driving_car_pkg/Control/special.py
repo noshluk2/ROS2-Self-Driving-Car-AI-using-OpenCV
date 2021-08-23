@@ -87,7 +87,7 @@ def Steer(Distance,Curvature,frame , Mode , Tracked_class):
             color_direction=(0,255,0)
 
 
-        cv2.putText(frame,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.5,(0,0,255),1)
+        #cv2.putText(frame,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.5,(0,0,255),1)
         cv2.putText(frame,str(direction_string),(20,40),cv2.FONT_HERSHEY_DUPLEX,0.4,color_direction,1)
     else:
         angle_speed_str = "[ Angle ,Speed ] = [ " + str("N/A") + " , " + str("N/A") + " ] "

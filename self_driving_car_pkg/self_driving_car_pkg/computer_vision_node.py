@@ -35,7 +35,7 @@ class Video_feed_in(Node):
         self.publisher.publish(self.velocity)
         
     def process_data(self, data): 
-        
+
         frame = self.bridge.imgmsg_to_cv2(data,'bgr8') # performing conversion
         img = frame[0:640,238:1042] 
         img = cv2.resize(img,(320,240))
@@ -62,8 +62,13 @@ class Video_feed_in(Node):
         self.velocity.linear.x = b        
         self.velocity.angular.z = a
 
-        cv2.putText(img,Traffic_State,(20,60),cv2.FONT_HERSHEY_COMPLEX,0.5,255)
-        cv2.putText(img,"Angle = "+str(np.round(a,3))+" , Speed = " + str(np.round(b,3)) ,(20,80),cv2.FONT_HERSHEY_COMPLEX,0.5,255)
+        angle_of_car = interp(a,[0.5,-0.5],[-45,45])
+        current_speed = interp(b,[1,2],[30,90])
+        angle_speed_str = "[ Angle ,Speed ] = [ " + str(int(angle_of_car)) + " deg , " + str(int(current_speed)) + " mph ] "
+        cv2.putText(img,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.5,(0,0,255),1)
+
+        cv2.putText(img,"Traffic Light State = [ "+Traffic_State+" ] ",(20,60),cv2.FONT_HERSHEY_COMPLEX,0.5,255)
+        #cv2.putText(img,"Angle = "+str(np.round(a,3))+" , Speed = " + str(np.round(b,3)) ,(20,80),cv2.FONT_HERSHEY_COMPLEX,0.5,255)
 
         cv2.imshow("Frame",img)
         cv2.waitKey(1)

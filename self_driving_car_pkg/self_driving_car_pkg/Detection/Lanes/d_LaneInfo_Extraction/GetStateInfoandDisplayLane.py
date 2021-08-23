@@ -119,13 +119,14 @@ def FetchInfoAndDisplay(Mid_lane_edge,Mid_lane,Outer_Lane,frame,Offset_correctio
 
 		if(Traj_lowP!=(0,0)):
 			cv2.line(Out_image,Traj_lowP,(int(Out_image.shape[1]/2),Traj_lowP[1]),(255,255,0),2)# distance of car center with lane path
-		
-		# 10. Draw extracted distance and curvature 
-		curvature_str="Curvature = " + f"{curvature:.2f}"
-		PerpDist_ImgCen_CarNose_str="Distance = " + str(PerpDist_LaneCentralStart_CarNose)
-		textSize_ratio = 0.5
-		cv2.putText(Out_image,curvature_str,(10,30),cv2.FONT_HERSHEY_DUPLEX,textSize_ratio,(0,255,255),1)
-		cv2.putText(Out_image,PerpDist_ImgCen_CarNose_str,(10,50),cv2.FONT_HERSHEY_DUPLEX,textSize_ratio,(0,255,255),1)
+
+		if (config.debugging and config.debugging_Lane):
+			# 10. Draw extracted distance and curvature 
+			curvature_str="Curvature = " + f"{curvature:.2f}"
+			PerpDist_ImgCen_CarNose_str="Distance = " + str(PerpDist_LaneCentralStart_CarNose)
+			textSize_ratio = 0.5
+			cv2.putText(Out_image,curvature_str,(10,30),cv2.FONT_HERSHEY_DUPLEX,textSize_ratio,(0,255,255),1)
+			cv2.putText(Out_image,PerpDist_ImgCen_CarNose_str,(10,50),cv2.FONT_HERSHEY_DUPLEX,textSize_ratio,(0,255,255),1)
 
 
 	return PerpDist_LaneCentralStart_CarNose,curvature
