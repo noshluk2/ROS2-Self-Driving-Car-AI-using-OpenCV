@@ -16,6 +16,7 @@ debugging = True # Set to True --> If you want to debug code
 
 debugging_Lane = False
 debugging_Signs = False
+debugging_TrafficLights = False
 
 clr_segmentation_tuning = True # Set to True --> If you want to tune color segmentation parameters
 
