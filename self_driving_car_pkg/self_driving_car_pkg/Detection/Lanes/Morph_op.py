@@ -3,7 +3,7 @@ import numpy as np
 import math
 import time
 from .utilities import Distance, Distance_
-
+from ...config import config
 
 def BwareaOpen(img,MinArea):
 
@@ -73,7 +73,8 @@ def RetLargestContour_OuterLane(gray,minArea):
     bin_img_dilated = cv2.morphologyEx(bin_img, cv2.MORPH_DILATE, kernel)    #Find the two Contours for which you want to find the min distance between them.
     bin_img_ret = cv2.morphologyEx(bin_img_dilated, cv2.MORPH_ERODE, kernel)    #Find the two Contours for which you want to find the min distance between them.
     bin_img = bin_img_ret
-    cv2.imshow("bin_img",bin_img)
+    if(config.debugging_Lane and config.debugging):
+        cv2.imshow("bin_img",bin_img)
     #################################### TESTING SHADOW BREAKER CODE BY DILATING####################
 
     cnts = cv2.findContours(bin_img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[1]
@@ -128,11 +129,13 @@ def Ret_LowestEdgePoints(gray):
 
     Top_Row,Bot_Row = FindExtremas(thresh)
 
-    #cv2.namedWindow("thresh",cv2.WINDOW_NORMAL)
-    cv2.imshow("thresh",thresh)
+    if(config.debugging_Lane and config.debugging):
+        cv2.imshow("thresh",thresh)
 
     Contour_TopBot_PortionCut = ROI_extracter(thresh,(0, Top_Row + 5),(thresh.shape[1],Bot_Row-5))
-    cv2.imshow("Contour_TopBot_PortionCut",Contour_TopBot_PortionCut)
+
+    if(config.debugging_Lane and config.debugging):
+        cv2.imshow("Contour_TopBot_PortionCut",Contour_TopBot_PortionCut)
 
     cnts2 = cv2.findContours(Contour_TopBot_PortionCut, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[1]
 
@@ -157,11 +160,13 @@ def Ret_LowestEdgePoints(gray):
         Lane_OneSide = np.zeros(gray.shape,dtype=gray.dtype)
         Lane_OneSide = cv2.drawContours(Lane_OneSide, cnts2, index, (255,255,255), 1) # [ contour = less then minarea contour, contourIDx, Colour , Thickness ]
         Lane_TwoSide = cv2.drawContours(Lane_TwoSide, cnts2, index, (255,255,255), 1) # [ contour = less then minarea contour, contourIDx, Colour , Thickness ]
-        #cv2.namedWindow("Lane_TwoSide",cv2.WINDOW_NORMAL)
-        #cv2.imshow("Lane_TwoSide",Lane_TwoSide)
-        #cv2.namedWindow("Lane_OneSide",cv2.WINDOW_NORMAL)
-        cv2.imshow("Lane_OneSide",Lane_OneSide)
-        #cv2.waitKey(0)
+
+        if(config.debugging_Lane and config.debugging):
+            #cv2.namedWindow("Lane_TwoSide",cv2.WINDOW_NORMAL)
+            #cv2.imshow("Lane_TwoSide",Lane_TwoSide)
+            #cv2.namedWindow("Lane_OneSide",cv2.WINDOW_NORMAL)
+            cv2.imshow("Lane_OneSide",Lane_OneSide)
+
         if(len(cnts2)==2):
             if (index==0):
                 First_line = np.copy(Lane_OneSide)

@@ -22,7 +22,7 @@ class Control:
         elif ( (self.prev_Mode =="Tracking") and (Mode=="Detection") and (Tracked_class=="left_turn") ):
             print("Left Activated")
             print("config.Activat_LeftTurn ",config.Activat_LeftTurn)
-            if ( ((self.Left_turn_iterations % 24 ) ==0) and (self.Left_turn_iterations>25) ):
+            if ( ((self.Left_turn_iterations % 20 ) ==0) and (self.Left_turn_iterations>20) ):
                 self.Frozen_Curvature = self.Frozen_Curvature -1 # Move left by 1 degree 
             if(self.Left_turn_iterations==100):
                 print("Left DeActivated")
