@@ -65,6 +65,10 @@ class Video_feed_in(Node):
         config.debugging_lane = debugLane
         config.debugging_Sign = debugSign
         config.debugging_TrafficLights = debugTrafficLights
+        print("config.debugging = ",config.debugging)
+        print("config.debugging_lane = ",config.debugging_lane)
+        print("config.debugging_Sign = ",config.debugging_Sign)
+        print("config.debugging_TrafficLights = ",config.debugging_TrafficLights)
         # #############################  DEBUG CONTROLS #######################################
 
         frame = self.bridge.imgmsg_to_cv2(data,'bgr8') # performing conversion
