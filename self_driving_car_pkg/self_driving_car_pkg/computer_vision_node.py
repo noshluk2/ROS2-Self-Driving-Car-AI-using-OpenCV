@@ -17,6 +17,24 @@ from sensor_msgs.msg import Image
 import rclpy 
 
 
+
+def nothing(x):
+    pass
+
+cv2.namedWindow('CONFIG')
+# create switch for ON/OFF functionality
+debugging_SW = 'Debug'
+cv2.createTrackbar(debugging_SW, 'CONFIG',False,True,nothing)
+# create switch for ON/OFF functionality
+debuggingLane_SW = 'Debug Lane'
+cv2.createTrackbar(debuggingLane_SW, 'CONFIG',False,True,nothing)
+# create switch for ON/OFF functionality
+debuggingSigns_SW = 'Debug Sign'
+cv2.createTrackbar(debuggingSigns_SW, 'CONFIG',False,True,nothing)
+# create switch for ON/OFF functionality
+debuggingTL_SW = 'Debug TL'
+cv2.createTrackbar(debuggingTL_SW, 'CONFIG',False,True,nothing)
+
 control = Control() 
 class Video_feed_in(Node):
     def __init__(self):
@@ -35,6 +53,19 @@ class Video_feed_in(Node):
         self.publisher.publish(self.velocity)
         
     def process_data(self, data): 
+
+        # #############################  DEBUG CONTROLS #######################################
+        # get current positions of four trackbars
+        debug = cv2.getTrackbarPos(debugging_SW,'CONFIG')
+        debugLane = cv2.getTrackbarPos(debuggingLane_SW,'CONFIG')
+        debugSign = cv2.getTrackbarPos(debuggingSigns_SW,'CONFIG')
+        debugTrafficLights = cv2.getTrackbarPos(debuggingTL_SW,'CONFIG')
+
+        config.debugging = debug
+        config.debugging_lane = debugLane
+        config.debugging_Sign = debugSign
+        config.debugging_TrafficLights = debugTrafficLights
+        # #############################  DEBUG CONTROLS #######################################
 
         frame = self.bridge.imgmsg_to_cv2(data,'bgr8') # performing conversion
         img = frame[0:640,238:1042] 

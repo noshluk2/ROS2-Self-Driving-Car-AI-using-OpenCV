@@ -170,6 +170,8 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
                 cimg_str = 'detected Signs'
                 cv2.imshow(cimg_str,frame_draw)
                 cv2.waitKey(1)
+            else:
+                cv2.destroyWindow('detected Signs')
 
     # 5. IF Mode of SignTrack is Tracking , Proceed
     else:

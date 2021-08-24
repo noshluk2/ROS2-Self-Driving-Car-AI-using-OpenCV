@@ -110,7 +110,8 @@ def Circledetector(gray,cimg,frame_draw,HLS):
                                 cv2.circle(frame_draw_special,(j[0],j[1]),2,(0,0,255),3)
                                 if (config.debugging and config.debugging_TrafficLights):
                                     cv2.imshow('Traffic Light Confirmed!! [Checking State!!!]',frame_draw_special)
-                                
+                                else:
+                                    cv2.destroyWindow('Traffic Light Confirmed!! [Checking State!!!]')
                                 #If Center is Brighter
                                 if( (int(HLS[center[1],center[0],1]) - int(HLS[center_cmp[1],center_cmp[0],1])) > 10 ):
                                     # Left was Brightest [Red]
@@ -163,6 +164,8 @@ def Circledetector(gray,cimg,frame_draw,HLS):
             if (config.debugging and config.debugging_TrafficLights):
                 cimg_str = '[Fetch_TL_State] (2) detected circular reg'
                 cv2.imshow(cimg_str,frame_draw)
+            else:
+                cv2.destroyWindow('[Fetch_TL_State] (2) detected circular reg')    
 
         if (Traffic_State !=prevTraffic_State):
             print("#################TRAFFIC STATE CHANGED####################")
@@ -235,6 +238,9 @@ def MaskExtract():
     if (config.debugging and config.debugging_TrafficLights):
         cv2.imshow("mask",dst)
         cv2.imshow("mask_R",dst)
+    else:
+        cv2.destroyWindow("mask")    
+        cv2.destroyWindow("mask_R")    
 
     return dst
 
@@ -248,7 +254,10 @@ if (config.debugging and config.debugging_TrafficLights):
     cv2.createTrackbar("Hue_L_red","mask_R",Hue_Low_R,255,OnHueLowChange_R)
     cv2.createTrackbar("Hue_H_red","mask_R",Hue_High_R,255,OnHueHighChange_R)
     cv2.createTrackbar("Lit_L_red","mask_R",Lit_Low_R,255,OnLitLowChange_R)
-    cv2.createTrackbar("Sat_L_red","mask_R",Sat_Low_R,255,OnSatLowChange_R)    
+    cv2.createTrackbar("Sat_L_red","mask_R",Sat_Low_R,255,OnSatLowChange_R)
+else:
+    cv2.destroyWindow("mask")    
+    cv2.destroyWindow("mask_R")    
 
 def clr_segment(HSL,lower_range,upper_range):
     

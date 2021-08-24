@@ -30,10 +30,16 @@ def IsPathCrossingMid(Midlane,Mid_cnts,Outer_cnts):
 
 	is_Ref_to_path_Left = ( (int(Ref_To_Path_Image.shape[1]/2) - Traj_lowP[0]) > 0 )
 	Distance_And_Midlane = cv2.bitwise_and(Ref_To_Path_Image,Midlane_copy)
+
 	if(config.debugging_Lane and config.debugging):
 		cv2.imshow("[GetYellowInnerEdge]-[IsPathCrossingMid] Midlane_copy",Midlane_copy)
 		cv2.imshow("[GetYellowInnerEdge]-[IsPathCrossingMid] Distance_Image",Ref_To_Path_Image)
 		cv2.imshow("[GetYellowInnerEdge]-[IsPathCrossingMid] Distance_And_Midlane",Distance_And_Midlane)
+	else:
+		cv2.destroyWindow("[GetYellowInnerEdge]-[IsPathCrossingMid] Midlane_copy")
+		cv2.destroyWindow("[GetYellowInnerEdge]-[IsPathCrossingMid] Distance_Image")
+		cv2.destroyWindow("[GetYellowInnerEdge]-[IsPathCrossingMid] Distance_And_Midlane")
+
 	if( np.any( (cv2.bitwise_and(Ref_To_Path_Image,Midlane_copy) > 0) ) ):
 		# Midlane and CarPath Intersets (MidCrossing)
 		return True,is_Ref_to_path_Left
@@ -44,6 +50,8 @@ def GetYellowInnerEdge(OuterLanes,MidLane,OuterLane_Points):
 	#  Fetching the closest outer lane to mid lane is the main goal here
 	if (config.debugging_Lane and config.debugging):
 		cv2.imshow("[GetYellowInnerEdge] OuterLanes",OuterLanes)
+	else:
+		cv2.destroyWindow("[GetYellowInnerEdge] OuterLanes")
 
 	# Variable to correct car offset if no YellowLane is Seen in Image 
 	Offset_correction = 0
@@ -102,8 +110,11 @@ def GetYellowInnerEdge(OuterLanes,MidLane,OuterLane_Points):
 			#If no fllor crossing return results
 			return Outer_Lanes_ret ,Outer_cnts_ret, Mid_cnts,0
 
-	if (config.debugging_Lane and config.debugging):
-		cv2.imshow("[GetYellowInnerEdge] OuterLanesaftr",OuterLanes)
+		if (config.debugging_Lane and config.debugging):
+			cv2.imshow("[GetYellowInnerEdge] OuterLanesaftr",OuterLanes)
+		else:
+			cv2.destroyWindow("[GetYellowInnerEdge] OuterLanesaftr")
+	
 	# 4. [len(OuterLane_Points)!=2)]
 	elif( Mid_cnts and np.any(OuterLanes>0) ):
 		# 4. [len(OuterLane_Points)!=2)] : Checking IF Correct Side outlane is detected

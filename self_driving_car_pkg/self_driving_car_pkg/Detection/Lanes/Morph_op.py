@@ -75,6 +75,8 @@ def RetLargestContour_OuterLane(gray,minArea):
     bin_img = bin_img_ret
     if(config.debugging_Lane and config.debugging):
         cv2.imshow("bin_img",bin_img)
+    else:
+        cv2.destroyWindow("bin_img")
     #################################### TESTING SHADOW BREAKER CODE BY DILATING####################
 
     cnts = cv2.findContours(bin_img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[1]
@@ -131,11 +133,15 @@ def Ret_LowestEdgePoints(gray):
 
     if(config.debugging_Lane and config.debugging):
         cv2.imshow("thresh",thresh)
+    else:
+        cv2.destroyWindow("thresh")
 
     Contour_TopBot_PortionCut = ROI_extracter(thresh,(0, Top_Row + 5),(thresh.shape[1],Bot_Row-5))
 
     if(config.debugging_Lane and config.debugging):
         cv2.imshow("Contour_TopBot_PortionCut",Contour_TopBot_PortionCut)
+    else:
+        cv2.destroyWindow("Contour_TopBot_PortionCut")
 
     cnts2 = cv2.findContours(Contour_TopBot_PortionCut, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[1]
 
@@ -166,6 +172,8 @@ def Ret_LowestEdgePoints(gray):
             #cv2.imshow("Lane_TwoSide",Lane_TwoSide)
             #cv2.namedWindow("Lane_OneSide",cv2.WINDOW_NORMAL)
             cv2.imshow("Lane_OneSide",Lane_OneSide)
+        else:
+            cv2.destroyWindow("Lane_OneSide")
 
         if(len(cnts2)==2):
             if (index==0):

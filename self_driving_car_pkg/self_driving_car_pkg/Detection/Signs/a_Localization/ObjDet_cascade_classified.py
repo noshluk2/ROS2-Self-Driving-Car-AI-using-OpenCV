@@ -4,6 +4,7 @@ import numpy as np
 from .TLD import detect_TrafficLight
 from ..c_Tracking.OpticalFlow_adv import SignTracking
 from ....config import config
+
 class TrafficLightDetector:
 
     def __init__(self):
@@ -31,6 +32,8 @@ class TrafficLightDetector:
 
             if (config.debugging and config.debugging_TrafficLights):
                 cv2.imshow('[Fetch_TL_State] (6) Traffic Light With State', img_draw)
+            else:
+                cv2.destroyWindow('[Fetch_TL_State] (6) Traffic Light With State')
             #cv2.waitKey(0)
         return Traffic_State
 
@@ -52,6 +55,8 @@ class TrafficLightDetector:
 
             if (config.debugging and config.debugging_TrafficLights):
                 cv2.imshow('[Fetch_TL_State] (1) img_ROI', img_ROI)
+            else:
+                cv2.destroyWindow('[Fetch_TL_State] (1) img_ROI')
             # Reconfirm if detected Traffic Light was the desired one
             Traffic_State = detect_TrafficLight(img_ROI,img_draw)
             if(Traffic_State!="Unknown"):
@@ -62,6 +67,8 @@ class TrafficLightDetector:
                 TrafficLightFound = True
                 if (config.debugging and config.debugging_TrafficLights):
                     cv2.imshow('[Fetch_TL_State] (3) Traffic Light With State', img_draw)
+                else:
+                    cv2.destroyWindow('[Fetch_TL_State] (3) Traffic Light With State')
                 # cv2.waitKey(0)
                 break
             TL_iteration +=1
@@ -98,12 +105,17 @@ def detect_TrafficLights(img):
         cv2.putText(frame_draw, "FPS : " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
         
         if (config.debugging and config.debugging_TrafficLights):
-            # 2. Display frame and wait for keypress
             cv2.imshow("[Fetch_TL_State] (4) Tracked_ROI",signTrack.Tracked_ROI)
+        else:
+            cv2.destroyWindow("[Fetch_TL_State] (4) Tracked_ROI")
+            
         img_ROI_tracked = cv2.bitwise_and(img,img,mask=Temp_Tracked_ROI)
         
         if (config.debugging and config.debugging_TrafficLights):        
             cv2.imshow('[Fetch_TL_State] (5) img_ROI_tracked_BoundedRect', img_ROI_tracked)
+        else:
+            cv2.destroyWindow('[Fetch_TL_State] (5) img_ROI_tracked_BoundedRect')
+
         Curr_TL_State = T_L_D.Get_TrafficLightState(img_ROI_tracked)
 
     # 3. If SignTrack is in Detection Proceed to intialize tracker

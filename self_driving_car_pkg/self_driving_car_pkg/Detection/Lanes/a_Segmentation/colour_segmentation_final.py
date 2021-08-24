@@ -82,6 +82,10 @@ if(config.debugging_Lane and config.debugging):
     cv2.createTrackbar("Hue_H","[Segment_Colour_final] mask_Y",Hue_High_Y,255,OnHueHighChange_Y)
     cv2.createTrackbar("Lit_L","[Segment_Colour_final] mask_Y",Lit_Low_Y,255,OnLitLowChange_Y)
     cv2.createTrackbar("Sat_L","[Segment_Colour_final] mask_Y",Sat_Low_Y,255,OnSatLowChange_Y)
+else:
+    cv2.destroyWindow("[Segment_Colour_final] mask")
+    cv2.destroyWindow("[Segment_Colour_final] mask_Y")
+
 
 def clr_segment(HSL,lower_range,upper_range):
     
@@ -176,8 +180,12 @@ def Segment_Colour(frame,minArea):
     if(config.debugging_Lane and config.debugging):
         cv2.imshow('[Segment_Colour_final] mask',mask)
         cv2.imshow('[Segment_Colour_final] mask_Y',mask_Y)
-
         cv2.imshow('Outer_edge_ROI',Outer_edge_ROI)
         cv2.imshow('OuterLane_Side_Seperated',OuterLane_SidesSeperated)
+    else:
+        cv2.destroyWindow('[Segment_Colour_final] mask')
+        cv2.destroyWindow('[Segment_Colour_final] mask_Y')
+        cv2.destroyWindow('Outer_edge_ROI')
+        cv2.destroyWindow('OuterLane_Side_Seperated')
 
     return Mid_edge_ROI,Mid_ROI_mask,Outer_edge_ROI,OuterLane_SidesSeperated,Outer_Points_list

@@ -205,11 +205,15 @@ def main():
             if (config.debugging and config.debugging_TrafficLights):
                 # 2. Display frame and wait for keypress
                 cv2.imshow("Tracked_ROI",signTrack.Tracked_ROI)
+            else:
+                cv2.destroyWindow("Tracked_ROI")
         
         if (config.debugging and config.debugging_TrafficLights):
             # 2. Display frame and wait for keypress
             cv2.imshow("frame",frame_draw)
             k = cv2.waitKey(1)
+        else:
+            cv2.destroyWindow("frame")
 
         # 3. If 'c' is pressed Proceed to intialize tracker
         if ((k ==99)):
