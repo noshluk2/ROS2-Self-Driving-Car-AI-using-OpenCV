@@ -14,9 +14,9 @@ Out_write = False
 
 debugging = True # Set to True --> If you want to debug code
 
-debugging_Lane = False
-debugging_Signs = False
-debugging_TrafficLights = False
+debugging_Lane = True
+debugging_Signs = True
+debugging_TrafficLights = True
 
 Detect_lane_N_Draw = True
 Training_CNN = False 

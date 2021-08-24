@@ -61,13 +61,25 @@ class Video_feed_in(Node):
         debugSign = cv2.getTrackbarPos(debuggingSigns_SW,'CONFIG')
         debugTrafficLights = cv2.getTrackbarPos(debuggingTL_SW,'CONFIG')
 
-        config.debugging = debug
-        config.debugging_lane = debugLane
-        config.debugging_Sign = debugSign
-        config.debugging_TrafficLights = debugTrafficLights
+        if debug:
+            config.debugging = True
+        else:
+            config.debugging = False            
+        if debugLane:
+            config.debugging_Lane = True
+        else:
+            config.debugging_Lane = False    
+        if debugSign:
+            config.debugging_Signs = True
+        else:
+            config.debugging_Signs = False           
+        if debugTrafficLights:
+            config.debugging_TrafficLights = True
+        else:
+            config.debugging_TrafficLights = False          
         print("config.debugging = ",config.debugging)
-        print("config.debugging_lane = ",config.debugging_lane)
-        print("config.debugging_Sign = ",config.debugging_Sign)
+        print("config.debugging_lane = ",config.debugging_Lane)
+        print("config.debugging_Sign = ",config.debugging_Signs)
         print("config.debugging_TrafficLights = ",config.debugging_TrafficLights)
         # #############################  DEBUG CONTROLS #######################################
 
