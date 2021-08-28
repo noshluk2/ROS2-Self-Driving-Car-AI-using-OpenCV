@@ -14,3 +14,7 @@ self_driving_car_pkg/data/vids/new_ishara.avi
 self_driving_car_pkg/self_driving_car_pkg/data/vids/ishara_sign_conflict.avi
 self_driving_car_pkg/self_driving_car_pkg/data/vids/ishara_turning.avi
 self_driving_car_pkg/self_driving_car_pkg/data/vids/new_ishara.avi
+
+# Distribution / packaging
+.Python
+Haar_Cascade_Training/
