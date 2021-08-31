@@ -1,0 +1,11 @@
+source /opt/ros/foxy/setup.bash 
+source ~/self_driving_car_ws/install/setup.bash
+
+## Commands for the package file
+
+
+ros2 run prius_sdc_pkg recorder_node
+ros2 run teleop_twist_keyboard teleop_twist_keyboard 
+gazebo --verbose '/home/luqman/self_driving_car_ws/src/prius_sdc_pkg/worlds/test.world' -s libgazebo_ros_factory.so
+
+gazebo --verbose '/home/luqman/self_driving_car_ws/src/prius_sdc_pkg/worlds/test.world' -s libgazebo_ros_factory.so
