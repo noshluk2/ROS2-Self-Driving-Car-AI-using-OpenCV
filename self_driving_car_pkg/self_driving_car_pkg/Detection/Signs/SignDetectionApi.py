@@ -8,7 +8,7 @@ import numpy as np
 from ...config import config
 import math
 
-detected_img = 846 #Set this to current dataset images size so that new images number starts from there and dont overwrite
+detected_img = 1000 #Set this to current dataset images size so that new images number starts from there and dont overwrite
 
 #if config.Detect_lane_N_Draw:
 #    write_data = False # not gathering data # No Training
@@ -160,7 +160,7 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
                             else:
                                 class_id ="/5/"
 
-                            img_dir = os.path.abspath("data/dataset_signs/datasets") + class_id
+                            img_dir = os.path.abspath("self_driving_car_pkg/self_driving_car_pkg/data/dataset_signs/datasets") + class_id
                             img_name = img_dir + str(detected_img)+".png"
                             if not os.path.exists(img_dir):
                                 os.makedirs(img_dir)
