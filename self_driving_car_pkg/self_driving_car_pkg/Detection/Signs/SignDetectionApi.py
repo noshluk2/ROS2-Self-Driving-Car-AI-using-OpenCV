@@ -75,18 +75,18 @@ def image_forKeras(image):
     return image
 
 def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
-    
+
     # 3. IF Mode of SignTrack is Detection , Proceed
     if (signTrack.mode == "Detection"):
         # cv2.putText(frame_draw,"Sign Detected ==> "+str(signTrack.Tracked_class),(20,85),cv2.FONT_HERSHEY_COMPLEX,0.75,(255,255,0),2)
-        NumOfVotesForCircle = 45 #parameter 1 MinVotes needed to be classified as circle
+        NumOfVotesForCircle = 50 #parameter 1 MinVotes needed to be classified as circle
         CannyHighthresh = 250 # High threshold value for applying canny
         mindDistanBtwnCircles = 100 # kept as sign will likely not be overlapping
         max_rad = 140 # smaller circles dont have enough votes so only maxRadius need to be controlled 
                         # As signs are right besides road so they will eventually be in view so ignore circles larger than said limit
 
         # 4. Detection (Localization)
-        circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1,mindDistanBtwnCircles,param1=CannyHighthresh,param2=NumOfVotesForCircle,minRadius=7,maxRadius=max_rad)
+        circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1,mindDistanBtwnCircles,param1=CannyHighthresh,param2=NumOfVotesForCircle,minRadius=10,maxRadius=max_rad)
 
         # 4a. Detection (Localization) Checking if circular regions were localized
         if circles is not None:
@@ -106,8 +106,8 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
                     global detected_img
                     detected_img = detected_img + 1 
 
-                    startP = (center[0]-radius,center[1]-radius)
-                    endP = (center[0]+radius,center[1]+radius)
+                    startP = (center[0]-radius + 3 ,center[1]-radius + 3 )
+                    endP   = (center[0]+radius - 3 ,center[1]+radius - 3 )
                     
                     # 4c. Detection (Localization) Extracting Roi from localized circle
                     detected_sign = cimg[startP[1]:endP[1],startP[0]:endP[0]]
@@ -125,6 +125,7 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
 
                                 # 4g. Check if same sign detected 3 times , If yes initialize OF Tracker
                                 if(signTrack.known_centers_confidence[match_idx] > 3):
+                                    #cv2.imshow("Detected_SIGN",detected_sign)
                                     circle_mask = np.zeros_like(gray)
                                     circle_mask[startP[1]:endP[1],startP[0]:endP[0]] = 255
                                     if not config.Training_CNN:
@@ -209,8 +210,7 @@ def detect_Signs(frame,frame_draw):
 
         # 1. Load CNN model
         global model
-        #model = load_model(os.path.abspath("data/saved_model_Ros2.h5"),compile=False)
-        model = load_model(os.path.abspath("/home/luqman/ros2_workspace/src/self_driving_car_pkg/self_driving_car_pkg/data/saved_model_Ros2_5_Sign.h5"),compile=False)
+        model = load_model(os.path.join(os.getcwd(),"self_driving_car_pkg/self_driving_car_pkg/data/saved_model_Ros2_5_Sign.h5"),compile=False)
 
         # summarize model.
         model.summary()
