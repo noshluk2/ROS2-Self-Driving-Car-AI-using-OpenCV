@@ -4,7 +4,7 @@ import numpy as np
 from .TLD import detect_TrafficLight
 from ..c_Tracking.OpticalFlow_adv import SignTracking
 from ....config import config
-
+import os
 class TrafficLightDetector:
 
     def __init__(self):
@@ -14,8 +14,7 @@ class TrafficLightDetector:
 
     #Variable set outside __init__ belong to the class. 
     # They're shared by all instances.
-    TrafficLight_cascade_str="/home/luqman/ros2_workspace/src/self_driving_car_pkg/self_driving_car_pkg/data/TrafficLight_cascade.xml"
-    # TrafficLight_cascade_str = "self_driving_car_pkg/data/TrafficLight_cascade.xml"
+    TrafficLight_cascade_str = os.path.join(os.getcwd(), "self_driving_car_pkg/self_driving_car_pkg/data/TrafficLight_cascade.xml")
     TrafficLight_cascade = cv2.CascadeClassifier()
     #-- 1. Load the cascades
     if not TrafficLight_cascade.load(cv2.samples.findFile(TrafficLight_cascade_str)):
