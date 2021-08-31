@@ -3,3 +3,4 @@
 
 ## once build you can run the simulation
 - ros2 launch (package_name) world(launch file)
+- ros2 run self_driving_car_pkg computer_vision_node

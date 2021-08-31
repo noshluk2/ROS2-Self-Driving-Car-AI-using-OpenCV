@@ -1,0 +1,17 @@
+# ISSUES WITH ROS2-ZINDAGI
+
+
+1) We want Khali Ghar in ROS2 for Python Packages
+https://docs.ros.org/en/foxy/Guides/Using-Python-Packages.html
+
+2) But ROS2 is like naraz phupi 
+https://github.com/ros2/ros2/issues/1094
+
+3) It says "i want to stay in my purana ghar"
+https://github.com/colcon/colcon-core/issues/181
+
+4) We give ROS2 Tofi 
+https://github.com/colcon/colcon-core/issues/181#issuecomment-486390317
+
+5) Phupi is living in new ghar but still purani ghar ka toota nalka yad a ra ha 
+https://github.com/colcon/colcon-core/pull/183
