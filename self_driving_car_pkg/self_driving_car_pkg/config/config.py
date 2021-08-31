@@ -20,8 +20,6 @@ debugging_TrafficLights = True
 
 Detect_lane_N_Draw = True
 Training_CNN = False 
-Activat_LeftTurn=False
-
 
 vid_path = os.path.abspath("data/vids/Ros2/lane.avi")
 loopCount=0

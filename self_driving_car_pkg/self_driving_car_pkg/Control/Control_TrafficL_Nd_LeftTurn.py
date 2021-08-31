@@ -1,4 +1,3 @@
-from ..config import config
 class Control:
     def __init__(self):
         self.TrafficLight_iterations = 0
@@ -10,31 +9,42 @@ class Control:
         self.Left_turn_iterations = 0
         self.Frozen_distance = 0
         self.Frozen_Curvature = 0
+        self.Detected_LeftTurn = False
+        self.Activat_LeftTurn = False
 
     def Obey_LeftTurn(self,distance,Curvature,Mode,Tracked_class):
         
-        if ( (self.prev_Mode =="Detection") and (Mode=="Tracking") and (Tracked_class=="left_turn") ):
-            self.prev_Mode = "Tracking"
-            config.Activat_LeftTurn = True
-            self.Frozen_distance = distance
-            self.Frozen_Curvature = Curvature
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Tracking <<<<<<<<<<<<<<<<<<<<<<<<<<<")
-        elif ( (self.prev_Mode =="Tracking") and (Mode=="Detection") and (Tracked_class=="left_turn") ):
-            print("Left Activated")
-            print("config.Activat_LeftTurn ",config.Activat_LeftTurn)
-            if ( ((self.Left_turn_iterations % 20 ) ==0) and (self.Left_turn_iterations>20) ):
-                self.Frozen_Curvature = self.Frozen_Curvature -1 # Move left by 1 degree 
-            if(self.Left_turn_iterations==100):
-                print("Left DeActivated")
-                self.prev_Mode = "Detection"
-                config.Activat_LeftTurn = False
-                self.Left_turn_iterations = 0
-            self.Left_turn_iterations = self.Left_turn_iterations + 1
-            if (config.Activat_LeftTurn == True):
-                distance = self.Frozen_distance
-                Curvature = self.Frozen_Curvature
+        if (Tracked_class=="left_turn"):
+            if ( (self.prev_Mode =="Detection") and (Mode=="Tracking")):
+                self.prev_Mode = "Tracking"
+                print("Left Detected")
+                print("self.Detected_LeftTurn ",self.Detected_LeftTurn)
+                #self.Activat_LeftTurn = True
+                self.Detected_LeftTurn = True
+                self.Frozen_distance = distance
+                self.Frozen_Curvature = Curvature
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Tracking <<<<<<<<<<<<<<<<<<<<<<<<<<<")
+            elif ( (self.prev_Mode =="Tracking") and (Mode=="Detection")):
+                print("Left Activated")
+                self.Detected_LeftTurn = False
+                self.Activat_LeftTurn = True
+                print("self.Activat_LeftTurn ",self.Activat_LeftTurn)
 
-        return distance,Curvature
+                if ( ((self.Left_turn_iterations % 20 ) ==0) and (self.Left_turn_iterations>100) ):
+                    self.Frozen_Curvature = self.Frozen_Curvature -20 # Move left by 1 degree 
+                if(self.Left_turn_iterations==200):
+                    print("Left DeActivated")
+                    self.prev_Mode = "Detection"
+                    self.Activat_LeftTurn = False
+                    self.Left_turn_iterations = 0
+                self.Left_turn_iterations = self.Left_turn_iterations + 1
+
+                if (self.Activat_LeftTurn or self.Detected_LeftTurn):
+                    #Follow previously Saved Route
+                    distance = self.Frozen_distance
+                    Curvature = self.Frozen_Curvature
+
+        return distance,Curvature,self.Detected_LeftTurn,self.Activat_LeftTurn
 
 
     def OBEY_TrafficLights(self,a,b,Traffic_State,CloseProximity):

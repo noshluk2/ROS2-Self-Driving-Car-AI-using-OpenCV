@@ -18,16 +18,6 @@ def EstimateNonMidMask(MidEdgeROi):
 	Non_Mid_Mask=cv2.bitwise_not(Mid_Hull_Mask)
 	return Non_Mid_Mask
 
-def RectBoundingPoints(a,b,c,d,Img_shape):
-	start_point_X= min([a[0],b[0],c[0],d[0]])
-	start_point_Y= min([a[1],b[1],c[1],d[1]])
-	end_point_X= max([a[0],b[0],c[0],d[0]])
-	end_point_Y= max([a[1],b[1],c[1],d[1]])
-	ROI_img = np.zeros((Img_shape[0],Img_shape[1]),np.uint8)
-	cv2.rectangle(ROI_img, (start_point_X,start_point_Y), ( d[0] ,end_point_Y), 255, -1)
-	if(config.debugging_Lane and config.debugging):	
-		cv2.imshow("Bounding ROI",ROI_img)
-
 def LanePoints(MidLane,OuterLane,Offset_correction):
 
 	Mid_cnts = cv2.findContours(MidLane, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
@@ -45,8 +35,6 @@ def LanePoints(MidLane,OuterLane,Offset_correction):
 		Outer_lowP = Outer_cnts_Rowsorted[Outer_Rows-1,:]
 		Outer_highP = Outer_cnts_Rowsorted[0,:]
 
-		if config.Activat_LeftTurn:
-			RectBoundingPoints(Mid_lowP,Mid_highP,Outer_lowP,Outer_highP,MidLane.shape)
 		LanePoint_lower = ( int( (Mid_lowP[0] + Outer_lowP[0]  ) / 2 ) + Offset_correction, int( (Mid_lowP[1]  + Outer_lowP[1] ) / 2 ) )
 		LanePoint_top   = ( int( (Mid_highP[0] + Outer_highP[0]) / 2 ) + Offset_correction, int( (Mid_highP[1] + Outer_highP[1]) / 2 ) )
 

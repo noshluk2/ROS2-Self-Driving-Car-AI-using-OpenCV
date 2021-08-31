@@ -72,7 +72,7 @@ def beInLane(Max_Sane_dist,distance,curvature , Mode , Tracked_class):
     return angle , curr_speed
 
 def Steer(Distance,Curvature,frame , Mode , Tracked_class):
-    angle_of_car=0;current_speed=0;
+    angle_of_car=0;current_speed=0
     if((Distance != -1000) and (Curvature != -1000)):
 
         angle_of_car , current_speed = beInLane(int(frame.shape[1]/4), Distance,Curvature , Mode , Tracked_class )
@@ -91,7 +91,7 @@ def Steer(Distance,Curvature,frame , Mode , Tracked_class):
 
         #cv2.putText(frame,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.5,(0,0,255),1)
         cv2.putText(frame,str(direction_string),(20,40),cv2.FONT_HERSHEY_DUPLEX,0.4,color_direction,1)
-    else:
+    elif(Tracked_class!="left_turn"):
         angle_speed_str = "[ Angle ,Speed ] = [ " + str("N/A") + " , " + str("N/A") + " ] "
         cv2.putText(frame,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.4,(0,0,255),1)
    
