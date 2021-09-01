@@ -3,13 +3,14 @@ from numpy import interp
 import numpy as np
 
 from .config import config
+
 from .Detection.Lanes.Lane_Detection import detect_Lane
 from .Detection.Signs.SignDetectionApi import detect_Signs
-# from .Detection.Signs.a_Localization.TLD import detect_TrafficLight
 from .Detection.Signs.a_Localization.ObjDet_cascade_classified import detect_TrafficLights
-#from .Control.special import Drive_Car
-from .Control.Control import Drive_Car
-from .Control.Control_TrafficL_Nd_LeftTurn import Control
+
+from .Control.Control_Car import Control
+
+from .Display import Display_CarDriveState
 
 from geometry_msgs.msg import Twist
 from rclpy.node import Node 
@@ -85,50 +86,28 @@ class Video_feed_in(Node):
         # #############################  DEBUG CONTROLS #######################################
 
         frame = self.bridge.imgmsg_to_cv2(data,'bgr8') # performing conversion
+
         img = frame[0:640,238:1042]
-        img_b4_resiz = img.copy()
         img = cv2.resize(img,(320,240))
         img_orig = img.copy()
 
-        #Traffic_State = detect_TrafficLight(img,frame_draw)
         Traffic_State, CloseProximity = detect_TrafficLights(img_orig.copy())
 
         distance, Curvature = detect_Lane(img)
         Mode , Tracked_class = detect_Signs(img_orig,img)
 
-        distance,Curvature, Detected_LeftTurn, Activat_LeftTurn = control.Obey_LeftTurn(distance,Curvature,Mode,Tracked_class)
+        Current_State = [distance, Curvature , img , Mode , Tracked_class,Traffic_State, CloseProximity]
 
-        Current_State = [distance, Curvature , img , Mode , Tracked_class]
-        a,b = Drive_Car(Current_State)
+        Angle,Speed, Detected_LeftTurn, Activat_LeftTurn  = control.Drive_Car(Current_State)
 
-        a,b = control.OBEY_TrafficLights(a,b,Traffic_State,CloseProximity)
-
-        #angle_of_car = interp(a,[30,120],[-45,45])
-        angle_of_car = a
-        current_speed = b
-
-        angle_speed_str = "[ Angle ,Speed ] = [ " + str(int(angle_of_car)) + "deg ," + str(int(current_speed)) + "mph ]"
-        cv2.putText(img,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.4,(0,0,255),1)
-
-        cv2.putText(img,"Traffic Light State = [ "+Traffic_State+" ] ",(20,60),cv2.FONT_HERSHEY_COMPLEX,0.35,255)
-        
-        if (Tracked_class=="left_turn"):
-            font_Scale = 0.30
-            if (Detected_LeftTurn):
-                Tracked_class = Tracked_class + " : Detected { True } "
-            else:
-                Tracked_class = Tracked_class + " : Activated { "+ str(Activat_LeftTurn) + " } "
-        else:
-            font_Scale = 0.35
-        cv2.putText(img,"Sign Detected ==> "+str(Tracked_class),(20,85),cv2.FONT_HERSHEY_COMPLEX,font_Scale,(255,0,0),1)
+        Display_CarDriveState(img,Angle,Speed,Tracked_class,Traffic_State, Detected_LeftTurn, Activat_LeftTurn)
 
         # Translate [ Real World angle and speed ===>> ROS Car Control Range ]
-        #a=interp(a,[30,120],[0.5,-0.5])
-        a=interp(a,[-45,45],[0.5,-0.5])
-        if (b!=0):
-            b=interp(b,[30,90],[1,2])
-        self.velocity.linear.x = float(b)        
-        self.velocity.angular.z = a
+        Angle=interp(Angle,[-45,45],[0.5,-0.5])
+        if (Speed!=0):
+            Speed=interp(Speed,[30,90],[1,2])
+        self.velocity.linear.x = float(Speed)        
+        self.velocity.angular.z = Angle
 
         cv2.imshow("Frame",img)
         cv2.waitKey(1)
