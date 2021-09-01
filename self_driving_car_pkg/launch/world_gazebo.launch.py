@@ -9,7 +9,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 def generate_launch_description():
 
   package_dir=get_package_share_directory('self_driving_car_pkg')
-  world_file = os.path.join(package_dir,'worlds','test_abs_path1.world')
+  world_file = os.path.join(package_dir,'worlds','self_driving_car.world')
 
   return LaunchDescription([
 
@@ -20,7 +20,7 @@ def generate_launch_description():
 
         Node(
                 package='self_driving_car_pkg',
-                executable='light.bash',
+                executable='lights_spawner.bash',
                 name='Lights_installer',
                 output='screen'),
 

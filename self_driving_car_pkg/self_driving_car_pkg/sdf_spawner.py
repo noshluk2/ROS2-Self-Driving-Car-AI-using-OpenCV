@@ -13,9 +13,6 @@ def main():
     request = SpawnEntity.Request()
     request.name = argv[1]
     request.xml = open(sdf_path, 'r').read()
-    request.initial_pose.position.x = float(argv[2])
-    request.initial_pose.position.y = float(argv[3])
-    request.initial_pose.position.z = float(argv[4])
 
     node.get_logger().info("Sending service request to `/spawn_entity`")
     future = client.call_async(request)
