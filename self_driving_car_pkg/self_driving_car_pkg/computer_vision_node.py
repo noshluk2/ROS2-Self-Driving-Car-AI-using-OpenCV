@@ -7,7 +7,8 @@ from .Detection.Lanes.Lane_Detection import detect_Lane
 from .Detection.Signs.SignDetectionApi import detect_Signs
 # from .Detection.Signs.a_Localization.TLD import detect_TrafficLight
 from .Detection.Signs.a_Localization.ObjDet_cascade_classified import detect_TrafficLights
-from .Control.special import Drive_Car
+#from .Control.special import Drive_Car
+from .Control.Control import Drive_Car
 from .Control.Control_TrafficL_Nd_LeftTurn import Control
 
 from geometry_msgs.msg import Twist
@@ -102,7 +103,8 @@ class Video_feed_in(Node):
 
         a,b = control.OBEY_TrafficLights(a,b,Traffic_State,CloseProximity)
 
-        angle_of_car = interp(a,[30,120],[-45,45])
+        #angle_of_car = interp(a,[30,120],[-45,45])
+        angle_of_car = a
         current_speed = b
 
         angle_speed_str = "[ Angle ,Speed ] = [ " + str(int(angle_of_car)) + "deg ," + str(int(current_speed)) + "mph ]"
@@ -120,7 +122,9 @@ class Video_feed_in(Node):
             font_Scale = 0.35
         cv2.putText(img,"Sign Detected ==> "+str(Tracked_class),(20,85),cv2.FONT_HERSHEY_COMPLEX,font_Scale,(255,0,0),1)
 
-        a=interp(a,[30,120],[0.5,-0.5])
+        # Translate [ Real World angle and speed ===>> ROS Car Control Range ]
+        #a=interp(a,[30,120],[0.5,-0.5])
+        a=interp(a,[-45,45],[0.5,-0.5])
         if (b!=0):
             b=interp(b,[30,90],[1,2])
         self.velocity.linear.x = float(b)        

@@ -1,7 +1,7 @@
 class Control:
     def __init__(self):
         self.TrafficLight_iterations = 0
-        self.Prev_Turn_angle = 1.5
+        #self.Prev_Turn_angle = 0.0
         self.GO_MODE_ACTIVATED = False
         self.STOP_MODE_ACTIVATED = False
 
@@ -19,10 +19,9 @@ class Control:
                 self.prev_Mode = "Tracking"
                 print("Left Detected")
                 print("self.Detected_LeftTurn ",self.Detected_LeftTurn)
-                #self.Activat_LeftTurn = True
                 self.Detected_LeftTurn = True
-                self.Frozen_distance = distance
-                self.Frozen_Curvature = Curvature
+                #self.Frozen_distance = distance
+                #self.Frozen_Curvature = Curvature
                 print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Tracking <<<<<<<<<<<<<<<<<<<<<<<<<<<")
             elif ( (self.prev_Mode =="Tracking") and (Mode=="Detection")):
                 print("Left Activated")
@@ -60,8 +59,7 @@ class Control:
                     print("**************GO MODE ACTIVATED !!!!!**************")
                     self.STOP_MODE_ACTIVATED = False
                     self.GO_MODE_ACTIVATED = True
-                    self.Prev_Turn_angle = 75.0 # Save Computed Turn Angle
-                    #self.Prev_Turn_angle = a # Save Computed Turn Angle
+                    #self.Prev_Turn_angle = 0.0 # Save Computed Turn Angle
 
                 elif(self.STOP_MODE_ACTIVATED):
                     print("**************STOP MODE EXECUTING !!!!!**************")
@@ -69,7 +67,7 @@ class Control:
 
                 elif(self.GO_MODE_ACTIVATED):
                     print("**************GO MODE EXECUTING !!!!!**************")
-                    a = self.Prev_Turn_angle                    
+                    a = 0.0                    
                     if(self.TrafficLight_iterations==150):
                         self.GO_MODE_ACTIVATED = False
                         print("Interchange Crossed !!!")
