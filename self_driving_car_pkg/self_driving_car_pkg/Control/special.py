@@ -45,7 +45,6 @@ def beInLane(Max_Sane_dist,distance,curvature , Mode , Tracked_class):
         # Within allowed distance limits for car and lane
         # Interpolate distance to Angle Range
         Turn_angle_interpolated = interp(distance,[-Max_Sane_dist,Max_Sane_dist],[-90,90])
-        print("Turn_angle_interpolated = ", Turn_angle_interpolated)
         CarTurn_angle = Turn_angle_interpolated + curvature
 
     # Handle Max Limit [if (greater then either limits) --> set to max limit]
@@ -72,7 +71,9 @@ def beInLane(Max_Sane_dist,distance,curvature , Mode , Tracked_class):
     return angle , curr_speed
 
 def Steer(Distance,Curvature,frame , Mode , Tracked_class):
+
     angle_of_car=0;current_speed=0
+
     if((Distance != -1000) and (Curvature != -1000)):
 
         angle_of_car , current_speed = beInLane(int(frame.shape[1]/4), Distance,Curvature , Mode , Tracked_class )
@@ -91,9 +92,11 @@ def Steer(Distance,Curvature,frame , Mode , Tracked_class):
 
         #cv2.putText(frame,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.5,(0,0,255),1)
         cv2.putText(frame,str(direction_string),(20,40),cv2.FONT_HERSHEY_DUPLEX,0.4,color_direction,1)
-    elif(Tracked_class!="left_turn"):
-        angle_speed_str = "[ Angle ,Speed ] = [ " + str("N/A") + " , " + str("N/A") + " ] "
-        cv2.putText(frame,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.4,(0,0,255),1)
+    elif(Tracked_class=="left_turn"):
+        current_speed = 50
+    #elif(Tracked_class!="left_turn"):
+        #angle_speed_str = "[ Angle ,Speed ] = [ " + str("N/A") + " , " + str("N/A") + " ] "
+        #cv2.putText(frame,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.4,(0,0,255),1)
    
     return angle_of_car,current_speed
 

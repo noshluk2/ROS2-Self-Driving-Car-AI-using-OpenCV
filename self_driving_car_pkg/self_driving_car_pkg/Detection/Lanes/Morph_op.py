@@ -153,12 +153,10 @@ def Ret_LowestEdgePoints(gray):
     First_line = np.copy(Lane_OneSide)
     cnts_tmp = []
     
-    print("len(cnts2) = ",len(cnts2))
 
     if(len(cnts2)>1):
         for index_tmp, cnt_tmp in enumerate(cnts2):
             if((cnt_tmp.shape[0])>50):
-                print("cnt_tmp.shape = ",cnt_tmp.shape )
                 cnts_tmp.append(cnt_tmp)
         cnts2 = cnts_tmp
 

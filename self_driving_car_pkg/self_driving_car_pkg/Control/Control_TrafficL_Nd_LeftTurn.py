@@ -32,7 +32,7 @@ class Control:
 
                 if ( ((self.Left_turn_iterations % 20 ) ==0) and (self.Left_turn_iterations>100) ):
                     self.Frozen_Curvature = self.Frozen_Curvature -20 # Move left by 1 degree 
-                if(self.Left_turn_iterations==200):
+                if(self.Left_turn_iterations==250):
                     print("Left DeActivated")
                     self.prev_Mode = "Detection"
                     self.Activat_LeftTurn = False
@@ -51,7 +51,7 @@ class Control:
 
         if((Traffic_State == "Stop") and CloseProximity):
             print("**************STOP MODE ACTIVATED !!!!!**************")
-            b = 0.0 # Noob luqman
+            b = 0 # Noob luqman
             self.STOP_MODE_ACTIVATED = True
         else:
             if (self.STOP_MODE_ACTIVATED or self.GO_MODE_ACTIVATED):
@@ -60,17 +60,17 @@ class Control:
                     print("**************GO MODE ACTIVATED !!!!!**************")
                     self.STOP_MODE_ACTIVATED = False
                     self.GO_MODE_ACTIVATED = True
-                    self.Prev_Turn_angle = 0.0 # Save Computed Turn Angle
+                    self.Prev_Turn_angle = 75.0 # Save Computed Turn Angle
                     #self.Prev_Turn_angle = a # Save Computed Turn Angle
 
                 elif(self.STOP_MODE_ACTIVATED):
                     print("**************STOP MODE EXECUTING !!!!!**************")
-                    b = 0.0
+                    b = 0
 
                 elif(self.GO_MODE_ACTIVATED):
                     print("**************GO MODE EXECUTING !!!!!**************")
                     a = self.Prev_Turn_angle                    
-                    if(self.TrafficLight_iterations==100):
+                    if(self.TrafficLight_iterations==150):
                         self.GO_MODE_ACTIVATED = False
                         print("Interchange Crossed !!!")
                         self.TrafficLight_iterations = 0 #Reset

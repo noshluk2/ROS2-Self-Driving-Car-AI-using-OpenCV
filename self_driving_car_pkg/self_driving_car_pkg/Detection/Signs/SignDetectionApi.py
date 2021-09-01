@@ -79,14 +79,14 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
     # 3. IF Mode of SignTrack is Detection , Proceed
     if (signTrack.mode == "Detection"):
         # cv2.putText(frame_draw,"Sign Detected ==> "+str(signTrack.Tracked_class),(20,85),cv2.FONT_HERSHEY_COMPLEX,0.75,(255,255,0),2)
-        NumOfVotesForCircle = 50 #parameter 1 MinVotes needed to be classified as circle
+        NumOfVotesForCircle = 30 #parameter 1 MinVotes needed to be classified as circle
         CannyHighthresh = 250 # High threshold value for applying canny
         mindDistanBtwnCircles = 100 # kept as sign will likely not be overlapping
         max_rad = 140 # smaller circles dont have enough votes so only maxRadius need to be controlled 
                         # As signs are right besides road so they will eventually be in view so ignore circles larger than said limit
 
         # 4. Detection (Localization)
-        circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1,mindDistanBtwnCircles,param1=CannyHighthresh,param2=NumOfVotesForCircle,minRadius=10,maxRadius=max_rad)
+        circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1,mindDistanBtwnCircles,param1=CannyHighthresh,param2=NumOfVotesForCircle,minRadius=18,maxRadius=max_rad)
 
         # 4a. Detection (Localization) Checking if circular regions were localized
         if circles is not None:
@@ -180,7 +180,8 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
         p1, st, err = cv2.calcOpticalFlowPyrLK(signTrack.old_gray, gray, signTrack.p0, None,**signTrack.lk_params)
         
         # 5a. If no flow, look for new points
-        if p1 is None:
+        if ( (p1 is None) or ( len(p1[st == 1])<3 ) ):
+        #if p1 is None:
             signTrack.mode = "Detection"
             signTrack.mask = np.zeros_like(frame_draw)
             signTrack.Reset()

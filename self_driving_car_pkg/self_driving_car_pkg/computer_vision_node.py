@@ -88,40 +88,27 @@ class Video_feed_in(Node):
         img_b4_resiz = img.copy()
         img = cv2.resize(img,(320,240))
         img_orig = img.copy()
+
         #Traffic_State = detect_TrafficLight(img,frame_draw)
         Traffic_State, CloseProximity = detect_TrafficLights(img_orig.copy())
 
         distance, Curvature = detect_Lane(img)
         Mode , Tracked_class = detect_Signs(img_orig,img)
-        #Mode , Tracked_class = detect_Signs(img_b4_resiz,img_b4_resiz)
-        #img_a4tr_resiz = cv2.resize(img_b4_resiz,(320,240))
-        #img = cv2.bitwise_or(img_a4tr_resiz,img)
 
         distance,Curvature, Detected_LeftTurn, Activat_LeftTurn = control.Obey_LeftTurn(distance,Curvature,Mode,Tracked_class)
 
         Current_State = [distance, Curvature , img , Mode , Tracked_class]
         a,b = Drive_Car(Current_State)
 
-        #a=interp(a,[30,120],[0.5,-0.5])
-        #b=interp(b,[30,90],[1,2])
-        print("\n\nA = ",a,"   B = ", b,"\n\n")
-
         a,b = control.OBEY_TrafficLights(a,b,Traffic_State,CloseProximity)
-        print("After Obeying TrafficLights")
-        print("\n\nA = ",a,"   B = ", b,"\n\n")
 
-        #self.velocity.linear.x = b        
-        #self.velocity.angular.z = a
-
-        #angle_of_car = interp(a,[0.5,-0.5],[-45,45])
-        #current_speed = interp(b,[1,2],[30,90])
         angle_of_car = interp(a,[30,120],[-45,45])
         current_speed = b
+
         angle_speed_str = "[ Angle ,Speed ] = [ " + str(int(angle_of_car)) + "deg ," + str(int(current_speed)) + "mph ]"
         cv2.putText(img,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.4,(0,0,255),1)
 
         cv2.putText(img,"Traffic Light State = [ "+Traffic_State+" ] ",(20,60),cv2.FONT_HERSHEY_COMPLEX,0.35,255)
-        #cv2.putText(img,"Sign Detected ==> "+str(Tracked_class),(20,85),cv2.FONT_HERSHEY_COMPLEX,0.35,(255,0,0),1)
         
         if (Tracked_class=="left_turn"):
             font_Scale = 0.30
@@ -133,10 +120,10 @@ class Video_feed_in(Node):
             font_Scale = 0.35
         cv2.putText(img,"Sign Detected ==> "+str(Tracked_class),(20,85),cv2.FONT_HERSHEY_COMPLEX,font_Scale,(255,0,0),1)
 
-        #cv2.putText(img,"Angle = "+str(np.round(a,3))+" , Speed = " + str(np.round(b,3)) ,(20,80),cv2.FONT_HERSHEY_COMPLEX,0.5,255)
         a=interp(a,[30,120],[0.5,-0.5])
-        b=interp(b,[30,90],[1,2])
-        self.velocity.linear.x = b        
+        if (b!=0):
+            b=interp(b,[30,90],[1,2])
+        self.velocity.linear.x = float(b)        
         self.velocity.angular.z = a
 
         cv2.imshow("Frame",img)

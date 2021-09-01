@@ -83,7 +83,7 @@ def Circledetector(gray,cimg,frame_draw,HLS):
         # 4. Check if Circles larger then minim size
         i_count=0
         for i in circles[0,:]:
-            center =(int(i[0]),int(i[1]))
+            center =(int(i[0])-1,int(i[1])-1)
             radius = int(i[2] + 5)
             if (radius !=5):
                 global detected_circle
@@ -91,7 +91,7 @@ def Circledetector(gray,cimg,frame_draw,HLS):
                 j_count=0
                 for j in circles[0,:]:
                     if j_count!=i_count:
-                        center_cmp =(int(j[0]),int(j[1]))
+                        center_cmp =(int(j[0])-1,int(j[1])-1)
                         radius_cmp = int(j[2] + 5)
                         point_Dist = dist( ( center[0],center[1] ) , ( center_cmp[0],center_cmp[1] ) )
                         print("Distance between [ center = ", center, "center_cmp = ",center_cmp, " ] is  = ",point_Dist)
@@ -183,7 +183,7 @@ src=0
 
 Hue_Low_G = 56#66
 Hue_High_G =66#66
-Lit_Low_G = 66
+Lit_Low_G = 41#66
 Sat_Low_G = 23
 
 Hue_Low_R = 0#66
