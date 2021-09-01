@@ -167,12 +167,9 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
                             cv2.imwrite(img_name , detected_sign)
 
             
-            if config.debugging and config.debugging_Signs:
-                cimg_str = 'detected Signs'
-                cv2.imshow(cimg_str,frame_draw)
-                cv2.waitKey(1)
-            else:
-                cv2.destroyWindow('detected Signs')
+            if (config.debugging and config.debugging_Signs):
+                cv2.imshow("detected Signs",frame_draw)
+
 
     # 5. IF Mode of SignTrack is Tracking , Proceed
     else:
@@ -200,7 +197,11 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
             frame_draw_ = frame_draw + signTrack.mask # Display the image with the flow lines
             np.copyto(frame_draw,frame_draw_) #important to copy the data to same address as frame_draw
             signTrack.old_gray = gray.copy()  # Update the previous frame and previous points
-            signTrack.p0 = good_new.reshape(-1, 1, 2)           
+            signTrack.p0 = good_new.reshape(-1, 1, 2)
+    
+    if not (config.debugging and config.debugging_Signs):
+        cv2.destroyWindow("detected Signs")
+           
 
 def detect_Signs(frame,frame_draw):
     
