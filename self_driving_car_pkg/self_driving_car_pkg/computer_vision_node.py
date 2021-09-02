@@ -94,9 +94,10 @@ class Video_feed_in(Node):
         Traffic_State, CloseProximity = detect_TrafficLights(img_orig.copy())
 
         distance, Curvature = detect_Lane(img)
+        
         Mode , Tracked_class = detect_Signs(img_orig,img)
 
-        Current_State = [distance, Curvature , img , Mode , Tracked_class,Traffic_State, CloseProximity]
+        Current_State = [distance, Curvature, img, Mode, Tracked_class, Traffic_State, CloseProximity]
 
         Angle,Speed, Detected_LeftTurn, Activat_LeftTurn  = control.Drive_Car(Current_State)
 

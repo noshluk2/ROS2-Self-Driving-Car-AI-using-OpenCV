@@ -272,7 +272,7 @@ def clr_segment(HSL,lower_range,upper_range):
     return mask
 
 
-def detect_TrafficLight(frame,frame_draw):
+def Get_TL_State(frame,frame_draw):
     
     # 0. To be accessed in Script Functions without explicitly passing as an Argument
     global HLS,src
