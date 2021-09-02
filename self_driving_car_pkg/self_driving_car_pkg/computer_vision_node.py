@@ -6,7 +6,7 @@ from .config import config
 
 from .Detection.Lanes.Lane_Detection import detect_Lane
 from .Detection.Signs.SignDetectionApi import detect_Signs
-from .Detection.Signs.a_Localization.ObjDet_cascade_classified import detect_TrafficLights
+from .Detection.TrafficLights.TrafficLight_DetectNTrack import detect_TrafficLights
 
 from .Control.Control_Car import Control
 

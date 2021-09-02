@@ -1,10 +1,9 @@
-import os # for getting absolute filepath to mitigate cross platform inconsistensies
 import cv2
 import numpy as np
 import math
-from ....config import config
+from ...config import config
 
-class TLD:
+class TL_States:
 
     def __init__(self):
         self.detected_circle = 0 #Set this to current dataset images size so that new images number starts from there and dont overwrite
@@ -15,18 +14,20 @@ class TLD:
         self.draw_detected = True
         self.display_images = True
 
-        self.HLS=0
-        self.src=0
+        self.HLS = 0
+        self.src = 0
 
-        self.Hue_Low_G = 56#66
-        self.Hue_High_G =66#66
-        self.Lit_Low_G = 41#66
-        self.Sat_Low_G = 23
+    # Below Are Class Variables that will be same for each instance of the class
+    # As all bots will be in same environments so these variables will be same
+    Hue_Low_G  = 56
+    Hue_High_G = 66
+    Lit_Low_G  = 41
+    Sat_Low_G  = 23
 
-        self.Hue_Low_R = 0#66
-        self.Hue_High_R = 8#66
-        self.Lit_Low_R = 33
-        self.Sat_Low_R = 23
+    Hue_Low_R  = 0
+    Hue_High_R = 8
+    Lit_Low_R  = 33
+    Sat_Low_R  = 23
 
     def dist(self,a,b):
         return int( math.sqrt( ( (a[1]-b[1])**2 ) + ( (a[0]-b[0])**2 ) ) )

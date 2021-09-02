@@ -1,19 +1,18 @@
 import cv2
 import numpy as np
 
-from .TLD import Get_TL_State
-#from .TLD_C import TLD
-from ....config import config
+from .TL_State import TL_States
+from ...config import config
 import os
 import math
 
-#TLD_ = TLD()
-class TrafficLightDetector:
+TL_States_ = TL_States()
+class TL_Detector:
 
     def __init__(self):
         #Variables created inside __init__ (and all other method functions)
         # and prefaced with self.
-        print("Initialized Object of TrafficLightDetector class")
+        print("Initialized Object of TL_Detector class")
 
     #Variable set outside __init__ belong to the class. 
     # They're shared by all instances.
@@ -27,11 +26,11 @@ class TrafficLightDetector:
     def Get_TrafficLightState(self,Tracked_ROI):
         img_draw = Tracked_ROI.copy()
         # Reconfirm if detected Traffic Light was the desired one
-        #Traffic_State = TLD_.Get_TL_State(Tracked_ROI,img_draw)
-        Traffic_State = Get_TL_State(Tracked_ROI,img_draw)
+        Traffic_State = TL_States_.Get_TL_State(Tracked_ROI,img_draw)
+
         if(Traffic_State!="Unknown"):
             print("Traffic State Recived While Tracking ",Traffic_State)
-            cv2.putText(img_draw,str(signTrack.CollisionIminent),(80,80),cv2.FONT_HERSHEY_SIMPLEX,1,255)
+            cv2.putText(img_draw,str(TL_Track.CollisionIminent),(80,80),cv2.FONT_HERSHEY_SIMPLEX,1,255)
 
             if (config.debugging and config.debugging_TrafficLights):
                 cv2.imshow('[Fetch_TL_State] (6) Traffic Light With State', img_draw)
@@ -40,7 +39,7 @@ class TrafficLightDetector:
             #cv2.waitKey(0)
         return Traffic_State
 
-    def Detect_TL_Wt_Cascades(self,img):
+    def Cascade_Detect(self,img):
         img_draw=img.copy()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         target = self.TrafficLight_cascade.detectMultiScale(gray)
@@ -61,8 +60,7 @@ class TrafficLightDetector:
             else:
                 cv2.destroyWindow('[Fetch_TL_State] (1) img_ROI')
             # Reconfirm if detected Traffic Light was the desired one
-            #Traffic_State = TLD_.Get_TL_State(img_ROI,img_draw)
-            Traffic_State = Get_TL_State(img_ROI,img_draw)
+            Traffic_State = TL_States_.Get_TL_State(img_ROI,img_draw)
             if(Traffic_State!="Unknown"):
                 print("Traffic State Recived at",TL_iteration," pos = ",Traffic_State)
                 # Confirm Traffic Light 
@@ -88,7 +86,7 @@ class TrafficLightDetector:
 
         return TrafficLight_Rect,Traffic_State
 
-class SignTracking:
+class TL_Tracker:
 
     def __init__(self):
         #Variables created inside __init__ (and all other method functions)
@@ -182,7 +180,7 @@ class SignTracking:
 
     def Track(self,frame,frame_draw):
 
-        Temp_Tracked_ROI = signTrack.Tracked_ROI
+        Temp_Tracked_ROI = TL_Track.Tracked_ROI
         # 4a. Convert Rgb to gray
         gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
 
@@ -226,19 +224,19 @@ class SignTracking:
         self.p0 = []
 
 
-T_L_D = TrafficLightDetector()
-signTrack = SignTracking()
+TL_Detect = TL_Detector()
+TL_Track = TL_Tracker()
 
 def detect_TrafficLights(img):
     # Every form of drawing will be done on this stupit image
     frame_draw = img.copy()
     Curr_TL_State = "Unknown"
     # 4. Checking if SignTrack Class mode is Tracking If yes Proceed
-    if(signTrack.mode == "Tracking"):
+    if(TL_Track.mode == "Tracking"):
         # Start timer
         timer = cv2.getTickCount()
 
-        Temp_Tracked_ROI = signTrack.Track(img,frame_draw)
+        Temp_Tracked_ROI = TL_Track.Track(img,frame_draw)
 
         # Calculate Frames per second (FPS)
         fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
@@ -246,7 +244,7 @@ def detect_TrafficLights(img):
         cv2.putText(frame_draw, "FPS : " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
         
         if (config.debugging and config.debugging_TrafficLights):
-            cv2.imshow("[Fetch_TL_State] (4) Tracked_ROI",signTrack.Tracked_ROI)
+            cv2.imshow("[Fetch_TL_State] (4) Tracked_ROI",TL_Track.Tracked_ROI)
         else:
             cv2.destroyWindow("[Fetch_TL_State] (4) Tracked_ROI")
             
@@ -257,14 +255,14 @@ def detect_TrafficLights(img):
         else:
             cv2.destroyWindow('[Fetch_TL_State] (5) img_ROI_tracked_BoundedRect')
 
-        Curr_TL_State = T_L_D.Get_TrafficLightState(img_ROI_tracked)
+        Curr_TL_State = TL_Detect.Get_TrafficLightState(img_ROI_tracked)
 
     # 3. If SignTrack is in Detection Proceed to intialize tracker
-    elif (signTrack.mode == "Detection"):
+    elif (TL_Track.mode == "Detection"):
 
         # 3a. Select the ROI which u want to track
-        #r = cv2.selectROI("SelectROI",img)
-        r,TLD_Class = T_L_D.Detect_TL_Wt_Cascades(img)
+        r, TLD_Class = TL_Detect.Cascade_Detect(img)
+        
         if ((r!=np.array([0,0,0,0])).all()):
             # Traffic Light Detected ===> Initialize Tracker 
             # 3b. Convert Rgb to gray
@@ -275,16 +273,16 @@ def detect_TrafficLights(img):
             ROI_toTrack[int(r[1]):int(r[1]+r[3]), int(r[0]):int(r[0]+r[2])] = 255
             #cv2.rectangle(ROI_mask, (int(r[1]),int(r[0])), (int(r[1]+r[3]),int(r[0]+r[2])),255, 2)
             cv2.rectangle(ROI_mask, (int(r[0]),int(r[1])), (int(r[0]+r[2]),int(r[1]+r[3])),255, 2)
-            #signTrack.Tracked_ROI = ROI_mask
-            signTrack.Tracked_ROI = ROI_toTrack
+            #TL_Track.Tracked_ROI = ROI_mask
+            TL_Track.Tracked_ROI = ROI_toTrack
             # 3d. Updating signtrack class with variables initialized
-            signTrack.mode = "Tracking" # Set mode to tracking
-            signTrack.Tracked_class = TLD_Class # keep tracking frame sign name
-            signTrack.p0 = cv2.goodFeaturesToTrack(gray, mask = ROI_toTrack, **signTrack.feature_params)
-            signTrack.old_gray = gray.copy()
-            signTrack.mask = np.zeros_like(frame_draw)
-            signTrack.CollisionIminent = False
+            TL_Track.mode = "Tracking" # Set mode to tracking
+            TL_Track.Tracked_class = TLD_Class # keep tracking frame sign name
+            TL_Track.p0 = cv2.goodFeaturesToTrack(gray, mask = ROI_toTrack, **TL_Track.feature_params)
+            TL_Track.old_gray = gray.copy()
+            TL_Track.mask = np.zeros_like(frame_draw)
+            TL_Track.CollisionIminent = False
 
-    return Curr_TL_State,signTrack.CollisionIminent
+    return Curr_TL_State,TL_Track.CollisionIminent
 
 
