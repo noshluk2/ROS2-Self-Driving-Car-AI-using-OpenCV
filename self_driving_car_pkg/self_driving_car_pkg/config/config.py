@@ -2,7 +2,6 @@
 #Control Variables for 3c_threaded_Mod4
 import os
 import cv2
-print("old")
 
 detect = 1 # Set to 1 for Lane detection
 
@@ -15,8 +14,15 @@ Out_write = False
 debugging = True # Set to True --> If you want to debug code
 
 debugging_Lane = True
+
+debugging_L_ColorSeg = True
+debugging_L_Est= True
+debugging_L_Cleaning= True
+debugging_L_LaneInfoExtraction= True
+
 debugging_Signs = True
 debugging_TrafficLights = True
+debugging_TL_Config = True
 
 Detect_lane_N_Draw = True
 Training_CNN = False 

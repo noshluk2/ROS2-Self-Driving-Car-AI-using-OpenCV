@@ -54,7 +54,7 @@ def FetchInfoAndDisplay(Mid_lane_edge,Mid_lane,Outer_Lane,frame,Offset_correctio
 	curvature = findlaneCurvature(Traj_lowP[0],Traj_lowP[1],Traj_upP[0],Traj_upP[1])
 
 	if config.Testing:
-		if (config.debugging and config.debugging_Lane):
+		if (config.debugging and config.debugging_Lane and config.debugging_L_LaneInfoExtraction):
 			cv2.imshow("[FetchInfoAndDisplay] Mid_lane_edge",Mid_lane_edge)
 			cv2.imshow("[FetchInfoAndDisplay] Mid_lane ",Mid_lane)
 		else:
@@ -64,7 +64,7 @@ def FetchInfoAndDisplay(Mid_lane_edge,Mid_lane,Outer_Lane,frame,Offset_correctio
 		# 3. Keep only those edge that are part of MIDLANE
 		Mid_lane_edge = cv2.bitwise_and(Mid_lane_edge,Mid_lane)
 
-		if (config.debugging and config.debugging_Lane):
+		if (config.debugging and config.debugging_Lane and config.debugging_L_LaneInfoExtraction):
 			cv2.imshow("[FetchInfoAndDisplay] Trash Removed (Mid_lane_edge) ",Mid_lane_edge)
 		else:
 			cv2.destroyWindow("[FetchInfoAndDisplay] Trash Removed (Mid_lane_edge) ")
@@ -72,7 +72,7 @@ def FetchInfoAndDisplay(Mid_lane_edge,Mid_lane,Outer_Lane,frame,Offset_correctio
 		# 4. Combine Mid and OuterLane to get Lanes Combined
 		Lanes_combined = cv2.bitwise_or(Outer_Lane,Mid_lane)
 
-		if (config.debugging and config.debugging_Lane):
+		if (config.debugging and config.debugging_Lane and config.debugging_L_LaneInfoExtraction):
 			cv2.imshow("[FetchInfoAndDisplay] Lanes_combined",Lanes_combined)
 		else:
 			cv2.destroyWindow("[FetchInfoAndDisplay] Lanes_combined")
@@ -87,7 +87,7 @@ def FetchInfoAndDisplay(Mid_lane_edge,Mid_lane,Outer_Lane,frame,Offset_correctio
 			cnts = np.array(cnts)
 			cv2.fillConvexPoly(ProjectedLane, cnts, 255)
 
-			if (config.debugging and config.debugging_Lane):
+			if (config.debugging and config.debugging_Lane and config.debugging_L_LaneInfoExtraction):
 				cv2.imshow("[FetchInfoAndDisplay] ProjectedLane",ProjectedLane)
 			else:
 				cv2.destroyWindow("[FetchInfoAndDisplay] ProjectedLane")
@@ -95,7 +95,7 @@ def FetchInfoAndDisplay(Mid_lane_edge,Mid_lane,Outer_Lane,frame,Offset_correctio
 		# 6. Extract MidlessMask from MidLaneEdge
 		Mid_less_Mask = EstimateNonMidMask(Mid_lane_edge)
 
-		if (config.debugging and config.debugging_Lane):
+		if (config.debugging and config.debugging_Lane and config.debugging_L_LaneInfoExtraction):
 			cv2.imshow("[FetchInfoAndDisplay] Mid_less_Mask ",Mid_less_Mask)
 		else:
 			cv2.destroyWindow("[FetchInfoAndDisplay] Mid_less_Mask ")

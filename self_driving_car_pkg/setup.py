@@ -5,28 +5,28 @@ from glob import glob
 
 package_name = 'self_driving_car_pkg'
 
-det_l_module ="self_driving_car_pkg/Detection/Lanes"
-det_s_module ="self_driving_car_pkg/Detection/Signs"
-detec_TL_module="self_driving_car_pkg/Detection/TrafficLights"
 
 config_module = "self_driving_car_pkg/config" 
 data_module ="self_driving_car_pkg/data"
-control_module ="self_driving_car_pkg/Control"
+
+detection_module ="self_driving_car_pkg/Detection"
+
+det_l_module ="self_driving_car_pkg/Detection/Lanes"
 detec_l_a_module="self_driving_car_pkg/Detection/Lanes/a_Segmentation"
 detec_l_b_module="self_driving_car_pkg/Detection/Lanes/b_Estimation"
 detec_l_c_module="self_driving_car_pkg/Detection/Lanes/c_Cleaning"
 detec_l_d_module="self_driving_car_pkg/Detection/Lanes/d_LaneInfo_Extraction"
 
-detec_s_a_module="self_driving_car_pkg/Detection/Signs/a_Localization"
-detec_s_b_module="self_driving_car_pkg/Detection/Signs/b_Classification"
-detec_s_c_module="self_driving_car_pkg/Detection/Signs/c_Tracking"
-    # packages=[package_name,detec_s_a_module,detec_s_b_module,detec_s_c_module,detec_l_d_module,detec_l_c_module,detec_l_b_module,config_module,det_l_module,det_s_module,detec_TL_module,data_module,control_module,detec_l_a_module],
+det_s_module ="self_driving_car_pkg/Detection/Signs"
+detec_s_a_module="self_driving_car_pkg/Detection/Signs/Classification"
+
+detec_TL_module="self_driving_car_pkg/Detection/TrafficLights"
 
 
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name,detec_s_a_module,detec_s_b_module,detec_s_c_module,detec_l_d_module,detec_l_c_module,detec_l_b_module,config_module,det_l_module,det_s_module,detec_TL_module,data_module,control_module,detec_l_a_module],
+    packages=[package_name,detec_l_d_module,detec_l_c_module,detec_l_b_module,detec_l_a_module,det_l_module,detec_s_a_module,det_s_module,detec_TL_module,detection_module,config_module,data_module],
 
     data_files=[
         ('share/ament_index/resource_index/packages',

@@ -57,7 +57,7 @@ def ExtendShortLane(MidLane,Mid_cnts,Outer_cnts,OuterLane):
 				if(Ref_LineTouchPoint_row < Image_bottom):
 					Ref_TouchPoint_Ref = (Ref_LineTouchPoint_col,Image_bottom)
 					OuterLane = cv2.line(OuterLane,Ref_TouchPoint,Ref_TouchPoint_Ref,255)
-	if (config.debugging and config.debugging_Lane):
+	if (config.debugging and config.debugging_Lane and config.debugging_L_Cleaning):
 		cv2.imshow("[ExtendShortLane] OuterLanes",OuterLane)
 	else:
 		cv2.destroyWindow("[ExtendShortLane] OuterLanes")

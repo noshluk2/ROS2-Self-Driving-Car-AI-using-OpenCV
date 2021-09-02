@@ -54,7 +54,7 @@ def MaskExtract():
     mask_ = mask != 0
 
     dst = src * (mask_[:,:,None].astype(src.dtype))
-    if (config.debugging_Lane and config.debugging):
+    if (config.debugging_Lane and config.debugging and config.debugging_L_ColorSeg):
         cv2.imshow('[Segment_Colour_final] mask',dst)
         cv2.imshow('[Segment_Colour_final] mask_Y',dst_Y)
 
@@ -69,7 +69,7 @@ def MaskExtract():
 #cv2.namedWindow("Mid_ROI_mask",cv2.WINDOW_NORMAL)
 
 
-if(config.debugging_Lane and config.debugging):
+if (config.debugging_Lane and config.debugging and config.debugging_L_ColorSeg):
 
     cv2.namedWindow("[Segment_Colour_final] mask")
     cv2.namedWindow("[Segment_Colour_final] mask_Y")
@@ -177,7 +177,7 @@ def Segment_Colour(frame,minArea):
 
     #cv2.imshow('Mid_ROI_mask',Mid_ROI_mask)
 
-    if(config.debugging_Lane and config.debugging):
+    if (config.debugging_Lane and config.debugging and config.debugging_L_ColorSeg):
         cv2.imshow('[Segment_Colour_final] mask',mask)
         cv2.imshow('[Segment_Colour_final] mask_Y',mask_Y)
         cv2.imshow('Outer_edge_ROI',Outer_edge_ROI)
