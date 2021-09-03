@@ -5,6 +5,123 @@ from ...config import config
 import os
 import math
 
+class Segment_On_Clr:
+
+    def __init__(self, a_1 = 56,a_2 = 66,a_3 = 41,a_4 = 23, b_1 = 0,b_2 = 8,b_3 = 33,b_4 = 23):
+        
+        self.HLS = 0
+        self.src = 0
+
+        self.Hue_Low_G  = a_1
+        self.Hue_High_G = a_2
+        self.Lit_Low_G  = a_3
+        self.Sat_Low_G  = a_4
+
+        self.Hue_Low_R  = b_1
+        self.Hue_High_R = b_2
+        self.Lit_Low_R  = b_3
+        self.Sat_Low_R  = b_4
+
+    def clr_segment(self,lower_range,upper_range):
+        
+        # 2. Performing Color Segmentation on Given Range
+        lower = np.array( [lower_range[0],lower_range[1] ,lower_range[2]] )
+        upper = np.array( [upper_range[0]    ,255     ,255])
+        mask = cv2.inRange(self.HLS, lower, upper)
+        # 3. Dilating Segmented ROI's
+        kernel = cv2.getStructuringElement(shape=cv2.MORPH_ELLIPSE, ksize=(5,5))
+        mask = cv2.morphologyEx(mask, cv2.MORPH_DILATE, kernel)
+        return mask
+
+    def MaskExtract(self):
+        mask_Green   = self.clr_segment( (self.Hue_Low_G  ,self.Lit_Low_G   ,self.Sat_Low_G ), (self.Hue_High_G       ,255,255) )
+        mask_Red     = self.clr_segment( (self.Hue_Low_R  ,self.Lit_Low_R   ,self.Sat_Low_R ), (self.Hue_High_R       ,255,255) )
+
+        Mask = cv2.bitwise_or(mask_Green,mask_Red)
+        MASK_Binary = Mask != 0
+
+        dst = self.src * (MASK_Binary[:,:,None].astype(self.src.dtype))
+
+        if (config.debugging and config.debugging_TrafficLights and config.debugging_TL_Config):
+            cv2.imshow("[TL_Config] mask2",dst)
+            cv2.imshow("[TL_Config] mask_R2",dst)
+
+
+        return dst
+
+    def OnHueLowChange(self,val):
+        self.Hue_Low_G = val
+        self.MaskExtract()
+    def OnHueHighChange(self,val):
+        self.Hue_High_G = val
+        self.MaskExtract()
+    def OnLitLowChange(self,val):
+        self.Lit_Low_G = val
+        self.MaskExtract()
+    def OnSatLowChange(self,val):
+        self.Sat_Low_G = val
+        self.MaskExtract()
+
+
+    def OnHueLowChange_R(self,val):
+        self.Hue_Low_R = val
+        self.MaskExtract()
+    def OnHueHighChange_R(self,val):
+        self.Hue_High_R = val
+        self.MaskExtract()
+    def OnLitLowChange_R(self,val):
+        self.Lit_Low_R = val
+        self.MaskExtract()
+    def OnSatLowChange_R(self,val):
+        self.Sat_Low_R = val
+        self.MaskExtract()
+
+    def in_hls(self,frame,mask=None,Rmv_Clr_From_Frame = False):
+        
+        Seg_ClrReg_rmvd = None
+
+        Frame_Mask = np.ones((frame.shape[0],frame.shape[1]),np.uint8)*255
+
+        if Rmv_Clr_From_Frame:
+            ROI_detected = frame
+        else:
+            ROI_detected = cv2.bitwise_and(frame,frame,mask = mask )
+        
+        #cv2.imshow("ROI_detected",ROI_detected)
+        
+        if (config.debugging and config.debugging_TrafficLights and config.debugging_TL_Config):
+            cv2.createTrackbar("Hue_L","[TL_Config] mask2",self.Hue_Low_G,255,self.OnHueLowChange)
+            cv2.createTrackbar("Hue_H","[TL_Config] mask2",self.Hue_High_G,255,self.OnHueHighChange)
+            cv2.createTrackbar("Lit_L","[TL_Config] mask2",self.Lit_Low_G,255,self.OnLitLowChange)
+            cv2.createTrackbar("Sat_L","[TL_Config] mask2",self.Sat_Low_G,255,self.OnSatLowChange)
+            cv2.createTrackbar("Hue_L_red","[TL_Config] mask_R2",self.Hue_Low_R,255,self.OnHueLowChange_R)
+            cv2.createTrackbar("Hue_H_red","[TL_Config] mask_R2",self.Hue_High_R,255,self.OnHueHighChange_R)
+            cv2.createTrackbar("Lit_L_red","[TL_Config] mask_R2",self.Lit_Low_R,255,self.OnLitLowChange_R)
+            cv2.createTrackbar("Sat_L_red","[TL_Config] mask_R2",self.Sat_Low_R,255,self.OnSatLowChange_R)
+
+
+
+        # 0. To be accessed in Script Functions without explicitly passing as an Argument
+        self.src = ROI_detected.copy()
+        # 1. Converting frame to HLS ColorSpace
+        self.HLS = cv2.cvtColor(ROI_detected,cv2.COLOR_BGR2HLS)#2 msc
+        # 2. Extracting Mask of Only Red And Color Regions
+        Seg_ClrReg = self.MaskExtract()
+
+        if mask is not None:
+            frame_ROI_Gray = cv2.cvtColor(Seg_ClrReg,cv2.COLOR_BGR2GRAY)
+            frame_ROI_Bin = cv2.threshold(frame_ROI_Gray,0,255,cv2.THRESH_BINARY)[1]
+        if Rmv_Clr_From_Frame:
+            Seg_ClrReg_rmvd = cv2.bitwise_xor(Frame_Mask,frame_ROI_Bin)
+            Seg_ClrReg_rmvd = cv2.bitwise_and(frame,frame,mask=Seg_ClrReg_rmvd)
+        else:    
+            Seg_ClrReg_rmvd= cv2.bitwise_xor(mask,frame_ROI_Bin)
+            #cv2.imshow("Seg_ClrReg",Seg_ClrReg)
+            #cv2.imshow("Seg_ClrReg_rmvd",Seg_ClrReg_rmvd)
+            #cv2.waitKey(0)
+
+        return Seg_ClrReg,Seg_ClrReg_rmvd
+
 class TL_States:
 
     def __init__(self):
@@ -395,11 +512,34 @@ class TL_Tracker:
                 return match_found, match_idx
         # If no match found as of yet return default values
         return match_found, match_idx
+    def santitze_pts(self,pts_src,pts_dst):
+        # Idea was to Order on Descending Order of Strongest Points [Strength here is 
+        # considered when two points have minimum distance between each other]
+        pt_idx = 0
+        dist_list = []
+        for pt in pts_src:
+            pt_b = pts_dst[pt_idx]
+            dist_list.append(self.Distance(pt,pt_b))
+            pt_idx+=1
+
+        pts_src_list = pts_src.tolist()
+        pts_dst_list = pts_dst.tolist()
+
+        pts_src_list = [x for _, x in sorted(zip(dist_list, pts_src_list))]
+        pts_dst_list = [x for _, x in sorted(zip(dist_list, pts_dst_list))]
+
+        pts_src = np.asarray(pts_src_list, dtype=np.float32)
+        pts_dst = np.asarray(pts_dst_list, dtype=np.float32)
+
+        return pts_src,pts_dst
+
     
     def EstimateTrackedRect(self,im_src,pts_src,pts_dst):
         Tracking = "Tracking"
         im_dst = np.zeros_like(im_src)
+
         if(len(pts_src)>=3):
+            pts_src,pts_dst = self.santitze_pts(pts_src,pts_dst)
             pts_src = pts_src[0:3][:]
             pts_dst = pts_dst[0:3][:]
 
@@ -446,7 +586,7 @@ class TL_Tracker:
             # Set Img_dst_2 to Already saved Tracked Roi One last Time
             img_dst_2 = self.Tracked_ROI
             self.CollisionIminent = False # Reset
-
+        
         return im_dst,img_dst_2,Tracking
 
     def Track(self,frame,frame_draw):
@@ -472,7 +612,6 @@ class TL_Tracker:
             # Select good points
             good_new = p1[st == 1]
             good_old = self.p0[st == 1]
-
             self.Tracked_ROI,Temp_Tracked_ROI,self.mode = self.EstimateTrackedRect(self.Tracked_ROI,good_old,good_new)
             # Draw the tracks
             for i, (new, old) in enumerate(zip(good_new, good_old)):
@@ -484,7 +623,7 @@ class TL_Tracker:
             np.copyto(frame_draw,frame_draw_)#important to copy the data to same address as frame_draw   
             self.old_gray = gray.copy()
             self.p0 = good_new.reshape(-1, 1, 2)
-        
+        #cv2.imshow("frame_draw",frame_draw)
         return Temp_Tracked_ROI
 
     def Reset(self):
@@ -497,6 +636,7 @@ class TL_Tracker:
 
 TL_Detect = TL_Detector()
 TL_Track = TL_Tracker()
+Segment_On_Clr_ = Segment_On_Clr()
 
 def detect_TrafficLights(img):
     # Every form of drawing will be done on this stupit image
@@ -505,12 +645,15 @@ def detect_TrafficLights(img):
     # 4. Checking if SignTrack Class mode is Tracking If yes Proceed
     if(TL_Track.mode == "Tracking"):
 
+        #_,ClrRegRmvd = Segment_On_Clr_.in_hls(img, mask=TL_Track.Tracked_ROI, Rmv_Clr_From_Frame = True )
+        #cv2.imshow("[Tracking] ClrRegRmvd",ClrRegRmvd)
+        #cv2.waitKey(0)
         Temp_Tracked_ROI = TL_Track.Track(img,frame_draw)
+        #Temp_Tracked_ROI = TL_Track.Track(ClrRegRmvd,frame_draw)
         
         if (config.debugging and config.debugging_TrafficLights):
             cv2.imshow("[Fetch_TL_State] (4) Tracked_ROI",TL_Track.Tracked_ROI)
 
-            
         img_ROI_tracked = cv2.bitwise_and(img,img,mask=Temp_Tracked_ROI)
         
         if (config.debugging and config.debugging_TrafficLights):        
@@ -533,14 +676,19 @@ def detect_TrafficLights(img):
             ROI_mask = np.zeros_like(gray)
             ROI_toTrack = np.zeros_like(gray)
             ROI_toTrack[int(r[1]):int(r[1]+r[3]), int(r[0]):int(r[0]+r[2])] = 255
-            #cv2.rectangle(ROI_mask, (int(r[1]),int(r[0])), (int(r[1]+r[3]),int(r[0]+r[2])),255, 2)
+
             cv2.rectangle(ROI_mask, (int(r[0]),int(r[1])), (int(r[0]+r[2]),int(r[1]+r[3])),255, 2)
-            #TL_Track.Tracked_ROI = ROI_mask
+
+            #_,Mask_ClrRmvd = Segment_On_Clr_.in_hls(img,mask=ROI_toTrack)
+
             TL_Track.Tracked_ROI = ROI_toTrack
             # 3d. Updating signtrack class with variables initialized
             TL_Track.mode = "Tracking" # Set mode to tracking
             TL_Track.Tracked_class = TLD_Class # keep tracking frame sign name
+            #if Mask_ClrRmvd is None:
             TL_Track.p0 = cv2.goodFeaturesToTrack(gray, mask = ROI_toTrack, **TL_Track.feature_params)
+            #else:
+            #    TL_Track.p0 = cv2.goodFeaturesToTrack(gray, mask = Mask_ClrRmvd, **TL_Track.feature_params)
             TL_Track.old_gray = gray.copy()
             TL_Track.mask = np.zeros_like(frame_draw)
             TL_Track.CollisionIminent = False

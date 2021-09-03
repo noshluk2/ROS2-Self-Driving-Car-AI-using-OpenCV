@@ -37,11 +37,6 @@ class Debugging:
         debugTrafficLights = cv2.getTrackbarPos(self.debuggingTL_SW,'CONFIG')
 
 
-        print("config.debugging = ",config.debugging)
-        print("config.debugging_lane = ",config.debugging_Lane)
-        print("config.debugging_Sign = ",config.debugging_Signs)
-        print("config.debugging_TrafficLights = ",config.debugging_TrafficLights)
-
         if debug:
             config.debugging = True
         else:
@@ -73,7 +68,6 @@ class Debugging:
                 config.debugging_TL_Config = True
             else:
                 config.debugging_TL_Config = False
-            print("config.debugging_TrafficLights_Config = ",config.debugging_TL_Config)
 
         else:
             self.TL_Created = False
@@ -103,10 +97,6 @@ class Debugging:
                 config.debugging_L_LaneInfoExtraction = True
                 config.debugging_L_ColorSeg = config.debugging_L_Est = config.debugging_L_Cleaning = False
 
-            print("config.debugging_L_ColorSeg = ",config.debugging_L_ColorSeg)
-            print("config.debugging_L_Est = ",config.debugging_L_Est)
-            print("config.debugging_L_Cleaning = ",config.debugging_L_Cleaning)
-            print("config.debugging_L_LaneInfoExtraction = ",config.debugging_L_LaneInfoExtraction)
         else:
             self.Lan_Created = False
             cv2.destroyWindow('CONFIG_LANE')        
@@ -197,20 +187,15 @@ class Control:
 
             if ( (self.prev_Mode_LT =="Detection") and (Mode=="Tracking")):
                 self.prev_Mode_LT = "Tracking"
-                print("Left Detected")
-                print("self.Detected_LeftTurn ",self.Detected_LeftTurn)
                 self.Detected_LeftTurn = True
-                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Tracking <<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
             elif ( (self.prev_Mode_LT =="Tracking") and (Mode=="Detection")):
-                print("Left Activated")
                 self.Detected_LeftTurn = False
                 self.Activat_LeftTurn = True
-                print("self.Activat_LeftTurn ",self.Activat_LeftTurn)
 
                 if ( ((self.Left_turn_iterations % 20 ) ==0) and (self.Left_turn_iterations>100) ):
                     self.Frozen_Angle = self.Frozen_Angle -7 # Move left by 1 degree 
                 if(self.Left_turn_iterations==250):
-                    print("Left DeActivated")
                     self.prev_Mode_LT = "Detection"
                     self.Activat_LeftTurn = False
                     self.Left_turn_iterations = 0
@@ -226,23 +211,19 @@ class Control:
     def OBEY_TrafficLights(self,a,b,Traffic_State,CloseProximity):
 
         if((Traffic_State == "Stop") and CloseProximity):
-            print("**************STOP MODE ACTIVATED !!!!!**************")
             b = 0 # Noob luqman
             self.STOP_MODE_ACTIVATED = True
         else:
             if (self.STOP_MODE_ACTIVATED or self.GO_MODE_ACTIVATED):
 
                 if (self.STOP_MODE_ACTIVATED and (Traffic_State=="Go")):
-                    print("**************GO MODE ACTIVATED !!!!!**************")
                     self.STOP_MODE_ACTIVATED = False
                     self.GO_MODE_ACTIVATED = True
 
                 elif(self.STOP_MODE_ACTIVATED):
-                    print("**************STOP MODE EXECUTING !!!!!**************")
                     b = 0
 
                 elif(self.GO_MODE_ACTIVATED):
-                    print("**************GO MODE EXECUTING !!!!!**************")
                     a = 0.0                    
                     if(self.TrafficLight_iterations==150):
                         self.GO_MODE_ACTIVATED = False

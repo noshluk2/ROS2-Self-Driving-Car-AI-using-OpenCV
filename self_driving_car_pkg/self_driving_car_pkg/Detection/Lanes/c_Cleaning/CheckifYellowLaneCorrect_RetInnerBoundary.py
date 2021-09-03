@@ -12,9 +12,9 @@ def IsPathCrossingMid(Midlane,Mid_cnts,Outer_cnts):
 
 	Mid_cnts_Rowsorted = Cord_Sort(Mid_cnts,"rows")
 	Outer_cnts_Rowsorted = Cord_Sort(Outer_cnts,"rows")
-	#print(Mid_cnts_Rowsorted)
-	if not Mid_cnts:
-		print(" Hello there is an error")
+	if (config.debugging_Lane and config.debugging and config.debugging_L_Cleaning):
+		if not Mid_cnts:
+			print("[Warning!!!] NO Midlane detected")
 	Mid_Rows = Mid_cnts_Rowsorted.shape[0]
 	Outer_Rows = Outer_cnts_Rowsorted.shape[0]
 
@@ -29,16 +29,7 @@ def IsPathCrossingMid(Midlane,Mid_cnts,Outer_cnts):
 	cv2.line(Midlane_copy,tuple(Mid_lowP),(Mid_lowP[0],Midlane_copy.shape[0]-1),(255,255,0),2)# distance of car center with lane path
 
 	is_Ref_to_path_Left = ( (int(Ref_To_Path_Image.shape[1]/2) - Traj_lowP[0]) > 0 )
-	Distance_And_Midlane = cv2.bitwise_and(Ref_To_Path_Image,Midlane_copy)
-
-	if(config.debugging_Lane and config.debugging and config.debugging_L_Cleaning):
-		cv2.imshow("[GetYellowInnerEdge]-[IsPathCrossingMid] Midlane_copy",Midlane_copy)
-		cv2.imshow("[GetYellowInnerEdge]-[IsPathCrossingMid] Distance_Image",Ref_To_Path_Image)
-		cv2.imshow("[GetYellowInnerEdge]-[IsPathCrossingMid] Distance_And_Midlane",Distance_And_Midlane)
-	else:
-		cv2.destroyWindow("[GetYellowInnerEdge]-[IsPathCrossingMid] Midlane_copy")
-		cv2.destroyWindow("[GetYellowInnerEdge]-[IsPathCrossingMid] Distance_Image")
-		cv2.destroyWindow("[GetYellowInnerEdge]-[IsPathCrossingMid] Distance_And_Midlane")
+	#Distance_And_Midlane = cv2.bitwise_and(Ref_To_Path_Image,Midlane_copy)
 
 	if( np.any( (cv2.bitwise_and(Ref_To_Path_Image,Midlane_copy) > 0) ) ):
 		# Midlane and CarPath Intersets (MidCrossing)
@@ -86,10 +77,6 @@ def GetYellowInnerEdge(OuterLanes,MidLane,OuterLane_Points):
 			Closest_Index=0
 		elif(len(Outer_cnts)>1):
 			Closest_Index=1
-		if (config.debugging):
-			print("[FindClosestLane] [(len(OuterLane_Points)==2)] OuterLane_Points ",OuterLane_Points)
-			print("[FindClosestLane] [(len(OuterLane_Points)==2)] len(Outer_cnts) ",len(Outer_cnts))
-			print("[FindClosestLane] [(len(OuterLane_Points)==2)] Closest_Index ",Closest_Index)
 		Outer_Lanes_ret = cv2.drawContours(Outer_Lanes_ret, Outer_cnts, Closest_Index, 255, 1)
 		Outer_cnts_ret = [Outer_cnts[Closest_Index]]
 
@@ -103,7 +90,7 @@ def GetYellowInnerEdge(OuterLanes,MidLane,OuterLane_Points):
 		# 4. [len(OuterLane_Points)==2)] _ B: Find Connection between Mid And Detected OuterLane Crosses Mid
 		IsPathCrossing , IsCrossingLeft = IsPathCrossingMid(MidLane,Mid_cnts,Outer_cnts_ret)
 		if(IsPathCrossing):
-			if(config.debugging):
+			if(config.debugging_Lane and config.debugging and config.debugging_L_Cleaning):
 				print("[FindClosestLane] [(len(OuterLane_Points)==2)] Zeroing OuterLanes because LAnes are crossing")
 			OuterLanes = np.zeros_like(OuterLanes)#Empty outerLane
 		else:
@@ -120,11 +107,11 @@ def GetYellowInnerEdge(OuterLanes,MidLane,OuterLane_Points):
 		# 4. [len(OuterLane_Points)!=2)] : Checking IF Correct Side outlane is detected
 		IsPathCrossing , IsCrossingLeft = IsPathCrossingMid(MidLane,Mid_cnts,Outer_cnts)
 		if(IsPathCrossing):
-			if (config.debugging):
+			if (config.debugging_Lane and config.debugging and config.debugging_L_Cleaning):
 				print("[FindClosestLane] [np.any(OuterLanes>0)] Zeroing OuterLanes because LAnes are crossing")
 			OuterLanes = np.zeros_like(OuterLanes)#Empty outerLane
 		else:
-			if (config.debugging):
+			if (config.debugging_Lane and config.debugging and config.debugging_L_Cleaning):
 				print("[FindClosestLane] [np.any(OuterLanes>0)] Path are not crossing --> Ret as it is")
 			#If no fllor crossing return results
 			return OuterLanes ,Outer_cnts, Mid_cnts,0		
@@ -132,7 +119,7 @@ def GetYellowInnerEdge(OuterLanes,MidLane,OuterLane_Points):
 	# 4. >>>>>>>>>>>>>> Condition 2 : if MidLane is present but no Outlane detected >>>>>>>>>>>>>> Or Outlane got zerod because of crossings Midlane
 	# Action: Create Outlane on Side that represent the larger Lane as seen by camera
 	if( Mid_cnts and ( not np.any(OuterLanes>0) ) ):	
-		if (config.debugging):
+		if (config.debugging_Lane and config.debugging and config.debugging_L_Cleaning):
 			print("[FindClosestLane] [OuterLanes is Empty] OuterLanes Not empty but points are empty")
 
 		# Condition where MidCnts are detected 
@@ -148,17 +135,17 @@ def GetYellowInnerEdge(OuterLanes,MidLane,OuterLane_Points):
 
 		# 4. [Midlane But , No OuterLanes!!!] _ A : Check if Present before or Not 
 		if NoOuterLane_before:
-			if (config.debugging):
+			if (config.debugging_Lane and config.debugging and config.debugging_L_Cleaning):
 				print("[FindClosestLane] [OuterLanes is Empty] No OuterLanes were detected at all so can only rely on Midlane Info!!")
 			if(Mid_low_Col < int(MidLane.shape[1]/2)): # MidLane on left side of Col/2 of image --> Bigger side is right side draw there
 				DrawRight = True
 		# If Outerlane was present before and got EKIA: >>> DrawRight because it was Crossing LEFt
 		else:
-			if (config.debugging):
+			if (config.debugging_Lane and config.debugging and config.debugging_L_Cleaning):
 				print("[FindClosestLane] IsPathCrossing = ",IsPathCrossing," IsCrossingLeft = ",IsCrossingLeft)
 			if IsCrossingLeft: # trajectory from reflane to lane path is crossing midlane while moving left --> Draw Right
 				DrawRight = True
-		if (config.debugging):
+		if (config.debugging_Lane and config.debugging and config.debugging_L_Cleaning):
 			print("[FindClosestLane] [OuterLanes is Empty] DrawRight = ",DrawRight)
 
 		#Offset Correction wil be set here to correct for the yellow lane not found 
