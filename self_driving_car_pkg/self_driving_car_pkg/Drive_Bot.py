@@ -310,14 +310,14 @@ class Car:
         cv2.putText(frame_disp,"Traffic Light State = [ "+Traffic_State+" ] ",(20,60),cv2.FONT_HERSHEY_COMPLEX,0.35,255)
         
         if (Tracked_class=="left_turn"):
-            font_Scale = 0.30
+            font_Scale = 0.32
             if (Detected_LeftTurn):
                 Tracked_class = Tracked_class + " : Detected { True } "
             else:
                 Tracked_class = Tracked_class + " : Activated { "+ str(Activat_LeftTurn) + " } "
         else:
-            font_Scale = 0.35
-        cv2.putText(frame_disp,"Sign Detected ==> "+str(Tracked_class),(20,85),cv2.FONT_HERSHEY_COMPLEX,font_Scale,(255,0,0),1)
+            font_Scale = 0.37
+        cv2.putText(frame_disp,"Sign Detected ==> "+str(Tracked_class),(20,80),cv2.FONT_HERSHEY_COMPLEX,font_Scale,(0,255,255),1)
 
     def driveCar(self,frame):
         
