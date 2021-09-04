@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+
+  <model name="yellow_light">
+    <static>true</static>
+
+      <link name='Yellow_light_source'>
+      <pose>-1.15 0 2.4 1.57 0 0</pose>
+      
+      <light name='yellow' type='spot'>
+        <pose>0 0 0.0 1.57 0 0</pose>
+        <attenuation>
+          <range>30</range>
+          <linear>0.05</linear>
+        </attenuation>
+        <diffuse>0.5 1 1 1</diffuse>
+        <specular>1 1 1 1</specular>
+        <spot>
+          <inner_angle>0.3</inner_angle>
+          <outer_angle>0.35</outer_angle>
+          <falloff>1</falloff>
+        </spot>
+        <direction>0 0 -1</direction>
+      </light>
+      
+      <visual name='yellow'>
+        <geometry>
+          <cylinder>
+            <radius>0.25</radius>
+            <length>0.1</length>
+          </cylinder>
+          <sphere>
+            <radius>0.4</radius>
+          </sphere>
+        </geometry>
+        <transparency>0.6</transparency>
+      
+        <material>
+          <ambient>1 1 0 1</ambient>
+          <diffuse>1 1 0 1</diffuse>
+          <specular>1 1 1 1</specular>
+          <emissive>1 1 0 1 </emissive>
+        </material>
+      
+      </visual>
+      </link>
+
+    <plugin name='yellow_light_controller' filename='libLedPlugin.so'>
+      <enable>true</enable>
+      
+      <light>
+        <id>Yellow_light_source/yellow</id>
+        <duration>2</duration>
+        <interval>8</interval>
+        <enable>true</enable>
+      </light>
+      
+      </plugin>
+  </model>
+
+</sdf>
