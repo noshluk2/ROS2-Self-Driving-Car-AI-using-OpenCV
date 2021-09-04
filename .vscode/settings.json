@@ -30,5 +30,7 @@
         "/home/luqman/extra_ros_ws/install/controller_manager/lib/python3.8/site-packages",
         "/home/luqman/extra_ros_ws/install/controller_manager_msgs/lib/python3.8/site-packages",
         "/opt/ros/foxy/lib/python3.8/site-packages"
-    ]
+    ],
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": false
 }
