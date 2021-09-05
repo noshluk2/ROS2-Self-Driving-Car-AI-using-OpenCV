@@ -1,5 +1,6 @@
-__pychache__
-*.pyc
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
 prius_sdc/prius_sdc/Detection/__pycache__/__init__.cpython-36.pyc
 prius_sdc/prius_sdc/Detection/Lanes/__pycache__/__init__.cpython-36.pyc
 prius_sdc/prius_sdc/Detection/Lanes/__pycache__/Lane_Detection.cpython-36.pyc
@@ -14,7 +15,9 @@ self_driving_car_pkg/data/vids/new_ishara.avi
 self_driving_car_pkg/self_driving_car_pkg/data/vids/ishara_sign_conflict.avi
 self_driving_car_pkg/self_driving_car_pkg/data/vids/ishara_turning.avi
 self_driving_car_pkg/self_driving_car_pkg/data/vids/new_ishara.avi
-
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/vids/*.avi
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Negative/*
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Positive/*
 # Distribution / packaging
 .Python
 Haar_Cascade_Training/
