@@ -1,0 +1,9 @@
+
+Keras-Preprocessing==1.1.2
+opencv-python==3.4.15.55
+tensorboard==2.6.0
+tensorboard-data-server==0.6.1
+tensorboard-plugin-wit==1.8.0
+tensorflow==2.4.1
+tensorflow-estimator==2.4.0
+

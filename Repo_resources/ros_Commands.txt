@@ -1,0 +1,25 @@
+## This file contains ros commands to run Nodes and launch files from
+## this package
+
+## To run the simulation we need to build the package
+- cd path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/
+- colcon build 
+
+
+
+
+
+########### Commands to utilize files in the simulation ##########
+
+## once build you can run the simulation
+- ros2 launch (package_name) world(launch file)
+- ros2 run self_driving_car_pkg computer_vision_node
+
+
+## To drive the car Manully from keyboard run the commands below in order
+- ros2 launch (package_name) world(launch file)
+- ros2 run teleop_twist_keyboard teleop_twist_keyboard 
+
+## To record the video from car's camera
+- ros2 launch (package_name) world(launch file)
+- ros2 run teleop_twist_keyboard teleop_twist_keyboard 
