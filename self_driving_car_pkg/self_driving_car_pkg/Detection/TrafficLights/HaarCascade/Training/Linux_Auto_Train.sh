@@ -38,6 +38,7 @@ echo
 
 echo "#######################################################################"
 echo "#### [Step - 3] : Generating Positive Samples from the annotations ####"
+echo "####### INFO: Add -show to display generated positive samples ########"
 echo "#######################################################################"
 
 echo 

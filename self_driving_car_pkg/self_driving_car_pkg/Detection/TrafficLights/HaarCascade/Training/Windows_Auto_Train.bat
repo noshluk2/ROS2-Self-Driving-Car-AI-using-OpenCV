@@ -1,6 +1,8 @@
 @echo off
 title Traffic Light Training batch script!
 
+if [%1]==[] goto ExitProgram
+
 set OPENCV_PATH=%1
 echo OPENCV_BIN_PATH = %OPENCV_PATH% 
 
@@ -26,6 +28,7 @@ echo:
 pause
 echo #######################################################################
 echo #### [Step -3] : Generating Positive Samples from the annotations ####
+echo ####### INFO: Add -show to display generated positive samples ########
 echo #######################################################################
 
 echo:
@@ -40,3 +43,9 @@ mkdir Cascades
 echo:
 %OPENCV_PATH%/opencv_traincascade.exe -data Cascades/ -vec pos.vec -bg neg.txt -precalcValBufSize 6000 -precalcIdxBufSize 6000 -numPos 200 -numNeg 400 -numStages 8 -w 72 -h 24 -maxFalseAlarmRate 0.08
 echo:
+
+:ExitProgram:
+echo:
+echo #################### ERROR #######################
+echo ------) Path/To/OpenCV/bin not provided!!! (------
+echo ##################################################
