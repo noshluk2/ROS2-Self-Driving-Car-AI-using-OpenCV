@@ -15,9 +15,12 @@ self_driving_car_pkg/data/vids/new_ishara.avi
 self_driving_car_pkg/self_driving_car_pkg/data/vids/ishara_sign_conflict.avi
 self_driving_car_pkg/self_driving_car_pkg/data/vids/ishara_turning.avi
 self_driving_car_pkg/self_driving_car_pkg/data/vids/new_ishara.avi
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/test.py
 self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/vids/*.avi
 self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Negative/*
 self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Positive/*
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Augmented_Positives/*
+
 # Distribution / packaging
 .Python
 Haar_Cascade_Training/
@@ -25,3 +28,13 @@ build/
 install/
 log/
 dataset_signs/
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Cascades/params.xml
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Cascades/stage0.xml
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Cascades/stage2.xml
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Cascades/stage3.xml
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Cascades/stage1.xml
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Cascades/stage4.xml
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Cascades/stage5.xml
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Cascades/stage6.xml
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Cascades/stage7.xml
+self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Training/Cascades/cascade.xml
