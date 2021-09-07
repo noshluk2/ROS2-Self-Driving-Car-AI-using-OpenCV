@@ -8,7 +8,7 @@ TODO :
 
 A tesla Like Car in ROS2 will follow lane , Use AI to classify Sign Boards and perform Object tracking to act on the sign boards and set speed respectively
 
-- ![alt text](https://github.com/HaiderAbasi/SelfDrivingProject_MiniTesla/blob/master/3D%20model%20file/car_building.gif)
+- ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/a.gif)
 ----
 ## Using this Repository
 * Clone the repository in you Home folder 
@@ -63,15 +63,15 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 * **Lane Following** 
   -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/lane_detection.gif)
 * **Sign Board Detection**
-  - ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/sign_detection.gif)
+  - ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/traffic_signs_boards.gif)
 * **Traffic Signal Recognition**
-  - ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/traffic_lights_follow.gif)
+  - ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/traffic_signal.gif)
 
 * **T-Junction Navigation**
-  - ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/world.gif)
+  - ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/j_turning.gif)
 
 * **The World** 
-  -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/left_turning.gif)
+  -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/world.gif)
 
 * **Custom Models** 
   -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/custom_models.gif)
