@@ -2,10 +2,10 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>self_driving_car_pkg</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <version>1.0.0</version>
+  <description>This package is to run your ROS simulation with a prius model from gazebo with SDC features</description>
   <maintainer email="noshluk2@gmail.com">luqman</maintainer>
-  <license>TODO: License declaration</license>
+  <license>GNU-GPL</license>
 
   <depend>rclpy</depend>
   
@@ -16,6 +16,5 @@
 
   <export>
     <build_type>ament_python</build_type>
-    <!-- <gazebo_ros gazebo_model_path="${prefix}/models"/>   -->
   </export>
 </package>

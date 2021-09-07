@@ -1,5 +1,6 @@
 #!/bin/bash
-
+### This bash is going to spawn Traffic Lights into your simulation at origin 
+### Inside the traffic stand
 green_light_sdf=$HOME/.gazebo/models/green_light/model.sdf
 red_light_sdf=$HOME/.gazebo/models/red_light/model.sdf
 yellow_light_sdf=$HOME/.gazebo/models/yellow_light/model.sdf

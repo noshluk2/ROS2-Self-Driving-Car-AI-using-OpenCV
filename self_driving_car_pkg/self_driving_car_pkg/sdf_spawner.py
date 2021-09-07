@@ -1,3 +1,16 @@
+
+
+
+
+"""
+ This file is a service client implementation for Gazebo spawn service(SpawnEntity)
+ We utilize it for our traffic light sdf files to be spawned into gazebo world
+ with specific timing through bash file
+
+ Date  : 9/7/2021
+    
+"""
+
 import sys
 import rclpy
 from gazebo_msgs.srv import SpawnEntity
