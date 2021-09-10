@@ -307,14 +307,14 @@ class Car:
 
         img_orig = img.copy()
 
+        distance, Curvature = detect_Lane(img)
+
         if self.Inc_TL:
-            Traffic_State, CloseProximity = detect_TrafficLights(img_orig.copy())
+            Traffic_State, CloseProximity = detect_TrafficLights(img_orig.copy(),img)
         else:
             Traffic_State = "Unknown"
             CloseProximity = False
 
-        distance, Curvature = detect_Lane(img)
-        
         Mode , Tracked_class = detect_Signs(img_orig,img)
 
         Current_State = [distance, Curvature, img, Mode, Tracked_class, Traffic_State, CloseProximity]

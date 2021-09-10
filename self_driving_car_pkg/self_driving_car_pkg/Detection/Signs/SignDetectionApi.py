@@ -141,7 +141,7 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
                                 signTrack.known_centers_confidence.append(1)
 
                             # 4i. Display BBox and Class                      
-                            cv2.putText(frame_draw,sign,(endP[0]-20,startP[1]+10),cv2.FONT_HERSHEY_PLAIN,0.5,(0,0,255),1)
+                            cv2.putText(frame_draw,sign,(endP[0]-150,startP[1]-10),cv2.FONT_HERSHEY_PLAIN,1,(0,0,255),1)
                             if draw_detected:
                                 cv2.circle(frame_draw,(i[0],i[1]),i[2],(0,255,0),1) # draw the outer circle
                                 cv2.circle(frame_draw,(i[0],i[1]),2,(0,0,255),3) # draw the center of the circle

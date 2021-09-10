@@ -180,11 +180,13 @@ def Segment_Colour(frame,minArea):
     if (config.debugging_Lane and config.debugging and config.debugging_L_ColorSeg):
         cv2.imshow('[Segment_Colour_final] mask',mask)
         cv2.imshow('[Segment_Colour_final] mask_Y',mask_Y)
+        cv2.imshow('Mid_edge_ROI',Mid_edge_ROI)
         cv2.imshow('Outer_edge_ROI',Outer_edge_ROI)
         cv2.imshow('OuterLane_Side_Seperated',OuterLane_SidesSeperated)
     else:
         cv2.destroyWindow('[Segment_Colour_final] mask')
         cv2.destroyWindow('[Segment_Colour_final] mask_Y')
+        cv2.destroyWindow('Mid_edge_ROI')
         cv2.destroyWindow('Outer_edge_ROI')
         cv2.destroyWindow('OuterLane_Side_Seperated')
 

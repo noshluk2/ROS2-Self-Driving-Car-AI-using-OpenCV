@@ -293,11 +293,15 @@ class TL_States:
                             cv2.circle(frame_draw,(i[0],i[1]),2,(0,0,255),3)
                             #cv2.imshow('circle',detected_sign)
 
-            cv2.putText(frame_draw,str(circles.shape[1]),(40,50),cv2.FONT_HERSHEY_SIMPLEX,1,255)
+            if (config.debugging and config.debugging_TrafficLights):            
+                detected_circles_str= "#_of_detected_circles = "+ str(circles.shape[1])
+                cv2.putText(frame_draw,detected_circles_str,(20,100),cv2.FONT_HERSHEY_SIMPLEX,0.45,(255,255,255))
+            
             if self.display_images:
-                cv2.putText(frame_draw, self.Traffic_State, (20,20), cv2.FONT_HERSHEY_SIMPLEX, 1, 255)
                 
                 if (config.debugging and config.debugging_TrafficLights):
+                    Traffic_State_STR= "Traffic State = "+ self.Traffic_State
+                    cv2.putText(frame_draw, Traffic_State_STR, (20,120), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255,255,255))
                     cimg_str = '[Fetch_TL_State] (2) detected circular reg'
                     cv2.imshow(cimg_str,frame_draw)
   
@@ -402,11 +406,11 @@ class TL_States:
 
 TL_States_ = TL_States()
 
-class TL_Detector:
+class Cascade_Detector:
 
     def __init__(self):
         # Instance Variables
-        print("Initialized Object of TL_Detector class")
+        print("Initialized Object of Cascade_Detector class")
 
     # Class Variables
     TrafficLight_cascade_str = os.path.join(os.getcwd(), "self_driving_car_pkg/self_driving_car_pkg/data/TrafficLight_cascade.xml")
@@ -416,22 +420,8 @@ class TL_Detector:
         print('--(!)Error loading face cascade')
         exit(0)
     
-    def Get_TrafficLightState(self,Tracked_ROI):
-        img_draw = Tracked_ROI.copy()
-        # Reconfirm if detected Traffic Light was the desired one
-        Traffic_State = TL_States_.Get_TL_State(Tracked_ROI,img_draw)
 
-        if(Traffic_State!="Unknown"):
-            print("Traffic State Recived While Tracking ",Traffic_State)
-            cv2.putText(img_draw,str(TL_Track.CollisionIminent),(80,80),cv2.FONT_HERSHEY_SIMPLEX,1,255)
-
-            if (config.debugging and config.debugging_TrafficLights):
-                cv2.imshow('[Fetch_TL_State] (3) Traffic Light With State', img_draw)
-
-            #cv2.waitKey(0)
-        return Traffic_State
-
-    def Cascade_Detect(self,img):
+    def detect(self,img):
         img_draw=img.copy()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         target = self.TrafficLight_cascade.detectMultiScale(gray)
@@ -534,7 +524,7 @@ class TL_Tracker:
         return pts_src,pts_dst
 
     
-    def EstimateTrackedRect(self,im_src,pts_src,pts_dst):
+    def EstimateTrackedRect(self,im_src,pts_src,pts_dst,img_draw):
         Tracking = "Tracking"
         im_dst = np.zeros_like(im_src)
 
@@ -563,22 +553,14 @@ class TL_Tracker:
 
             cv2.drawContours(img_dst_2,[box],0,255,-1)
 
+            # Drawing Tracked Traffic Light Rect On Original Image
+            if (config.debugging and config.debugging_TrafficLights):
+                cv2.drawContours(img_draw,[box],0,(255,0,0),2)
+
             #https://stackoverflow.com/questions/39371507/image-loses-quality-with-cv2-warpperspective
             # Smoothing by warping is caused by interpolation
             #im_dst = cv2.warpAffine(im_src, M ,(im_dst.shape[1],im_dst.shape[0]))
 
-            max_value=np.amax(im_dst)
-            # applying Otsu thresholding
-            # as an extra flag in binary 
-            # thresholding     
-            #ret, thresh1 = cv2.threshold(im_dst, 255, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)     
-            ret, thresh1 = cv2.threshold(im_dst, max_value-25, 255, cv2.THRESH_BINARY)     
-            #im_dst=thresh1
-            # the window showing output image         
-            # with the corresponding thresholding         
-            # techniques applied to the input image    
-            #cv2.imshow('Otsu Threshold', thresh1)         
-            #cv2.imshow('img_dst_2', img_dst_2)         
         else:
             print("Points less then 3, Error!!!")
             #cv2.waitKey(0)
@@ -595,9 +577,11 @@ class TL_Tracker:
         # 4a. Convert Rgb to gray
         gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
 
-        Text2display = "OpticalFlow ( " + self.mode + " )"
+        if (config.debugging and config.debugging_TrafficLights):
+            Text2display = "OpticalFlow ( " + self.mode + " )"
+            cv2.putText(frame_draw,Text2display,(20,150),cv2.FONT_HERSHEY_SIMPLEX,0.45,(255,255,255),1)
+
         # Localizing Potetial Candidates and Classifying them in SignDetection
-        cv2.putText(frame_draw,Text2display,(10,20),cv2.FONT_HERSHEY_SIMPLEX,0.5,(255,255,255),1)
         # 4b. Calculate optical flow
         p1, st, err = cv2.calcOpticalFlowPyrLK(self.old_gray, gray, self.p0, None,**self.lk_params)
         
@@ -612,7 +596,7 @@ class TL_Tracker:
             # Select good points
             good_new = p1[st == 1]
             good_old = self.p0[st == 1]
-            self.Tracked_ROI,Temp_Tracked_ROI,self.mode = self.EstimateTrackedRect(self.Tracked_ROI,good_old,good_new)
+            self.Tracked_ROI,Temp_Tracked_ROI,self.mode = self.EstimateTrackedRect(self.Tracked_ROI,good_old,good_new,frame_draw)
             # Draw the tracks
             for i, (new, old) in enumerate(zip(good_new, good_old)):
                 a, b = (int(x) for x in new.ravel())
@@ -634,13 +618,12 @@ class TL_Tracker:
         self.p0 = []
 
 
-TL_Detect = TL_Detector()
+cascade_detector = Cascade_Detector()
 TL_Track = TL_Tracker()
 Segment_On_Clr_ = Segment_On_Clr()
 
-def detect_TrafficLights(img):
-    # Every form of drawing will be done on this stupit image
-    frame_draw = img.copy()
+def detect_TrafficLights(img,frame_draw):
+
     Curr_TL_State = "Unknown"
     # 4. Checking if SignTrack Class mode is Tracking If yes Proceed
     if(TL_Track.mode == "Tracking"):
@@ -659,25 +642,37 @@ def detect_TrafficLights(img):
         if (config.debugging and config.debugging_TrafficLights):        
             cv2.imshow('[Fetch_TL_State] (5) img_ROI_tracked_BoundedRect', img_ROI_tracked)
 
+        # Reconfirm if detected Traffic Light was the desired one
+        Curr_TL_State = TL_States_.Get_TL_State(img_ROI_tracked,frame_draw)
 
-        Curr_TL_State = TL_Detect.Get_TrafficLightState(img_ROI_tracked)
+        if(Curr_TL_State!="Unknown"):
+            print("Traffic State Recived While Tracking ",Curr_TL_State)
+
+            if (config.debugging and config.debugging_TrafficLights):
+                Collision_State= "Collision_State = "+ str(TL_Track.CollisionIminent)
+                cv2.putText(frame_draw,Collision_State,(20,135),cv2.FONT_HERSHEY_SIMPLEX,0.45,(255,255,255))
+
+            if (config.debugging and config.debugging_TrafficLights):
+                cv2.imshow('[Fetch_TL_State] (3) Traffic Light With State', frame_draw)
+
+        #Curr_TL_State = cascade_detector.Get_TrafficLightState(img_ROI_tracked)
 
     # 3. If SignTrack is in Detection Proceed to intialize tracker
     elif (TL_Track.mode == "Detection"):
 
         # 3a. Select the ROI which u want to track
-        r, TLD_Class = TL_Detect.Cascade_Detect(img)
+        r, TLD_Class = cascade_detector.detect(img)
         
         if ((r!=np.array([0,0,0,0])).all()):
             # Traffic Light Detected ===> Initialize Tracker 
             # 3b. Convert Rgb to gray
             gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
             # 3c. creating ROI mask
-            ROI_mask = np.zeros_like(gray)
             ROI_toTrack = np.zeros_like(gray)
             ROI_toTrack[int(r[1]):int(r[1]+r[3]), int(r[0]):int(r[0]+r[2])] = 255
-
-            cv2.rectangle(ROI_mask, (int(r[0]),int(r[1])), (int(r[0]+r[2]),int(r[1]+r[3])),255, 2)
+            
+            #ROI_mask = np.zeros_like(gray)
+            #cv2.rectangle(ROI_mask, (int(r[0]),int(r[1])), (int(r[0]+r[2]),int(r[1]+r[3])),255, 2)
 
             #_,Mask_ClrRmvd = Segment_On_Clr_.in_hls(img,mask=ROI_toTrack)
 
