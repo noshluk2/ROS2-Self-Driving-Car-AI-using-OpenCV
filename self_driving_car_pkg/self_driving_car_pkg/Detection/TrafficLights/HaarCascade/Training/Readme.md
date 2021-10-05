@@ -43,7 +43,10 @@ count_files_in_dirs_n_subdirs(Path/To/Training, display_bar=True)
 > **Note:** **( Step 4 Onwards )** Can be done Automatically by simply running the script file .
 
 > a) Windows_Auto_Train.bat
- 
+<p align="center">
+   <img src="https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/TL_InstallationReadme_Update/Images_videos/HaarCascade/Training_Steps/Windows_bat_run.png" style="width:750px;height:300px;"><br/><br/>
+</p>
+
 > b) Linux_Auto_Train.sh
 
 <br/>
