@@ -19,7 +19,7 @@ def plt_bar(Categories,Data_Amount):
     plt.title("Dataset Spread")
     plt.show()    
 
-def count_files_in_dirs_n_subdirs(path=None, display_bar=False):
+def count_files_in_dirs_n_subdirs(path=None, display_bar=True):
     if path is None:
         path= os.getcwd()
         print("CWD = {} ".format(path))
