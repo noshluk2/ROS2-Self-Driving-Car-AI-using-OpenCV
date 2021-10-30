@@ -3,10 +3,7 @@ from geometry_msgs.msg import Twist
 from rclpy.node import Node 
 from cv_bridge import CvBridge 
 from sensor_msgs.msg import Image 
-import rclpy 
-
-from .Drive_Bot import Car, Debugging
-
+import rclpy
 class Video_feed_in(Node):
     def __init__(self):
 
@@ -17,8 +14,6 @@ class Video_feed_in(Node):
 
         self.velocity = Twist()
         self.bridge   = CvBridge() # converting ros images to opencv data
-        self.Debug    = Debugging()
-        self.Car      = Car()
 
     def send_cmd_vel(self):
         self.publisher.publish(self.velocity)
@@ -29,7 +24,7 @@ class Video_feed_in(Node):
 
         frame = self.bridge.imgmsg_to_cv2(data,'bgr8') # performing conversion
 
-        Angle,Speed,img = self.Car.driveCar(frame)
+        Angle,Speed,img = 0,1,frame
 
         self.velocity.angular.z = Angle
         self.velocity.linear.x = Speed      
