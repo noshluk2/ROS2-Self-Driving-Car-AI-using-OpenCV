@@ -1,0 +1,30 @@
+
+############################################# VIRTUAL ENVIRONMENT CREATION ##############################################################
+# Create a virutal Environment
+python3 -m virtualenv ROS2SDC_VENV
+# Activate Virtaul Environment
+source ROS2SDC_VENV/bin/activate
+# Install neccesary python modules
+pip3 install -r Repo_resources/installation_requirements_python.txt
+
+############################################# BUILDING THE PROJECT ######################################################################
+# Bring all models into your .gazebo/models
+cp /models/* ~/.gazebo/models 
+#Build repo
+colcon build
+
+############################################# RUNNING THE PROJECT #######################################################################
+
+>>>>>>> Open A new Terminal <<<<<<<<
+
+#Activate Environment
+source ROS2SDC_VENV/bin/activate
+# Source *your Workspace* in any terminal you open to Run files from this workspace
+source /home/haiderabbasi/Development/HAD_LUQ/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
+source /opt/ros/foxy/setup.bash
+
+## once build you can run the simulation e.g [ ros2 launch (package_name) world(launch file) ] 
+ros2 run self_driving_car_pkg computer_vision_node
+
+## To activate the SelfDriving Car
+ros2 run self_driving_car_pkg computer_vision_node 

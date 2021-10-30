@@ -225,7 +225,7 @@ class Control:
 
                 elif(self.GO_MODE_ACTIVATED):
                     a = 0.0                    
-                    if(self.TrafficLight_iterations==150):
+                    if(self.TrafficLight_iterations==200):
                         self.GO_MODE_ACTIVATED = False
                         print("Interchange Crossed !!!")
                         self.TrafficLight_iterations = 0 #Reset
