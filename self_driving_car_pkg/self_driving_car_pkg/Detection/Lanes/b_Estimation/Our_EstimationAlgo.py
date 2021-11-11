@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 import math
+
 def Distance_(a,b):
     return math.sqrt( ( (a[1]-b[1])**2 ) + ( (a[0]-b[0])**2 ) )
-
 
 def ApproxDistBWCntrs(cnt,cnt_cmp):
     # compute the center of the contour
@@ -44,7 +44,7 @@ def Estimate_MidLane(BW,MaxDistance):
     BW_zero= cv2.cvtColor(BW,cv2.COLOR_GRAY2BGR)
 
     # 1. Find the two Contours for which you want to find the min distance between them.
-    cnts= cv2.findContours(BW, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[1]#3ms
+    cnts = cv2.findContours(BW, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[1]#3ms
     
     # 2. Keep Only those contours that are not lines 
     MinArea=1
@@ -53,7 +53,7 @@ def Estimate_MidLane(BW,MaxDistance):
         area = cv2.contourArea(cnts[index])
         if area > MinArea:
             cnts_Legit.append(cnts[index])
-    cnts=cnts_Legit
+    cnts = cnts_Legit
 
     # Cycle through each point in the Two contours & find the distance between them.
     # Take the minimum Distance by comparing all other distances & Mark that Points.
@@ -74,8 +74,8 @@ def Estimate_MidLane(BW,MaxDistance):
                         prevmin_dist = min_dist
                         Bstindex_cmp = index_cmp
                         #BstClosests_Pixels = Closests_Pixels
-                        BstCentroid_a=Centroid_a
-                        BstCentroid_b=Centroid_b   
+                        BstCentroid_a = Centroid_a
+                        BstCentroid_b = Centroid_b   
 
                     else:
                         Present= False
@@ -86,8 +86,9 @@ def Estimate_MidLane(BW,MaxDistance):
                             prevmin_dist = min_dist
                             Bstindex_cmp = index_cmp
                             #BstClosests_Pixels = Closests_Pixels
-                            BstCentroid_a=Centroid_a
-                            BstCentroid_b=Centroid_b   
+                            BstCentroid_a = Centroid_a
+                            BstCentroid_b = Centroid_b
+   
         if ((prevmin_dist!=100000 ) and (prevmin_dist>MaxDistance)):
             break
         if (type(BstCentroid_a)!=int):
