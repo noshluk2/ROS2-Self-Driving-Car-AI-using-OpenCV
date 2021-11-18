@@ -11,6 +11,12 @@ class Control():
         # Cruise_Control Variable
         self.prev_Mode = "Detection"
         self.IncreaseTireSpeedInTurns = False
+        # Nav T-Junc Variable
+        self.prev_Mode_LT = "Detection"
+        self.Left_turn_iterations = 0
+        self.Frozen_Angle = 0
+        self.Detected_LeftTurn = False
+        self.Activat_LeftTurn = False
     
     def follow_lane(self,max_sane_dist,dist,curv,mode,tracked_class):
         #2. Cruise control speed adjusted to match road speed limit
@@ -53,7 +59,35 @@ class Control():
             elif(self.angle<(-30)):
                 car_speed_turn = interp(self.angle,[-45,-30],[100,80])
                 self.speed = car_speed_turn
+
+
+    def Obey_LeftTurn(self,mode):
+
+        self.speed = 50
+        # Car starts tracking left turn...
+        if ( (self.prev_Mode_LT =="Detection") and (mode=="Tracking")):
+            self.prev_Mode_LT = "Tracking"
+            self.Detected_LeftTurn = True 
+        elif ( (self.prev_Mode_LT =="Tracking") and (mode=="Detection")):
+            self.Detected_LeftTurn = False
+            self.Activat_LeftTurn = True
+            # Move left by 7 degree every 20th iteration after a few waiting a bit 
+            if ( ((self.Left_turn_iterations % 20 ) ==0) and (self.Left_turn_iterations>100) ):
+                self.Frozen_Angle = self.Frozen_Angle -7
+            
+            # After a time period has passed [ De-Activate Left Turn + Reset Left Turn Variables ]
+            if(self.Left_turn_iterations==250):
+                self.prev_Mode_LT = "Detection"
+                self.Activat_LeftTurn = False
+                self.Left_turn_iterations = 0
                 
+            self.Left_turn_iterations = self.Left_turn_iterations + 1
+
+        # Angle of car adjusted here
+        if (self.Activat_LeftTurn or self.Detected_LeftTurn):
+            #Follow previously Saved Route
+            self.angle = self.Frozen_Angle
+
     def drive(self,Current_State):
         [dist,curv,img,mode,tracked_class] = Current_State
 
@@ -61,7 +95,10 @@ class Control():
             self.follow_lane(img.shape[1]/4,dist,curv,mode,tracked_class)
         else:
             self.speed = 0.0 # Stop the car
-
+            
+        if (tracked_class == "left_turn"):
+            self.Obey_LeftTurn(mode)
+            
         # Interpolating the angle and speed from real world to motor worlld
         angle_motor = interp(self.angle,[-45,45],[0.5,-0.5])
         if (self.speed!=0):
@@ -107,7 +144,14 @@ class Car():
         angle_speed_str = "[ Angle ,Speed ] = [ " + str(int(angle_of_car)) + "deg ," + str(int(current_speed)) + "mph ]"
         cv2.putText(frame_disp,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.4,(0,0,255),1)
         
-        font_Scale = 0.37
+        if (tracked_class=="left_turn"):
+            font_Scale = 0.32
+            if (self.Control.Detected_LeftTurn):
+                tracked_class = tracked_class + " : Detected { True } "
+            else:
+                tracked_class = tracked_class + " : Activated { "+ str(self.Control.Activat_LeftTurn) + " } "
+        else:
+            font_Scale = 0.37
         cv2.putText(frame_disp,"Sign Detected ==> "+str(tracked_class),(20,80),cv2.FONT_HERSHEY_COMPLEX,font_Scale,(0,255,255),1)    
 
     def drive_car(self,frame):
