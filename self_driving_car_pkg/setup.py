@@ -7,12 +7,13 @@ package_name = 'self_driving_car_pkg'
 config_module = "self_driving_car_pkg/config" 
 det_module= "self_driving_car_pkg/Detection"
 det_l_module= "self_driving_car_pkg/Detection/Lanes"
+det_s_module = "self_driving_car_pkg/Detection/Signs"
 
 
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name,config_module,det_module,det_l_module],
+    packages=[package_name,config_module,det_module,det_l_module,det_s_module],
 
     data_files=[
         ('share/ament_index/resource_index/packages',

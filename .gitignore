@@ -23,6 +23,8 @@ self_driving_car_pkg/self_driving_car_pkg/Detection/TrafficLights/HaarCascade/Tr
 
 # Distribution / packaging
 .Python
+self_driving_car_pkg/self_driving_car_pkg/data/live_dataset/
+self_driving_car_pkg/self_driving_car_pkg/data/datasets/
 ROS2SDC_VENV/
 Haar_Cascade_Training/
 build/
