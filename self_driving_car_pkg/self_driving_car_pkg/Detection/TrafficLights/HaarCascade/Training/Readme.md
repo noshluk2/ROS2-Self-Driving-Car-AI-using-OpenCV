@@ -10,7 +10,7 @@
 
 **1)** *Extracted frames from vids using following function by importing from Training/utils.py*
   ```python
-from util.py import extract_frames_from_batch
+from utils import extract_frames_from_batch
    extract_frames_from_batch(vids_folder)
   ```
 <br/>
