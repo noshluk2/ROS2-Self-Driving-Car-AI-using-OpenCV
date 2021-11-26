@@ -39,15 +39,20 @@ class Tracker:
         # If no match found as of yet return default values
         return match_found, match_idx
         
-    def init_tracker(self,sign,gray,frame_draw,startP,endP):
-        sign_mask = np.zeros_like(gray)
-        sign_mask[startP[1]:endP[1],startP[0]:endP[0]] = 255
+    def init_tracker(self,label,gray,frame_draw,startP,endP,mask_to_track = None):
+
+        if mask_to_track is None:
+            sign_mask = np.zeros_like(gray)
+            sign_mask[startP[1]:endP[1],startP[0]:endP[0]] = 255
+            self.p0 = cv2.goodFeaturesToTrack(gray,mask= sign_mask,**self.feature_params)
+        else:
+            self.p0 = cv2.goodFeaturesToTrack(gray,mask= mask_to_track,**self.feature_params)
+        
         if not config.Training_CNN:
             self.mode = "Tracking"
-        self.Tracked_class = sign
+        self.Tracked_class = label
         self.old_gray = gray
         self.mask = np.zeros_like(frame_draw)
-        self.p0 = cv2.goodFeaturesToTrack(gray,mask= sign_mask,**self.feature_params)
 
     def track(self,gray,frame_draw):
         p1,st,_ = cv2.calcOpticalFlowPyrLK(self.old_gray,gray,self.p0,None,**self.lk_params)

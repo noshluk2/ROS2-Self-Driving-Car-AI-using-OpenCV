@@ -27,7 +27,7 @@ def sign_det_n_track(gray,frame,frame_draw):
 
     if (sign_tracker.mode=="Detection"):
 
-        circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1,100,param1=250,param2=30,minRadius=10,maxRadius=100)
+        circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1,100,param1=250,param2=30,minRadius=20,maxRadius=100)
 
         # 4a. Checking if any circular regions were localized
         if circles is not None:
