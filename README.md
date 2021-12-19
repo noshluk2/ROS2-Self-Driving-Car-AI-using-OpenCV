@@ -53,8 +53,8 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
  ```
   **NOTE:** This upper command is going to add the source file path into your ~/.bashrc file ( Only perform it once and you know what you are doing).This will save your time when running things from the Workspace
 * If the repository is not working for you. Watch the free preview video on our course page 
- in **Section # 6 : How to use Code** where full explaination is given on setting up this repository.
-  * **[[Link not added Yet !]]()**
+ Where full explaination is given on setting up this repository.
+  * **[[How to Run the Project]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/learn/lecture/30013318#overview)**
 ----
 ## Course Workflow
 #### **Ros Package**
