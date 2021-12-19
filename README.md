@@ -110,7 +110,7 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 ## Link to the Course
 <!-- - ![alt text](https://github.com/HaiderAbasi/SelfDrivingProject_MiniTesla/blob/master/3D%20model%20file/Tesla%20Self%20Driving%20Car.png) -->
 
-**[[Course Not Yet Published]](https://www.udemy.com/user/e8894488-eb79-45f5-aef1-f3a8733b6f43/)**
+**[[Discounted Link]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/?referralCode=7B46B1C0DF4689EF69EB)**
 
 ----
 
