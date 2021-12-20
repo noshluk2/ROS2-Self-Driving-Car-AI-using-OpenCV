@@ -20,7 +20,7 @@ TODO :
 ## About this Repository
 A tesla Like Car in ROS2 will follow lane , Use AI to classify Sign Boards and perform Object tracking to act on the sign boards and set speed respectively
 
-- ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/a.png)
+- ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/thumbnail.png)
 ----
 ## Using this Repository
 * Clone the repository in you Home folder 
@@ -106,9 +106,8 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 * Motivated mind :)
 ---
 ## Link to the Course
-<!-- - ![alt text](https://github.com/HaiderAbasi/SelfDrivingProject_MiniTesla/blob/master/3D%20model%20file/Tesla%20Self%20Driving%20Car.png) -->
 
-**[[Discounted Link]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/?referralCode=7B46B1C0DF4689EF69EB)**
+**[[Discounted Link]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/?couponCode=GITHUB)**
 
 ----
 
