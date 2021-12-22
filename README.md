@@ -65,9 +65,14 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 * Textures and Plugins in SDF
 
 #### **Computer Vision** 
-* @HaiderAbasi add your workflow
+* Perception Pipeline setup
+* Lane Detection with Computer Vision Techniques
+* Traffic Light Detection Using Haar Cascades
+* Sign and Traffic Light Tracking using Optical Flow
+* Rule-Based Control Algorithms
+
 #### **DeepLearning**
-* @HaiderAbasi add your workflow
+* Sign Classification using (custom-built) CNN
 ---
 ## Features
 * **Prius Hybrid Car** 
@@ -102,7 +107,7 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 * Basic ROS2 Nodes Communication
 * Launch Files 
 * Gazebo Model Creation
-* @HaiderAbasi Add yours
+* Basic OpenCV Usage
 * Motivated mind :)
 ---
 ## Link to the Course
