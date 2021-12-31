@@ -1,8 +1,6 @@
 # ROS2 Prius Self Driving Car  using AI/Deeplearning and Computer Vision
 
-TODO : 
-- Description
-- Course Thumnbail
+
 <details open="open">
   <summary>Table of Contents</summary>
   <ol>
