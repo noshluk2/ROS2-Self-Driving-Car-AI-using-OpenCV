@@ -40,6 +40,8 @@ def RetLargestContour(gray):
 
 
 def Estimate_MidLane(BW,MaxDistance):
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(2,2))
+    BW = cv2.morphologyEx(BW,cv2.MORPH_DILATE,kernel)
     #cv2.namedWindow("BW_zero",cv2.WINDOW_NORMAL)
     BW_zero= cv2.cvtColor(BW,cv2.COLOR_GRAY2BGR)
 

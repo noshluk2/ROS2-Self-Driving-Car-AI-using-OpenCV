@@ -59,5 +59,5 @@ minArea_resized = int(Resize_Framepixels * Lane_Extraction_minArea_per)
 BWContourOpen_speed_MaxDist_per = 500 / Ref_imgHeight
 MaxDist_resized = int(Resized_height * BWContourOpen_speed_MaxDist_per)
 
-CropHeight = 600 # Required in Camera mounted on top of car 640p
+CropHeight = 650 # Required in Camera mounted on top of car 640p
 CropHeight_resized = int( (CropHeight / Ref_imgHeight ) * Resized_height )
