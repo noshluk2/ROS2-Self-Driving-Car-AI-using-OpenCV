@@ -1,5 +1,7 @@
 
 ############################################# VIRTUAL ENVIRONMENT CREATION ##############################################################
+# Install virtualenv package using pip
+python3 -m pip install --user virtualenv
 # Create a virutal Environment
 python3 -m virtualenv ROS2SDC_VENV
 # Activate Virtaul Environment
