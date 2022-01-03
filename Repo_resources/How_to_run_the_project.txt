@@ -9,8 +9,15 @@ source ROS2SDC_VENV/bin/activate
 # Install neccesary python modules
 pip3 install -r Repo_resources/installation_requirements_python.txt
 
+############################ Installing Dependencies (Not mentioned in the video lecture ) #######################################
+
+mkdir -p ~/.gazebo/models
+sudo apt install -y python3-colcon-common-extensions
+sudo apt install -y ros-foxy-gazebo-ros-pkgs
+
 ############################################# BUILDING THE PROJECT ######################################################################
 # Bring all models into your .gazebo/models
+
 cp -r self_driving_car_pkg/models/* ~/.gazebo/models
 #Build repo
 colcon build
