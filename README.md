@@ -31,17 +31,17 @@ git clone https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV.git
 ##e.g cd ~/ROS2-Self-Driving-Car-AI-using-OpenCV/
   ```
 
-* Bring all models into your **.gazebo/models**
+* Bring all models into your **.gazebo/models** ( requires gazebo to be installed )
  ```
  cp /models/* ~/.gazebo/models 
  ```
- or manually copy->paste them into ~/.gazebo/models/
+ or manually copy->paste them into ~/.gazebo/models/ ( if not avaible press ctrl + H  , a hidden foler )
 
-* Perform Colcon Build
+* Perform Colcon Build ( if not installed refer to Repo_resources/How_to_run_the_project.txt )
 ```
 colcon build
 ```
-* Source your Workspace in any terminal you open to Run files from this workspace ( Basics thing of ROS )
+* Source your Workspace in any terminal you open to Run files from this workspace ( Basic thing of ROS )
 ```
 source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 ```
