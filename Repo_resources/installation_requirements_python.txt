@@ -9,4 +9,3 @@ sklearn
 # Visualization libraries
 matplotlib
 visualkeras
-git+git://github.com/keplr-io/quiver.git
