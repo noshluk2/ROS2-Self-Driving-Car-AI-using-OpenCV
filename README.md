@@ -21,7 +21,7 @@ A tesla Like Car in ROS2 will follow lane , Use AI to classify Sign Boards and p
 [![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/thumbnail_1.png)](https://youtu.be/D5BkqDcfw2U "Click to Watch Intro Video on Youtube")
 ----
 ## Using this Repository
-* Clone the repository in you Home folder 
+* Clone the repository in you Home folder
 ```
 git clone https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV.git
 ```
@@ -33,7 +33,7 @@ git clone https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV.git
 
 * Bring all models into your **.gazebo/models** ( requires gazebo to be installed )
  ```
- cp /models/* ~/.gazebo/models 
+ cp /models/* ~/.gazebo/models
  ```
  or manually copy->paste them into ~/.gazebo/models/ ( if not avaible press ctrl + H  , a hidden foler )
 
@@ -49,8 +49,19 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
  ```
   echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
  ```
+
+ * To Run the pathplanning world and saving Video
+ ```
+ ros2 launch  self_driving_car_pkg maze_solving_world.launch.py
+ ```
+   * Next terminal
+ ```
+ ros2 run self_driving_car_pkg  upper_camera_recording
+
+ ```
+
   **NOTE:** This upper command is going to add the source file path into your ~/.bashrc file ( Only perform it once and you know what you are doing).This will save your time when running things from the Workspace
-* If the repository is not working for you. Watch the free preview video on our course page 
+* If the repository is not working for you. Watch the free preview video on our course page
  Where full explaination is given on setting up this repository.
   * **[[How to Run the Project]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/learn/lecture/30013318#overview)**
 ----
@@ -62,7 +73,7 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 * SDF through Gazebo
 * Textures and Plugins in SDF
 
-#### **Computer Vision** 
+#### **Computer Vision**
 * Perception Pipeline setup
 * Lane Detection with Computer Vision Techniques
 * Traffic Light Detection Using Haar Cascades
@@ -73,9 +84,9 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 * Sign Classification using (custom-built) CNN
 ---
 ## Features
-* **Prius Hybrid Car** 
+* **Prius Hybrid Car**
   -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/the_car.gif)
-* **Lane Following** 
+* **Lane Following**
   -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/lane_detection.gif)
 * **Sign Board Detection**
   - ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/traffic_signs_boards.gif)
@@ -85,25 +96,25 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 * **T-Junction Navigation**
   - ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/j_turning.gif)
 
-* **The World** 
+* **The World**
   -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/world.gif)
 
-* **Custom Models** 
+* **Custom Models**
   -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/custom_models.gif)
 
 ----
-## Pre-Course Requirments 
+## Pre-Course Requirments
 
 **Software Based**
 * Ubuntu 20.04 (LTS)
-* ROS2 - Foxy Fitzroy 
-* Python 3.6 
+* ROS2 - Foxy Fitzroy
+* Python 3.6
 * Opencv 4.2
 * Tensorflow 2.14
 
 **Skill Based**
 * Basic ROS2 Nodes Communication
-* Launch Files 
+* Launch Files
 * Gazebo Model Creation
 * Basic OpenCV Usage
 * Motivated mind :)
@@ -116,8 +127,8 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 
 ## Instructors
 
-Haider Najeeb   (Computer Vision)    -  [Profile Link](https://www.linkedin.com/in/haider-najeeb-68812516a/)  
-Muhammad Luqman (ROS Simulation and Control Systems) - [Profile Link](https://www.linkedin.com/in/muhammad-luqman-9b227a11b/)  
+Haider Najeeb   (Computer Vision)    -  [Profile Link](https://www.linkedin.com/in/haider-najeeb-68812516a/)
+Muhammad Luqman (ROS Simulation and Control Systems) - [Profile Link](https://www.linkedin.com/in/muhammad-luqman-9b227a11b/)
 
 ----
 ## License
