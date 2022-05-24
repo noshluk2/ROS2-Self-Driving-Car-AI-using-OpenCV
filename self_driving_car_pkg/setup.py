@@ -1,12 +1,12 @@
 from setuptools import setup
 import os
-from glob import glob 
+from glob import glob
 
 
 package_name = 'self_driving_car_pkg'
 
 
-config_module = "self_driving_car_pkg/config" 
+config_module = "self_driving_car_pkg/config"
 data_module ="self_driving_car_pkg/data"
 
 detection_module ="self_driving_car_pkg/Detection"
@@ -48,6 +48,7 @@ setup(
         'spawner_node = self_driving_car_pkg.sdf_spawner:main',
         'computer_vision_node = self_driving_car_pkg.computer_vision_node:main',
         'video_recording_node = self_driving_car_pkg.video_save:main',
+        'upper_camera_recording = self_driving_car_pkg.upper_camera_video:main',
         ],
     },
 )
