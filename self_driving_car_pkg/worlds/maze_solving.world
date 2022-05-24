@@ -105,7 +105,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>/home/luqman/blender_projects/meshes/road/road.dae</uri>
+              <uri>model://pp_prius_road/meshes/road.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -118,7 +118,7 @@
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
             <mesh>
-              <uri>/home/luqman/blender_projects/meshes/road/road.dae</uri>
+              <uri>model://pp_prius_road/meshes/road.dae</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>
@@ -976,65 +976,11 @@
         <robot_base_frame>chassis</robot_base_frame>
       </plugin>
     </model>
-    <light name='user_point_light_0' type='point'>
-      <pose>20.1964 29.1307 1 0 -0 0</pose>
-      <diffuse>0.5 0.5 0.5 1</diffuse>
-      <specular>0.1 0.1 0.1 1</specular>
-      <attenuation>
-        <range>20</range>
-        <constant>0.5</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <cast_shadows>0</cast_shadows>
-      <direction>0 0 -1</direction>
-      <spot>
-        <inner_angle>0</inner_angle>
-        <outer_angle>0</outer_angle>
-        <falloff>0</falloff>
-      </spot>
-    </light>
-    <light name='user_point_light_1' type='point'>
-      <pose>38.3727 25.1788 1 0 -0 0</pose>
-      <diffuse>0.5 0.5 0.5 1</diffuse>
-      <specular>0.1 0.1 0.1 1</specular>
-      <attenuation>
-        <range>20</range>
-        <constant>0.5</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <cast_shadows>0</cast_shadows>
-      <direction>0 0 -1</direction>
-      <spot>
-        <inner_angle>0</inner_angle>
-        <outer_angle>0</outer_angle>
-        <falloff>0</falloff>
-      </spot>
-    </light>
-    <light name='user_point_light_2' type='point'>
-      <pose>47.8929 5.1099 1 0 -0 0</pose>
-      <diffuse>0.5 0.5 0.5 1</diffuse>
-      <specular>0.1 0.1 0.1 1</specular>
-      <attenuation>
-        <range>20</range>
-        <constant>0.5</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <cast_shadows>0</cast_shadows>
-      <direction>0 0 -1</direction>
-      <spot>
-        <inner_angle>0</inner_angle>
-        <outer_angle>0</outer_angle>
-        <falloff>0</falloff>
-      </spot>
-    </light>
     <state world_name='default'>
-      <sim_time>1869 801000000</sim_time>
-      <real_time>525 656911198</real_time>
-      <wall_time>1653378870 398166266</wall_time>
-      <iterations>483609</iterations>
+      <sim_time>1914 166000000</sim_time>
+      <real_time>45 667479406</real_time>
+      <wall_time>1653389300 423572873</wall_time>
+      <iterations>44365</iterations>
       <model name='House 1'>
         <pose>31.2073 -15.9625 0 0 -0 1.59209</pose>
         <scale>1 1 1</scale>
@@ -1096,55 +1042,55 @@
         </link>
       </model>
       <model name='prius_hybrid'>
-        <pose>-24.7876 19.0099 0.093389 -2e-06 -0 1.59306</pose>
+        <pose>-24.7884 19.0099 0.093389 -2e-06 -0 1.59304</pose>
         <scale>1 1 1</scale>
         <link name='camera_frame'>
-          <pose>-24.5876 19.0144 1.59339 0 0.099999 0.023059</pose>
+          <pose>-24.5885 19.0144 1.59339 0 0.099999 0.023039</pose>
           <velocity>-2e-05 0 2.2e-05 0 -4e-06 0</velocity>
-          <acceleration>-0 0.000103 -0 2e-06 -0 5.8e-05</acceleration>
-          <wrench>-0 0.000103 -0 0 -0 0</wrench>
+          <acceleration>1.1e-05 -5e-05 0 -4e-06 -2e-06 1e-05</acceleration>
+          <wrench>1.1e-05 -5e-05 0 0 -0 0</wrench>
         </link>
         <link name='chassis'>
-          <pose>-24.7876 19.0099 0.093389 -2e-06 -0 1.59306</pose>
-          <velocity>-1.8e-05 1e-06 2.1e-05 0 -3e-06 0</velocity>
-          <acceleration>0 0.000106 -0 -0.000557 -1e-05 5.8e-05</acceleration>
-          <wrench>0.000546 0.140349 -2.8e-05 0 -0 0</wrench>
+          <pose>-24.7884 19.0099 0.093389 -2e-06 -0 1.59304</pose>
+          <velocity>-1.8e-05 0 2.1e-05 0 -3e-06 0</velocity>
+          <acceleration>4e-06 1.4e-05 -0 -0.000496 -8e-06 1.2e-05</acceleration>
+          <wrench>0.004844 0.019091 -0.00025 0 -0 0</wrench>
         </link>
         <link name='front_left_wheel'>
-          <pose>-23.3948 19.8011 0.393394 -0.100616 9e-06 1.59316</pose>
-          <velocity>-1.9e-05 1e-06 3.2e-05 -3e-06 -6e-05 0.000165</velocity>
-          <acceleration>-3.5e-05 0.000279 -1e-06 -0.001663 -7.8e-05 0.023624</acceleration>
-          <wrench>-0.000383 0.003072 -1.1e-05 0 -0 0</wrench>
+          <pose>-23.3957 19.8011 0.393394 -0.103352 1.2e-05 1.59317</pose>
+          <velocity>-1.9e-05 0 3.2e-05 1e-06 -6e-05 5.2e-05</velocity>
+          <acceleration>-9e-06 0.000392 -1e-06 -0.002324 -3.9e-05 0.057688</acceleration>
+          <wrench>-0.000104 0.004314 -1.2e-05 0 -0 0</wrench>
         </link>
         <link name='front_right_wheel'>
-          <pose>-23.361 18.2815 0.393394 0.084382 -3e-06 1.59302</pose>
-          <velocity>-1.9e-05 -0 3.1e-05 2e-06 -6e-05 -6.3e-05</velocity>
-          <acceleration>3.2e-05 8.5e-05 1e-06 -0.000418 5.3e-05 -0.007401</acceleration>
-          <wrench>0.000348 0.000934 1e-05 0 -0 0</wrench>
+          <pose>-23.3619 18.2815 0.393394 0.081632 -6e-06 1.59297</pose>
+          <velocity>-1.9e-05 -0 3.1e-05 2e-06 -6.1e-05 -2.9e-05</velocity>
+          <acceleration>1.1e-05 -0.000181 0 0.001082 3e-05 -0.031447</acceleration>
+          <wrench>0.000117 -0.001989 4e-06 0 -0 0</wrench>
         </link>
         <link name='rear_axle'>
-          <pose>-26.2372 18.9777 0.393385 -2e-06 -5e-06 1.59306</pose>
+          <pose>-26.2381 18.9777 0.393385 -2e-06 -5e-06 1.59304</pose>
           <velocity>-1.9e-05 1e-06 1.5e-05 4e-06 -4e-06 0</velocity>
-          <acceleration>2e-06 7e-06 -0 -0.02167 0.02616 6e-05</acceleration>
-          <wrench>7.5e-05 0.000221 -3e-06 0 -0 0</wrench>
+          <acceleration>4e-06 -3e-06 1e-06 -0.021671 0.025651 1.3e-05</acceleration>
+          <wrench>0.000118 -8.8e-05 2.2e-05 0 -0 0</wrench>
         </link>
         <link name='rear_left_wheel'>
-          <pose>-26.2547 19.7635 0.393395 -0.070063 -4e-06 1.59306</pose>
+          <pose>-26.2556 19.7635 0.393395 -0.07281 -4e-06 1.59304</pose>
           <velocity>-1.9e-05 0 2.5e-05 2e-06 -5.9e-05 0</velocity>
-          <acceleration>-2.8e-05 5e-06 -0 -2.7e-05 -5.2e-05 5e-05</acceleration>
-          <wrench>-0.000313 5.1e-05 -1e-06 0 -0 0</wrench>
+          <acceleration>1e-06 -2e-06 0 1.2e-05 3e-06 8e-06</acceleration>
+          <wrench>1.5e-05 -2.4e-05 1e-06 0 -0 0</wrench>
         </link>
         <link name='rear_right_wheel'>
-          <pose>-26.2197 18.1918 0.393395 -0.051769 8e-06 1.59306</pose>
-          <velocity>-1.9e-05 1e-06 2.5e-05 -1e-06 -6.1e-05 0</velocity>
-          <acceleration>4.2e-05 6e-06 0 -3.4e-05 7.6e-05 5.6e-05</acceleration>
-          <wrench>0.000461 7e-05 0 0 -0 0</wrench>
+          <pose>-26.2206 18.1919 0.393395 -0.05455 8e-06 1.59304</pose>
+          <velocity>-1.9e-05 1e-06 2.5e-05 -1e-06 -6.2e-05 0</velocity>
+          <acceleration>1e-05 -2e-06 0 1.2e-05 1.8e-05 1e-05</acceleration>
+          <wrench>0.000106 -2.3e-05 1e-06 0 -0 0</wrench>
         </link>
         <link name='steering_wheel'>
-          <pose>-24.1678 19.3816 1.08163 -1.3021 0.000374 1.59316</pose>
-          <velocity>-2.2e-05 0 2e-05 -0.001406 -3.4e-05 0.000387</velocity>
-          <acceleration>-9.5e-05 0.000124 -0.000271 -0.159563 -0.003553 0.038275</acceleration>
-          <wrench>-9.5e-05 0.000124 -0.000271 0 -0 0</wrench>
+          <pose>-24.1687 19.3816 1.08163 -1.3021 0.000369 1.59314</pose>
+          <velocity>-2.1e-05 0 2.1e-05 -0.000857 -2.2e-05 0.000236</velocity>
+          <acceleration>-7.7e-05 8e-06 -0.000275 -0.163999 -0.003648 0.039461</acceleration>
+          <wrench>-7.7e-05 8e-06 -0.000275 0 -0 0</wrench>
         </link>
       </model>
       <model name='road_pp_prius'>
@@ -1158,7 +1104,7 @@
         </link>
       </model>
       <model name='satellite'>
-        <pose>2.4669 -6.98808 91.585 0 -0 1.56032</pose>
+        <pose>2.46689 -6.98808 91.5851 0 -0 1.56032</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
           <pose>2.46689 -6.98808 91.5851 0 -0 1.56032</pose>
@@ -1170,19 +1116,10 @@
       <light name='sun'>
         <pose>0 0 10 0 -0 0</pose>
       </light>
-      <light name='user_point_light_0'>
-        <pose>20.1964 29.1307 1 0 -0 0</pose>
-      </light>
-      <light name='user_point_light_1'>
-        <pose>38.3727 25.1788 1 0 -0 0</pose>
-      </light>
-      <light name='user_point_light_2'>
-        <pose>47.8929 5.1099 1 0 -0 0</pose>
-      </light>
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>-3.26029 -10.8253 98.1198 0 0.969796 0.496186</pose>
+        <pose>-42.5036 -22.0039 94.7678 0 0.969796 0.496186</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
