@@ -18,11 +18,11 @@ def generate_launch_description():
             output='screen'),
 
 
-        # Node(
-        #         package='self_driving_car_pkg',
-        #         executable='lights_spawner.bash',
-        #         name='Lights_installer',
-        #         output='screen'),
+        Node(
+                package='self_driving_car_pkg',
+                executable='lights_spawner.bash',
+                name='Lights_installer',
+                output='screen'),
 
 
 
