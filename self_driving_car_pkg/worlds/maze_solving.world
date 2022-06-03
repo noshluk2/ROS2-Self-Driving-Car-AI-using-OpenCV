@@ -1134,7 +1134,7 @@
           <update_rate>30</update_rate>
           <visualize>1</visualize>
           <camera name='head'>
-            <horizontal_fov>1.0856</horizontal_fov>
+            <horizontal_fov>6</horizontal_fov>
             <image>
               <width>1280</width>
               <height>720</height>
@@ -1142,7 +1142,7 @@
             </image>
             <clip>
               <near>0.03</near>
-              <far>100</far>
+              <far>200</far>
             </clip>
             <noise>
               <type>gaussian</type>
