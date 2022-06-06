@@ -15,6 +15,8 @@ debugging = True # Set to True --> If you want to debug code
 
 debugging_Lane = True
 
+clr_seg_dbg_created = False
+
 debugging_L_ColorSeg = True
 debugging_L_Est= True
 debugging_L_Cleaning= True
@@ -23,6 +25,8 @@ debugging_L_LaneInfoExtraction= True
 debugging_Signs = True
 debugging_TrafficLights = True
 debugging_TL_Config = True
+
+engines_on = False
 
 Detect_lane_N_Draw = True
 Training_CNN = False 
@@ -56,7 +60,7 @@ Resize_Framepixels = Resized_width * Resized_height
 Lane_Extraction_minArea_per = 1000 / Frame_pixels
 minArea_resized = int(Resize_Framepixels * Lane_Extraction_minArea_per)
 
-BWContourOpen_speed_MaxDist_per = 500 / Ref_imgHeight
+BWContourOpen_speed_MaxDist_per = 800 / Ref_imgHeight
 MaxDist_resized = int(Resized_height * BWContourOpen_speed_MaxDist_per)
 
 CropHeight = 650 # Required in Camera mounted on top of car 640p

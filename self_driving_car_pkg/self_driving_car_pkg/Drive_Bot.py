@@ -4,6 +4,7 @@ from .Detection.TrafficLights.TrafficLights_Detection import detect_TrafficLight
 import cv2
 from numpy import interp
 from .config import config
+from collections import deque
 
 class Debugging:
 
@@ -15,6 +16,9 @@ class Debugging:
         pass
 
     cv2.namedWindow('CONFIG')
+    Motors = 'Engine'
+    cv2.createTrackbar(Motors, 'CONFIG',False,True,nothing)
+
     # create switch for ON/OFF functionality
     debugging_SW = 'Debug'
     cv2.createTrackbar(debugging_SW, 'CONFIG',False,True,nothing)
@@ -31,11 +35,17 @@ class Debugging:
 
     def setDebugParameters(self):
         # get current positions of four trackbars
+        Motors = cv2.getTrackbarPos(self.Motors,'CONFIG')
+        
         debug = cv2.getTrackbarPos(self.debugging_SW,'CONFIG')
         debugLane = cv2.getTrackbarPos(self.debuggingLane_SW,'CONFIG')
         debugSign = cv2.getTrackbarPos(self.debuggingSigns_SW,'CONFIG')
         debugTrafficLights = cv2.getTrackbarPos(self.debuggingTL_SW,'CONFIG')
 
+        if Motors:
+            config.engines_on = True
+        else:
+            config.engines_on = False       
 
         if debug:
             config.debugging = True
@@ -120,6 +130,8 @@ class Control:
         self.GO_MODE_ACTIVATED = False
         self.STOP_MODE_ACTIVATED = False
 
+        self.angle_queue = deque(maxlen=10)
+
     def follow_Lane(self,Max_Sane_dist,distance,curvature , Mode , Tracked_class):
 
         IncreaseTireSpeedInTurns = True
@@ -163,7 +175,7 @@ class Control:
                 CarTurn_angle = -Max_turn_angle
 
         #angle = CarTurn_angle
-        angle = interp(CarTurn_angle,[-90,90],[-45,45])
+        angle = interp(CarTurn_angle,[-90,90],[-60,60])
 
         curr_speed = self.car_speed
         
@@ -244,6 +256,11 @@ class Control:
 
             self.angle_of_car , current_speed = self.follow_Lane(int(frame_disp.shape[1]/4), Distance,Curvature , Mode , Tracked_class )
         
+        # Rolling average applied to get smoother steering angles for robot
+        self.angle_queue.append(self.angle_of_car)
+        self.angle_of_car = (sum(self.angle_queue)/len(self.angle_queue))
+
+        
         if Inc_LT:
             self.angle_of_car,current_speed, Detected_LeftTurn, Activat_LeftTurn = self.Obey_LeftTurn(self.angle_of_car,current_speed,Mode,Tracked_class)
         else:
@@ -252,6 +269,7 @@ class Control:
 
         if Inc_TL:
             self.angle_of_car,current_speed = self.OBEY_TrafficLights(self.angle_of_car,current_speed,Traffic_State,CloseProximity)        
+
 
 
         return self.angle_of_car,current_speed, Detected_LeftTurn, Activat_LeftTurn 
@@ -324,7 +342,7 @@ class Car:
         self.display_state(img,Angle,Speed,Tracked_class,Traffic_State, Detected_LeftTurn, Activat_LeftTurn)
 
         # Translate [ Real World angle and speed ===>> ROS Car Control Range ]
-        Angle=interp(Angle,[-45,45],[0.5,-0.5])
+        Angle=interp(Angle,[-60,60],[0.8,-0.8])
         if (Speed!=0):
             Speed=interp(Speed,[30,90],[1,2])
 

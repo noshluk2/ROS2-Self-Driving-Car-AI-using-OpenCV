@@ -10,6 +10,7 @@ config_module = "self_driving_car_pkg/config"
 data_module ="self_driving_car_pkg/data"
 
 detection_module ="self_driving_car_pkg/Detection"
+navigate_to_home ="self_driving_car_pkg/GPS_Navigation"
 
 det_l_module ="self_driving_car_pkg/Detection/Lanes"
 detec_l_a_module="self_driving_car_pkg/Detection/Lanes/a_Segmentation"
@@ -26,7 +27,7 @@ detec_TL_module="self_driving_car_pkg/Detection/TrafficLights"
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name,detec_l_d_module,detec_l_c_module,detec_l_b_module,detec_l_a_module,det_l_module,detec_s_a_module,det_s_module,detec_TL_module,detection_module,config_module,data_module],
+    packages=[package_name,detec_l_d_module,detec_l_c_module,detec_l_b_module,detec_l_a_module,det_l_module,detec_s_a_module,det_s_module,detec_TL_module,detection_module,navigate_to_home,config_module,data_module],
 
     data_files=[
         ('share/ament_index/resource_index/packages',
@@ -49,6 +50,7 @@ setup(
         'computer_vision_node = self_driving_car_pkg.computer_vision_node:main',
         'video_recording_node = self_driving_car_pkg.video_save:main',
         'upper_camera_recording = self_driving_car_pkg.upper_camera_video:main',
+        'Navigate_to_Home = self_driving_car_pkg.Navigate_to_Home:main',
         ],
     },
 )
