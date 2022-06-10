@@ -52,9 +52,6 @@ class bot_localizer():
 
         self.orig_rot = 0
         self.rot_mat = 0
-
-
-
     
     def update_frameofrefrence_parameters(self,X,Y,W,H,rot_angle):
         self.orig_X = X; self.orig_Y = Y; self.orig_rows = H; self.orig_cols = W; self.orig_rot = rot_angle # 90 degree counterClockwise
@@ -72,39 +69,13 @@ class bot_localizer():
                                  [-np.sin(np.deg2rad(-self.orig_rot)) , np.cos(np.deg2rad(-self.orig_rot))]
                                 ]
                                )
-    
-    @staticmethod
-    def connect_objs(bin_img):
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
-        bin_img = cv2.morphologyEx(bin_img, cv2.MORPH_CLOSE, kernel)
-
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
-        cnts = cv2.findContours(bin_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[1]
-        
-        cncted_cnts = []
-        cncted_cnts_edges = []
-        for idx,_ in enumerate(cnts):
-            temp_edges = np.zeros_like(bin_img)
-            temp = np.zeros_like(bin_img)
-            cncted_cnts_edges.append(cv2.drawContours(temp_edges, cnts, idx, 255,1))
-            cncted_cnts_edges[idx] = cv2.morphologyEx(cncted_cnts_edges[idx], cv2.MORPH_CLOSE, kernel)
-
-            cncted_cnts.append(cv2.drawContours(temp, cnts, idx, 255,-1))
-            cncted_cnts[idx] = cv2.morphologyEx(cncted_cnts[idx], cv2.MORPH_CLOSE, kernel)
-
-        cncted_edges = sum(cncted_cnts_edges)
-        cncted_objects = sum(cncted_cnts)
-
-        return cncted_objects,cncted_edges
 
 
-    # Program to find most frequent
-    # element in a list
+    # Program to find most frequent element in a list
     @staticmethod
     def most_frequent(List):
         return max(set(List), key = List.count)
     
-
     def refine_road_mask(self,edges,mask):
 
         cnts = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[1]
@@ -112,59 +83,24 @@ class bot_localizer():
         # [50less, 10less,150less,200less]
         pix_count = 50
         for idx,cnt in enumerate(cnts):
-            print("cnt.shape = ",cnt.shape)
-            #area_idx = (cv2.contourArea(cnt)%50)
             area_idx = ((cnt.shape[0])//pix_count)
             cnts_boundedAreas[idx]= area_idx
 
-        print("cnts_boundedAreas = ",cnts_boundedAreas)
         max_occuring = self.most_frequent(cnts_boundedAreas)
-        print("max_occuring = ",max_occuring)
         cnts_small_removed = []
         for idx,cnt in enumerate(cnts):
-            #if cnts_boundedAreas[idx]!= max_occuring:
             if ( cnt.shape[0] > ( ( (max_occuring+1)*pix_count ) + 50 ) ):
                 cnts_small_removed.append(cnt)
                 
         edges_small_remvd = np.zeros_like(edges)
         cv2.drawContours(edges_small_remvd, cnts_small_removed, -1, 255,1)
 
-        cv2.namedWindow("edges_small_remvd",cv2.WINDOW_NORMAL)
-        cv2.imshow("edges_small_remvd",edges_small_remvd)
-
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
-        edges_small_remvd = cv2.morphologyEx(edges_small_remvd, cv2.MORPH_CLOSE, kernel)     
-
-        cv2.namedWindow("edges_small_remvd (Closed)",cv2.WINDOW_NORMAL)
-        cv2.imshow("edges_small_remvd (Closed)",edges_small_remvd)
+        edges_small_remvd = cv2.morphologyEx(edges_small_remvd, cv2.MORPH_CLOSE, kernel)
 
         _ ,contours ,hierarchy = cv2.findContours(edges_small_remvd, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
-        # loop through the contours/hierarchy
-        for i,cnt in enumerate(contours):
-                edges_small_remvd_bgr2 = cv2.cvtColor(edges_small_remvd, cv2.COLOR_GRAY2BGR)
-                cv2.drawContours( edges_small_remvd_bgr2, contours, i, (0,0,255) )
-                cv2.namedWindow("edges_small_remvd_bgr2",cv2.WINDOW_NORMAL)
-                cv2.imshow("edges_small_remvd_bgr2",edges_small_remvd_bgr2)
-                cv2.waitKey(0)
-
-        edges_small_remvd_bgr = cv2.cvtColor(edges_small_remvd, cv2.COLOR_GRAY2BGR)
-        if ( (len(contours)!=0) and (len(hierarchy)!=0) ):
-            # loop through the contours/hierarchy
-            for i,cnt in enumerate(contours):
-                # look for hierarchy[i][3]!=-1, ie hole boundaries
-                # look for contours with no child or look for second level hiearchy contours
-                if ( hierarchy[0][i][2] == -1 ):
-                    # random colour
-                    cv2.drawContours( edges_small_remvd_bgr, contours, i, (0,255,0) )
-                    cv2.namedWindow("edges_small_remvd_bgr",cv2.WINDOW_NORMAL)
-                    cv2.imshow("edges_small_remvd_bgr",edges_small_remvd_bgr)
-                    cv2.waitKey(0)
-                
-        cv2.namedWindow("edges_small_remvd_bgr",cv2.WINDOW_NORMAL)
-        cv2.imshow("edges_small_remvd_bgr",edges_small_remvd_bgr)
-        print("hierarchy = ",hierarchy)
-
+        # Identifying and removing wrongly detected holes as part of road network
         lrgst_hole_h1_idx = -1
         prev_max = 0
         for i,cnt in enumerate(contours):
@@ -190,14 +126,28 @@ class bot_localizer():
                     # Set child_idx to nxtChild_idx
                     child_idx = nxtchild_idx
 
-        cv2.namedWindow("road_hole_mask",cv2.WINDOW_NORMAL)
-        cv2.imshow("road_hole_mask",road_hole_mask)
-
         road_noholes_mask = cv2.bitwise_not(road_hole_mask)
         mask = cv2.bitwise_and(mask, mask,mask=road_noholes_mask)
 
-
         return mask
+
+    @staticmethod
+    def connect_objs(bin_img):
+
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+        bin_img = cv2.morphologyEx(bin_img, cv2.MORPH_CLOSE, kernel)
+
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
+        cnts = cv2.findContours(bin_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[1]
+        
+        cncted_objects_list = []
+        for idx,_ in enumerate(cnts):
+            temp = np.zeros_like(bin_img)
+            cncted_objects_list.append(cv2.drawContours(temp, cnts, idx, 255,-1))
+            cncted_objects_list[idx] = cv2.morphologyEx(cncted_objects_list[idx], cv2.MORPH_CLOSE, kernel)
+        cncted_objects = sum(cncted_objects_list)
+
+        return cncted_objects
 
     def extract_bg(self,frame):
 
@@ -206,10 +156,8 @@ class bot_localizer():
         edges_canny = cv2.Canny(gray, 50, 150,None,3)
 
         # [connect_objs] => Connect disconnected edges that are close enough
-        edges,edges_asli = self.connect_objs(edges_canny)
-        cv2.imshow("edges (Connected)= >",edges)
-        cv2.imshow("edges (Asli)= >",edges_asli)
-        cv2.waitKey(0)
+        edges = self.connect_objs(edges_canny)
+
         cnts = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[1]
         rois_mask = np.zeros((frame.shape[0],frame.shape[1]),dtype= np.uint8)
         
@@ -240,17 +188,14 @@ class bot_localizer():
         # Step 2: Extracting the maze (Frame of Refrence) Maze Entry on Top
         # a) Finding dimensions of hull enclosing largest contour
         road_network_mask, road_network_cnt = ret_largest_obj(rois_mask)
+        
+        # Fetching edges of only road network
         road_network_edges = cv2.bitwise_and(edges_canny, edges_canny,mask=road_network_mask)
-        cv2.imshow("road_network_mask", road_network_mask)
-        cv2.imshow("road_network_edges", road_network_edges)
+        # Removing holes wrongly considered to be part of roads
         road_network_mask = self.refine_road_mask(road_network_edges,road_network_mask)
-        cv2.waitKey(0)
         
         [X,Y,W,H] = cv2.boundingRect(road_network_cnt)
         # b) Cropping maze_mask from the image
-        #maze = rois_noCar_mask[Y:Y+H,X:X+W]
-        #maze_occupencygrid = cv2.bitwise_not(maze)
-
         maze_occupencygrid = road_network_mask[Y:Y+H,X:X+W]
         
         # Creating Boundary-at-edges to represent no-go areas
@@ -273,27 +218,35 @@ class bot_localizer():
         M = cv2.moments(cnt)
         cx = int(M['m10']/M['m00'])
         cy = int(M['m01']/M['m00'])
-        return (cy,cx)
+        return (cx,cy)
 
     def get_car_loc(self,car_cnt,car_mask):
         
         # a) Get the centroid of the car
         bot_cntr = self.get_centroid(car_cnt)
         # b) Converting from point --> array to apply transforms
-        bot_cntr_arr =  np.array([bot_cntr[1],bot_cntr[0]])
+        bot_cntr_arr =  np.array([bot_cntr[0],bot_cntr[1]])
         # c) Shift origin from sat_view -> maze
         bot_cntr_translated = np.zeros_like(bot_cntr_arr)
+
         bot_cntr_translated[0] = bot_cntr_arr[0] - self.orig_X
-        bot_cntr_translated[1] = bot_cntr_arr[1]-self.orig_Y
+        bot_cntr_translated[1] = bot_cntr_arr[1] - self.orig_Y
+
         # d) Applying rotation tranformation to bot_centroid to get bot location relative to maze
         bot_on_maze = (self.rot_mat @ bot_cntr_translated.T).T
+
+        center_ = np.array([int(car_mask.shape[1]/2),int(car_mask.shape[0]/2)])
+        chachu = (self.rot_mat @ center_.T).T
+
         # e) Translating Origin If neccesary (To get complete Image)
         rot_cols = self.orig_rows
         rot_rows = self.orig_cols
-        bot_on_maze[0] = bot_on_maze[0] + (rot_cols * (bot_on_maze[0]<0) )  
-        bot_on_maze[1] = bot_on_maze[1] + (rot_rows * (bot_on_maze[1]<0) )
+
+        bot_on_maze[0] = bot_on_maze[0] + (rot_cols * (chachu[0]<0) )  
+        bot_on_maze[1] = bot_on_maze[1] + (rot_rows * (chachu[1]<0) )
         # Update the placeholder for relative location of car
         self.loc_car = (int(bot_on_maze[0]),int(bot_on_maze[1]))
+
 
     def localize_bot(self,curr_frame,frame_disp):
         
@@ -323,17 +276,14 @@ class bot_localizer():
             cv2.imshow("1d. bg_model",self.bg_model)
             cv2.imshow("2. maze_og",self.maze_og)
             
-            cv2.imshow("car_localized", frame_disp)
             cv2.imshow("change_mask(Noise Visible)", change_mask) 
             cv2.imshow("Detected_foreground(car)", car_mask)
-            cv2.waitKey(0)
 
         else:
             try:
                 cv2.destroyWindow("1d. bg_model")
                 cv2.destroyWindow("2. maze_og")
                 
-                cv2.destroyWindow("car_localized")
                 cv2.destroyWindow("change_mask(Noise Visible)")
                 cv2.destroyWindow("Detected_foreground(car)")
 

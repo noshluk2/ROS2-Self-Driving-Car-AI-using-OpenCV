@@ -1,12 +1,12 @@
 
 
 
-debug = True
+debug = False
 
-debug_localization = True
-debug_mapping = True
-debug_pathplanning = True
-debug_motionplanning = True
+debug_localization = False
+debug_mapping = False
+debug_pathplanning = False
+debug_motionplanning = False
 
 debug_live = False
 debug_live_amount = 0

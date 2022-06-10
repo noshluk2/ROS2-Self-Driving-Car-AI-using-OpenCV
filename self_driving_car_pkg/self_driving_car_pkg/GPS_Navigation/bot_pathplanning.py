@@ -32,6 +32,7 @@ import numpy as np
 from numpy import sqrt
 
 from . import config
+
 class bot_pathplanner():
 
     def __init__(self):
@@ -72,7 +73,7 @@ class bot_pathplanner():
 
         img_str = "maze (Found Path) [" +method +"]"
         if config.debug and config.debug_pathplanning:
-            cv2.namedWindow(img_str,cv2.WINDOW_FREERATIO)
+            cv2.namedWindow(img_str,cv2.WINDOW_NORMAL)
             cv2.imshow(img_str, maze_bgr)
 
         if method == "dijisktra":
@@ -342,7 +343,6 @@ class dijisktra():
         
         # Keep updating the shortest route from end to start by visiting closest vertices starting fron end
         route.append(self.idxs2vrtxs[end])
-        
         # Once we have reached the start (maze_entry) => Stop! We found the shortest route
         if (end==start):
             return
@@ -356,9 +356,7 @@ class dijisktra():
 
         # Teaking the first item of the list created by list comprehension
         # Which is while looping over the key value pair of graph. Return the pairs_idx that match the start key
-        print("start = ",start)
         start_idx = [idx for idx, key in enumerate(graph.items()) if key[0]==start][0]
-        print("Index of search key : {}".format(start_idx))
 
         # Distanc list storing dist of each node
         dist = []       
@@ -403,14 +401,12 @@ class dijisktra():
             for v in graph[u]:
                 # Ignore Case node
                 if v!= "case":
-
                     print("Vertex adjacent to {} is {}".format(u,v))
                     v_idx = self.vrtxs2idxs[v]
-
                     #if we have not found shortest distance to v + new found dist < known dist ==> Update dist for v
                     if ( self.minHeap.isInMinHeap(v_idx) and (dist[u_idx]!=1e7) and
                        (    (graph[u][v]["cost"] + dist[u_idx]) < dist[v_idx] )    ):
-
+                       
                        dist[v_idx] = graph[u][v]["cost"] + dist[u_idx]
                        self.minHeap.decreaseKey(v_idx, dist[v_idx])
                        parent[v_idx] = u_idx

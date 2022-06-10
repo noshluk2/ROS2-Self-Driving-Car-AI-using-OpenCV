@@ -9,7 +9,7 @@ import cv2
 from .Drive_Bot import Car, Debugging
 from .config import config
 
-from .Navigation import Navigator
+from .GPS_Navigation.Navigation import Navigator
 
 class Video_feed_in(Node):
     def __init__(self):

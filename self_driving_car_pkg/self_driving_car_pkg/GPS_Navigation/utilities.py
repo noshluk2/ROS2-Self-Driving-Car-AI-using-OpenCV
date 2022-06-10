@@ -33,8 +33,39 @@ def ret_smallest_obj(cnts, noise_thresh = 10):
           Min_Cntr_area = area
           Min_Cntr_idx = index
           SmallestContour_Found = True
-  print("min_area" , Min_Cntr_area)
   return Min_Cntr_idx
+
+def closest_node(node, nodes):
+    nodes = np.asarray(nodes)
+    dist_2 = np.sum((nodes - node)**2, axis=2)
+    return np.argmin(dist_2)
+
+def find_point_in_FOR(bot_cntr,transform_arr,rot_mat,cols,rows):
+        
+        # b) Converting from point --> array to apply transforms
+        bot_cntr_arr =  np.array([bot_cntr[0],bot_cntr[1]])
+        # c) Shift origin from sat_view -> maze
+        bot_cntr_translated = np.zeros_like(bot_cntr_arr)
+
+        bot_cntr_translated[0] = bot_cntr_arr[0] - transform_arr[0]
+        bot_cntr_translated[1] = bot_cntr_arr[1] - transform_arr[1]
+
+        # d) Applying rotation tranformation to bot_centroid to get bot location relative to maze
+        bot_on_maze = (rot_mat @ bot_cntr_translated.T).T
+
+        center_ = np.array([int(cols/2),int(rows/2)])
+        chachu = (rot_mat @ center_.T).T
+
+        # e) Translating Origin If neccesary (To get complete Image)
+        rot_cols = transform_arr[3]
+        rot_rows = transform_arr[2]
+
+        bot_on_maze[0] = bot_on_maze[0] + (rot_cols * (chachu[0]<0) )  
+        bot_on_maze[1] = bot_on_maze[1] + (rot_rows * (chachu[1]<0) )
+        # Update the placeholder for relative location of car
+        Point_on_FOR = (int(bot_on_maze[0]),int(bot_on_maze[1]))
+        return Point_on_FOR
+
 
 class Debugging:
 

@@ -27,6 +27,7 @@ import cv2
 import numpy as np
 
 from . import config
+from .utilities import closest_node
 
 draw_intrstpts = True
 debug_mapping = False
@@ -304,14 +305,13 @@ class bot_mapper():
         self.connected_up = False
         self.connected_upright = False
 
-    def one_pass(self,maze):
+    def one_pass(self,maze,start_loc=[],destination=[]):
 
         # Remove previously found nodes
         self.Graph.graph.clear()
 
         # Initalizing Maze_connect with Colored Maze
         self.maze_connect = cv2.cvtColor(maze, cv2.COLOR_GRAY2BGR)
-        cv2.namedWindow("Nodes Conected",cv2.WINDOW_FREERATIO)
 
         # Initialize counts of Ip's
         turns = 0
@@ -319,10 +319,11 @@ class bot_mapper():
         junc_4 = 0
 
         # Converting maze to Colored for Identifying discovered Interest Points
-        #maze_bgr = cv2.cvtColor(maze, cv2.COLOR_GRAY2BGR)
-        maze_bgr = np.zeros((maze.shape[0],maze.shape[1],3),np.uint8)
-        # Creating a window to display Detected Interest Points
-        cv2.namedWindow("Maze (Interest Points)",cv2.WINDOW_FREERATIO)
+        if debug_mapping:
+            maze_bgr = cv2.cvtColor(maze, cv2.COLOR_GRAY2BGR)
+        else:
+            maze_bgr = np.zeros((maze.shape[0],maze.shape[1],3),np.uint8)
+        
         rows = maze.shape[0]
         cols = maze.shape[1]
 
@@ -337,8 +338,13 @@ class bot_mapper():
                     # Probable IP => Find Surrounding Pixel Intensities
                     top_left,top,top_rgt,rgt,btm_rgt,btm,btm_left,lft, paths = self.get_surround_pixel_intensities(maze.copy(),row,col)
 
-                    if ( (row==0) or (row == (rows-1)) or (col==0) or (col == (cols-1)) ):
-                        if (row == 0):
+                    if ( ( (start_loc == (col,row) ) or (destination == (col,row)) ) or
+                         ( (start_loc==[]) and 
+                           ( (row==0) or (row == (rows-1)) or (col==0) or (col == (cols-1)) )
+                         ) 
+                       ):
+
+                        if ( (start_loc == (col,row)) or ( (start_loc==[]) and (row == 0) ) ):
                             # Start
                             maze_bgr[row][col] = (0,128,255)
                             if config.debug and config.debug_mapping:
@@ -346,8 +352,11 @@ class bot_mapper():
                             # Adding [Found vertex to graph & maze entry to graph-start]
                             self.Graph.add_vertex((row,col),case="_Start_")
                             self.Graph.start = (row,col)
+                            # Connecting vertex to its neighbor (if-any)
+                            self.reset_connct_paramtrs()
+                            self.connect_neighbors(maze, row, col, "_Start_")
 
-                        else:
+                        elif ( (destination == (col,row)) or (start_loc==[]) ):
                             # End (MAze Exit)
                             maze_bgr[row][col] = (0,255,0)
                             if config.debug and config.debug_mapping:
@@ -419,12 +428,14 @@ class bot_mapper():
                             self.reset_connct_paramtrs()
                             self.connect_neighbors(maze, row, col, "_4-Junc_")
                             junc_4+=1
+                    
+
         self.maze_interestPts = maze_bgr
         print("\nInterest Points !!! \n[ Turns , 3_Junc , 4_Junc ] [ ",turns," , ",junc_3," , ",junc_4," ] \n")
 
     # (Graphify) :           Main function 
     #              [Usage : (Convert) Maze ==> Graph]
-    def graphify(self,extracted_maze):
+    def graphify(self,extracted_maze,bot_loc=[],destination=[]):
 
         # Check graph extracted or not from the maze
         if not self.graphified:
@@ -437,23 +448,34 @@ class bot_mapper():
             thinned_dilated = cv2.morphologyEx(thinned, cv2.MORPH_DILATE, kernel)
             _, bw2 = cv2.threshold(thinned_dilated, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)        
             thinned = cv2.ximgproc.thinning(bw2)
-            
+
             # Step 3: Crop out Boundary that is not part of maze
             thinned_cropped = thinned[self.crp_amt:thinned.shape[0]-self.crp_amt,
                                       self.crp_amt:thinned.shape[1]-self.crp_amt]
+
+            if bot_loc!=[]:
+                road_cnts = cv2.findContours(thinned_cropped, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[1]
+
+                closest_idx = closest_node(bot_loc,road_cnts[0])
+                start = (road_cnts[0][closest_idx][0][0],road_cnts[0][closest_idx][0][1])
+
+                closest_idx = closest_node(destination,road_cnts[0])
+                destination = (road_cnts[0][closest_idx][0][0],road_cnts[0][closest_idx][0][1])
+
+                thinned_bgr = cv2.cvtColor(thinned_cropped, cv2.COLOR_GRAY2BGR)
+                cv2.circle(thinned_bgr, bot_loc, 5, (0,0,255))
+                cv2.circle(thinned_bgr, start, 1, (128,0,255),1)
+                cv2.circle(thinned_bgr, destination, 15, (0,255,0),3)
+
 
             # Step 4: Overlay found path on Maze Occupency Grid.
             extracted_maze_cropped = extracted_maze[self.crp_amt:extracted_maze.shape[0]-self.crp_amt,
                                                     self.crp_amt:extracted_maze.shape[1]-self.crp_amt]
             extracted_maze_cropped = cv2.cvtColor(extracted_maze_cropped, cv2.COLOR_GRAY2BGR)
             extracted_maze_cropped[thinned_cropped>0] = (0,255,255)
-            cv2.namedWindow("thinned_cropped",cv2.WINDOW_NORMAL)
-            cv2.imshow("thinned_cropped",thinned_cropped)
-            cv2.waitKey(0)
             
             # Step 5: Identify Interest Points in the path to further reduce processing time
-            self.one_pass(thinned_cropped)
-            #cv2.waitKey(0)
+            self.one_pass(thinned_cropped,start,destination)
             self.maze = thinned_cropped
             self.graphified = True
             
@@ -463,9 +485,13 @@ class bot_mapper():
                 cv2.imshow('Maze (thinned*2)', thinned)
                 cv2.imshow('Maze (thinned*2)(Cropped)', thinned_cropped)
                 cv2.imshow('Maze (thinned*2)(Cropped)(Path_Overlayed)', extracted_maze_cropped)
+                cv2.namedWindow("thinned_bgr",cv2.WINDOW_NORMAL)
+                cv2.imshow("thinned_bgr",thinned_bgr)
         else:
 
             if config.debug and config.debug_mapping:
+                cv2.namedWindow("Maze (Interest Points)",cv2.WINDOW_FREERATIO)
+                cv2.namedWindow("Nodes Conected",cv2.WINDOW_FREERATIO)
                 cv2.imshow("Nodes Conected", self.maze_connect)
                 cv2.imshow("Maze (Interest Points)", self.maze_interestPts)
             else:
@@ -477,6 +503,7 @@ class bot_mapper():
                     cv2.destroyWindow('Maze (thinned*2)')
                     cv2.destroyWindow('Maze (thinned*2)(Cropped)')
                     cv2.destroyWindow('Maze (thinned*2)(Cropped)(Path_Overlayed)')
+                    cv2.destroyWindow("Nodes thinned_bgr")
                 except:
                     pass
 
