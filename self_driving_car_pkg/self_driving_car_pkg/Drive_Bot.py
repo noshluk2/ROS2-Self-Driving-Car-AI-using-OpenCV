@@ -18,6 +18,8 @@ class Debugging:
     cv2.namedWindow('CONFIG')
     Motors = 'Engine'
     cv2.createTrackbar(Motors, 'CONFIG',False,True,nothing)
+    enable_SatNav = 'Sat-Nav'
+    cv2.createTrackbar(enable_SatNav, 'CONFIG',False,True,nothing)
 
     # create switch for ON/OFF functionality
     debugging_SW = 'Debug'
@@ -36,6 +38,8 @@ class Debugging:
     def setDebugParameters(self):
         # get current positions of four trackbars
         Motors = cv2.getTrackbarPos(self.Motors,'CONFIG')
+        # get current positions of four trackbars
+        enable_SatNav = cv2.getTrackbarPos(self.enable_SatNav,'CONFIG')
         
         debug = cv2.getTrackbarPos(self.debugging_SW,'CONFIG')
         debugLane = cv2.getTrackbarPos(self.debuggingLane_SW,'CONFIG')
@@ -46,6 +50,11 @@ class Debugging:
             config.engines_on = True
         else:
             config.engines_on = False       
+
+        if enable_SatNav:
+            config.enable_SatNav = True
+        else:
+            config.enable_SatNav = False       
 
         if debug:
             config.debugging = True
@@ -134,7 +143,7 @@ class Control:
 
     def follow_Lane(self,Max_Sane_dist,distance,curvature , Mode , Tracked_class):
 
-        IncreaseTireSpeedInTurns = True
+        IncreaseTireSpeedInTurns = False
 
         if((Tracked_class!=0) and (self.prev_Mode == "Tracking") and (Mode == "Detection")):
             if  (Tracked_class =="speed_sign_30"):
@@ -165,7 +174,7 @@ class Control:
             # Within allowed distance limits for car and lane
             # Interpolate distance to Angle Range
             Turn_angle_interpolated = interp(distance,[-Max_Sane_dist,Max_Sane_dist],[-90,90])
-            CarTurn_angle = Turn_angle_interpolated + curvature
+            CarTurn_angle = (0.65*Turn_angle_interpolated) + (0.35*curvature)
 
         # Handle Max Limit [if (greater then either limits) --> set to max limit]
         if( (CarTurn_angle > Max_turn_angle) or (CarTurn_angle < (-1 *Max_turn_angle) ) ):
@@ -254,11 +263,14 @@ class Control:
         
         if((Distance != -1000) and (Curvature != -1000)):
 
-            self.angle_of_car , current_speed = self.follow_Lane(int(frame_disp.shape[1]/4), Distance,Curvature , Mode , Tracked_class )
-        
+            self.angle_of_car , current_speed = self.follow_Lane(int(frame_disp.shape[1]/2), Distance,Curvature , Mode , Tracked_class )
+
+        config.angle_orig = self.angle_of_car
         # Rolling average applied to get smoother steering angles for robot
         self.angle_queue.append(self.angle_of_car)
         self.angle_of_car = (sum(self.angle_queue)/len(self.angle_queue))
+        config.angle = self.angle_of_car
+        #config.angle = (sum(self.angle_queue)/len(self.angle_queue))
 
         
         if Inc_LT:
@@ -280,6 +292,8 @@ class Car:
         self.Control_ = Control()
         self.Inc_TL = Inc_TL
         self.Inc_LT = Inc_LT
+        self.Tracked_class = "Unknown"
+        self.Traffic_State = "Unknown"
 
     def display_state(self,frame_disp,angle_of_car,current_speed,Tracked_class,Traffic_State,Detected_LeftTurn, Activat_LeftTurn):
     
@@ -334,6 +348,9 @@ class Car:
             CloseProximity = False
 
         Mode , Tracked_class = detect_Signs(img_orig,img)
+
+        self.Tracked_class = Tracked_class
+        self.Traffic_State = Traffic_State
 
         Current_State = [distance, Curvature, img, Mode, Tracked_class, Traffic_State, CloseProximity]
 

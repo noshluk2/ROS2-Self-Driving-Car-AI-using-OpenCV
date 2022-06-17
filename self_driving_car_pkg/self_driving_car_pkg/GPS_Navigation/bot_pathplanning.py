@@ -102,7 +102,8 @@ class bot_pathplanner():
         elif (method == "dijisktra"):
             
             if not self.dijisktra.shortestpath_found:
-                print("Finding Shortest ROutes")
+                print("")
+                print("3# Finding Shortest Routes Using Dijisktra......")
                 self.dijisktra.find_best_routes(graph, start, end)
             
             path_to_display = self.dijisktra.shortest_path
@@ -111,7 +112,8 @@ class bot_pathplanner():
         elif (method == "a_star"):
             
             if not self.astar.shortestpath_found:
-                print("Finding Shortest ROutes")
+                print("")
+                print("3# Finding Shortest Routes using A*.......")
                 self.astar.find_best_routes(graph, start, end)
             
             path_to_display = self.astar.shortest_path
@@ -401,8 +403,11 @@ class dijisktra():
             for v in graph[u]:
                 # Ignore Case node
                 if v!= "case":
-                    print("Vertex adjacent to {} is {}".format(u,v))
+                    if config.debug and config.debug_pathplanning:
+                        print("Vertex adjacent to {} is {}".format(u,v))
+
                     v_idx = self.vrtxs2idxs[v]
+                    
                     #if we have not found shortest distance to v + new found dist < known dist ==> Update dist for v
                     if ( self.minHeap.isInMinHeap(v_idx) and (dist[u_idx]!=1e7) and
                        (    (graph[u][v]["cost"] + dist[u_idx]) < dist[v_idx] )    ):
@@ -446,7 +451,8 @@ class a_star(dijisktra):
         # Teaking the first item of the list created by list comprehension
         # Which is while looping over the key value pair of graph. Return the pairs_idx that match the start key
         start_idx = [idx for idx, key in enumerate(graph.items()) if key[0]==start][0]
-        print("Index of search key : {}".format(start_idx))
+        if config.debug and config.debug_pathplanning:
+            print("Index of search key : {}".format(start_idx))
 
         # Cost of reaching that node from start
         cost2node = []
@@ -497,8 +503,9 @@ class a_star(dijisktra):
             for v in graph[u]:
                 # Ignore Case node
                 if v!= "case":
-
-                    print("Vertex adjacent to {} is {}".format(u,v))
+                    
+                    if config.debug and config.debug_pathplanning:
+                        print("Vertex adjacent to {} is {}".format(u,v))
                     v_idx = self.vrtxs2idxs[v]
 
                     #if we have not found shortest distance to v + new found cost2Node < known cost2node ==> Update Cost2node for neighbor node

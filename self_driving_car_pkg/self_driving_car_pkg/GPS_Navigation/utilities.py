@@ -3,6 +3,19 @@ import numpy as np
 
 from . import config
 
+
+# function to display the coordinates of
+# of the points clicked on the image
+def click_event(event, x, y, flags, params):
+
+    # checking for left mouse clicks
+    if event == cv2.EVENT_LBUTTONDOWN:
+
+        # displaying the coordinates
+        # on the Shell
+        config.destination = (x,y)
+        
+
 def imfill(image):
   cnts = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[0]# OpenCV 4.2
   for idx,_ in enumerate(cnts):
@@ -21,8 +34,10 @@ def ret_largest_obj(img):
     img_largestobject = np.zeros_like(img)
     if (Max_Cntr_idx!=-1):
         img_largestobject = cv2.drawContours(img_largestobject, cnts, Max_Cntr_idx, 255, -1) # [ contour = less then minarea contour, contourIDx, Colour , Thickness ]
-        img_largestobject = cv2.drawContours(img_largestobject, cnts, Max_Cntr_idx, 255, 2) # [ contour = less then minarea contour, contourIDx, Colour , Thickness ]
-    return img_largestobject,cnts[Max_Cntr_idx]
+        #img_largestobject = cv2.drawContours(img_largestobject, cnts, Max_Cntr_idx, 255, 2) # [ contour = less then minarea contour, contourIDx, Colour , Thickness ]
+        return img_largestobject,cnts[Max_Cntr_idx]
+    else:
+        return img,cnts
 
 def ret_smallest_obj(cnts, noise_thresh = 10):
   Min_Cntr_area = 1000
@@ -37,8 +52,14 @@ def ret_smallest_obj(cnts, noise_thresh = 10):
 
 def closest_node(node, nodes):
     nodes = np.asarray(nodes)
-    dist_2 = np.sum((nodes - node)**2, axis=2)
+    dist_2 = np.sum((nodes - node)**2, axis=(nodes.ndim-1))
     return np.argmin(dist_2)
+
+def closest_nodes(node, nodes,max_dist):
+    nodes = np.asarray(nodes)
+    dist_2 = np.sum((nodes - node)**2, axis=(nodes.ndim-1))
+    closest_nodes_idx = [idx for idx,i in enumerate(dist_2) if ( (i <= max_dist) and (i!=0) )]
+    return closest_nodes_idx
 
 def find_point_in_FOR(bot_cntr,transform_arr,rot_mat,cols,rows):
         
@@ -65,6 +86,16 @@ def find_point_in_FOR(bot_cntr,transform_arr,rot_mat,cols,rows):
         # Update the placeholder for relative location of car
         Point_on_FOR = (int(bot_on_maze[0]),int(bot_on_maze[1]))
         return Point_on_FOR
+
+def get_centroid(cnt):
+
+    M = cv2.moments(cnt)
+    if M['m00']==0:        
+        return cv2.minEnclosingCircle(cnt)[0]
+    else:
+        cx = int(M['m10']/M['m00'])
+        cy = int(M['m01']/M['m00'])
+        return (cx,cy)
 
 
 class Debugging:

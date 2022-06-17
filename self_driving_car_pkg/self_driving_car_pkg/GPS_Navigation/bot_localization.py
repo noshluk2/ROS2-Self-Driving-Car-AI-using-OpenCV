@@ -42,6 +42,10 @@ class bot_localizer():
         self.bg_model = []
         self.maze_og = []
         self.loc_car = 0
+        
+        # Container to store Location of Car with respect to the Cropped Road Network
+        self.loc_car_sv = 0
+        self.car_rect = []
 
         # Transfomation(Crop + Rotated) Variables
         self.orig_X = 0
@@ -78,6 +82,7 @@ class bot_localizer():
     
     def refine_road_mask(self,edges,mask):
 
+        # 1) Removing midlane patches by utilizing their abundance and small size as the key features
         cnts = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[1]
         cnts_boundedAreas = [0]*len(cnts)
         # [50less, 10less,150less,200less]
@@ -95,10 +100,22 @@ class bot_localizer():
         edges_small_remvd = np.zeros_like(edges)
         cv2.drawContours(edges_small_remvd, cnts_small_removed, -1, 255,1)
 
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
-        edges_small_remvd = cv2.morphologyEx(edges_small_remvd, cv2.MORPH_CLOSE, kernel)
+        # 2) Connecting disconnected edges by closing operation and finding their contour representation
+        #cv2.imshow("edges_small_remvd",edges_small_remvd)
+        
+        #kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
+        kernel_rect = cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))
+        #edges_small_remvd = cv2.morphologyEx(edges_small_remvd, cv2.MORPH_CLOSE, kernel)
+        #edges_small_remvd_Rect = cv2.morphologyEx(edges_small_remvd, cv2.MORPH_CLOSE, kernel_rect)
+        edges_small_remvd = cv2.morphologyEx(edges_small_remvd, cv2.MORPH_DILATE, kernel_rect)
+        edges_small_remvd = cv2.morphologyEx(edges_small_remvd, cv2.MORPH_ERODE, kernel_rect)
+
 
         _ ,contours ,hierarchy = cv2.findContours(edges_small_remvd, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+        #cv2.imshow("edges_small_remvd[Closed]",edges_small_remvd)
+        #cv2.imshow("edges_small_remvd[Closed (Rect)]",edges_small_remvd_Rect)
+        #cv2.imshow("edges_small_remvd[Dilated (Rect)]",edges_small_remvd_Rect_)
 
         # Identifying and removing wrongly detected holes as part of road network
         lrgst_hole_h1_idx = -1
@@ -137,17 +154,44 @@ class bot_localizer():
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
         bin_img = cv2.morphologyEx(bin_img, cv2.MORPH_CLOSE, kernel)
 
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
+        kernel_rect = cv2.getStructuringElement(cv2.MORPH_RECT,(9,9))
         cnts = cv2.findContours(bin_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[1]
         
         cncted_objects_list = []
         for idx,_ in enumerate(cnts):
             temp = np.zeros_like(bin_img)
-            cncted_objects_list.append(cv2.drawContours(temp, cnts, idx, 255,-1))
-            cncted_objects_list[idx] = cv2.morphologyEx(cncted_objects_list[idx], cv2.MORPH_CLOSE, kernel)
+            temp = cv2.drawContours(temp, cnts, idx, 255,-1)
+            cncted_objects_list.append(cv2.morphologyEx(temp, cv2.MORPH_CLOSE, kernel_rect))
+            #cv2.namedWindow("temp_"+str(idx),cv2.WINDOW_NORMAL)
+            #cv2.imshow("temp_"+str(idx), temp_)
         cncted_objects = sum(cncted_objects_list)
 
         return cncted_objects
+    
+    @staticmethod
+    def connect_objs_excluding(rois_mask,cnts_mask,exclude = "largest"):
+        roi_to_exclude = np.zeros_like(rois_mask)
+        if exclude =="largest":
+            roi_to_exclude,_ = ret_largest_obj(rois_mask)
+            roi_we_want = cv2.bitwise_not(roi_to_exclude)
+        
+        rois_mask_selective = cv2.bitwise_and(rois_mask, rois_mask,mask = roi_we_want)
+
+        # Retrieving Edges of selective ROI's
+        cnts= cv2.findContours(rois_mask_selective, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[1]
+        edges_temp = np.zeros_like(rois_mask)
+        edges_temp = cv2.drawContours(edges_temp, cnts, -1, 255)
+
+        # Closing Selective ROis to bridge gaps and adding removed ROI
+        kernel_rect = cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))
+        edges_temp = cv2.morphologyEx(edges_temp, cv2.MORPH_CLOSE, kernel_rect)
+        edges_temp = cv2.bitwise_or(edges_temp, roi_to_exclude)
+
+        # Receiving contours for the now connected rois to draw back on the original roi_mask
+        cnts_mask = cv2.findContours(edges_temp, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[1]
+        rois_mask = cv2.drawContours(edges_temp, cnts_mask, -1, 255,-1)
+
+        return rois_mask,cnts_mask
 
     def extract_bg(self,frame):
 
@@ -156,13 +200,19 @@ class bot_localizer():
         edges_canny = cv2.Canny(gray, 50, 150,None,3)
 
         # [connect_objs] => Connect disconnected edges that are close enough
+        #cv2.imshow("edges_canny",edges_canny)
         edges = self.connect_objs(edges_canny)
+        #cv2.imshow("edges(Connected)",edges)
 
         cnts = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[1]
         rois_mask = np.zeros((frame.shape[0],frame.shape[1]),dtype= np.uint8)
         
         for idx,_ in enumerate(cnts):
             cv2.drawContours(rois_mask, cnts, idx, 255,-1)
+
+        #cv2.imshow("rois_mask(Before)",rois_mask)
+        rois_mask,cnts = self.connect_objs_excluding(rois_mask,cnts)
+        #cv2.imshow("rois_mask(After)",rois_mask)
 
         # b) Extract BG_model by 
         #               i)  removing the smallest object from the scene (Bot)
@@ -191,8 +241,11 @@ class bot_localizer():
         
         # Fetching edges of only road network
         road_network_edges = cv2.bitwise_and(edges_canny, edges_canny,mask=road_network_mask)
+        #cv2.imshow("road_network_edges",road_network_edges)
+
         # Removing holes wrongly considered to be part of roads
         road_network_mask = self.refine_road_mask(road_network_edges,road_network_mask)
+        #cv2.imshow("road_network_mask",road_network_mask)
         
         [X,Y,W,H] = cv2.boundingRect(road_network_cnt)
         # b) Cropping maze_mask from the image
@@ -212,6 +265,7 @@ class bot_localizer():
             cv2.imshow("1c. Ground_replica",Ground_replica)
             cv2.imshow("1d. bg_model",self.bg_model)
             cv2.imshow("2. maze_og",self.maze_og)
+            #cv2.waitKey(0)
 
     @staticmethod
     def get_centroid(cnt):
@@ -231,6 +285,8 @@ class bot_localizer():
 
         bot_cntr_translated[0] = bot_cntr_arr[0] - self.orig_X
         bot_cntr_translated[1] = bot_cntr_arr[1] - self.orig_Y
+
+        self.loc_car_sv = bot_cntr_translated
 
         # d) Applying rotation tranformation to bot_centroid to get bot location relative to maze
         bot_on_maze = (self.rot_mat @ bot_cntr_translated.T).T
@@ -252,6 +308,8 @@ class bot_localizer():
         
         # Step 1: Background Model Extraction
         if not self.is_bg_extracted:
+            print("")
+            print("1# Localizing the Robot.......")
             self.extract_bg(curr_frame.copy())
             self.is_bg_extracted = True
             
@@ -260,7 +318,8 @@ class bot_localizer():
         change_gray = cv2.cvtColor(change, cv2.COLOR_BGR2GRAY)
         change_mask = cv2.threshold(change_gray, 15, 255, cv2.THRESH_BINARY)[1]
         car_mask, car_cnt = ret_largest_obj(change_mask)
-
+        x,y,w,h = cv2.boundingRect(car_cnt)
+        self.car_rect = [x,y,w,h]
         # Step 3: Fetching the (relative) location of car.
         self.get_car_loc(car_cnt,car_mask)
 

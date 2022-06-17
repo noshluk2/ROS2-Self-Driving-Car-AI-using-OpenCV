@@ -5,6 +5,9 @@ import cv2
 
 detect = 1 # Set to 1 for Lane detection
 
+angle_orig = 0
+angle = 0
+
 Testing = True# Set to True --> if want to see what the car is seeing
 Profiling = False # Set to True --> If you want to profile code
 write = False # Set to True --> If you want to Write input / output videos
@@ -27,6 +30,9 @@ debugging_TrafficLights = True
 debugging_TL_Config = True
 
 engines_on = False
+
+enable_SatNav = False
+animate_steering = True
 
 Detect_lane_N_Draw = True
 Training_CNN = False 

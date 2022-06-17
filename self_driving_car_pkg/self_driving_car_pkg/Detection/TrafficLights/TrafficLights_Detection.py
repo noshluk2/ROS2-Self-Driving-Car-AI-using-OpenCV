@@ -544,7 +544,10 @@ class TL_Tracker:
             cnts = cv2.findContours(closing, cv2.RETR_EXTERNAL ,cv2.CHAIN_APPROX_NONE )[1]
             cnt = max(cnts, key=cv2.contourArea)
             x,y,w,h = cv2.boundingRect(cnt)
-            if ( abs( (x+w) - im_src.shape[1] ) < (0.3*im_src.shape[1]) ):
+
+            if ( (              (x+w)             < (0.5*im_src.shape[1]) ) or
+                 ( abs( (x+w) - im_src.shape[1] ) < (0.3*im_src.shape[1]) )    ):
+            
                 self.CollisionIminent = True
                 
             rect = cv2.minAreaRect(cnt)
