@@ -1,5 +1,4 @@
 Keras-Preprocessing==1.1.2
-opencv-python==3.4.15.55
 tensorboard==2.6.0
 tensorboard-data-server==0.6.1
 tensorboard-plugin-wit==1.8.0
@@ -9,3 +8,6 @@ sklearn
 # Visualization libraries
 matplotlib
 visualkeras
+# [Reqs. for Sat-Nav]
+opencv-contrib-python==3.4.15.55
+pygame

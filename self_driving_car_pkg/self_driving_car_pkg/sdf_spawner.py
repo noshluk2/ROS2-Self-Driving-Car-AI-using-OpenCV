@@ -1,7 +1,3 @@
-
-
-
-
 """
  This file is a service client implementation for Gazebo spawn service(SpawnEntity)
  We utilize it for our traffic light sdf files to be spawned into gazebo world
@@ -25,6 +21,10 @@ def main():
     sdf_path = argv[0]
     request = SpawnEntity.Request()
     request.name = argv[1]
+    # Use user defined positions (If provided)
+    if len(argv)>3:
+        request.initial_pose.position.x = float(argv[2])
+        request.initial_pose.position.y = float(argv[3])
     request.xml = open(sdf_path, 'r').read()
 
     node.get_logger().info("Sending service request to `/spawn_entity`")

@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 3.1.2 commit date:2022-03-31, commit time:17:40, hash:cc66d1020c3b</authoring_tool>
     </contributor>
-    <created>2022-06-03T17:13:04</created>
-    <modified>2022-06-03T17:13:04</modified>
+    <created>2022-05-26T16:05:47</created>
+    <modified>2022-05-26T16:05:47</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -226,25 +226,25 @@
   </library_geometries>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
-      <node id="chowk_4" name="chowk_4" type="NODE">
+      <node id="road_piece_002" name="road_piece.002" type="NODE">
         <matrix sid="transform">-1.37919e-7 -0.5919116 0 10.2 3.155221 -2.58733e-8 0 -28.08 0 0 1.213235 0 0 0 0 1</matrix>
-        <instance_geometry url="#Plane_028-mesh" name="chowk_4"/>
+        <instance_geometry url="#Plane_028-mesh" name="road_piece.002"/>
       </node>
-      <node id="chowk_1" name="chowk_1" type="NODE">
+      <node id="road_piece_004" name="road_piece.004" type="NODE">
         <matrix sid="transform">3.145221 0 0 50.81 0 0.5819116 0 -3.5 0 0 1.213235 0 0 0 0 1</matrix>
-        <instance_geometry url="#Plane_027-mesh" name="chowk_1"/>
+        <instance_geometry url="#Plane_027-mesh" name="road_piece.004"/>
       </node>
-      <node id="chowk" name="chowk" type="NODE">
-        <matrix sid="transform">-1.36171e-7 -0.5919116 0 92.41 3.115221 -2.58733e-8 0 -28.13 0 0 1.213235 0.03 0 0 0 1</matrix>
-        <instance_geometry url="#Plane_025-mesh" name="chowk"/>
+      <node id="road_piece_005" name="road_piece.005" type="NODE">
+        <matrix sid="transform">-1.36171e-7 -0.5919116 0 92.98 3.115221 -2.58733e-8 0 -28.13 0 0 1.213235 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_025-mesh" name="road_piece.005"/>
       </node>
-      <node id="chowk_2" name="chowk_2" type="NODE">
+      <node id="road_piece_001" name="road_piece.001" type="NODE">
         <matrix sid="transform">3.745221 0 0 50.81 0 3.651912 0 -28.05 0 0 1.213235 0 0 0 0 1</matrix>
-        <instance_geometry url="#Plane_022-mesh" name="chowk_2"/>
+        <instance_geometry url="#Plane_022-mesh" name="road_piece.001"/>
       </node>
-      <node id="chowk_3" name="chowk_3" type="NODE">
+      <node id="road_piece_003" name="road_piece.003" type="NODE">
         <matrix sid="transform">3.145221 0 0 13.64 0 0.5819116 0 -3.5 0 0 1.213235 0 0 0 0 1</matrix>
-        <instance_geometry url="#Plane_009-mesh" name="chowk_3"/>
+        <instance_geometry url="#Plane_009-mesh" name="road_piece.003"/>
       </node>
     </visual_scene>
   </library_visual_scenes>

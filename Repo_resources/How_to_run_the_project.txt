@@ -38,4 +38,8 @@ source /opt/ros/foxy/setup.bash
 ros2 launch self_driving_car_pkg world_gazebo.launch.py
 
 ## To activate the SelfDriving Car
-ros2 run self_driving_car_pkg computer_vision_node 
+ros2 run self_driving_car_pkg computer_vision_node
+
+############################################# PROBLEMS & SOLUTION  ########################################3
+## TypeError: Descriptors cannot not be created directly.
+pip install protobuf==3.20.0
