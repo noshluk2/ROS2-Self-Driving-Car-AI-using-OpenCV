@@ -162,8 +162,7 @@ class bot_localizer():
             temp = np.zeros_like(bin_img)
             temp = cv2.drawContours(temp, cnts, idx, 255,-1)
             cncted_objects_list.append(cv2.morphologyEx(temp, cv2.MORPH_CLOSE, kernel_rect))
-            #cv2.namedWindow("temp_"+str(idx),cv2.WINDOW_NORMAL)
-            #cv2.imshow("temp_"+str(idx), temp_)
+
         cncted_objects = sum(cncted_objects_list)
 
         return cncted_objects
@@ -265,7 +264,6 @@ class bot_localizer():
             cv2.imshow("1c. Ground_replica",Ground_replica)
             cv2.imshow("1d. bg_model",self.bg_model)
             cv2.imshow("2. maze_og",self.maze_og)
-            #cv2.waitKey(0)
 
     @staticmethod
     def get_centroid(cnt):

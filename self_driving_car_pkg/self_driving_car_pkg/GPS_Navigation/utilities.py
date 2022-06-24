@@ -90,8 +90,9 @@ def find_point_in_FOR(bot_cntr,transform_arr,rot_mat,cols,rows):
 def get_centroid(cnt):
 
     M = cv2.moments(cnt)
-    if M['m00']==0:        
-        return cv2.minEnclosingCircle(cnt)[0]
+    if M['m00']==0:
+        (cx,cy) = cv2.minEnclosingCircle(cnt)[0]        
+        return (int(cx),int(cy))
     else:
         cx = int(M['m10']/M['m00'])
         cy = int(M['m01']/M['m00'])
