@@ -24,6 +24,11 @@ debugging_Signs = True
 debugging_TrafficLights = True
 debugging_TL_Config = True
 
+# adding engines on/off control 
+engines_on = False
+# adding clr_seg_dbg control to create trackbars only once 
+clr_seg_dbg_created = False
+
 Detect_lane_N_Draw = True
 Training_CNN = False 
 

@@ -15,6 +15,11 @@ class Debugging:
         pass
 
     cv2.namedWindow('CONFIG')
+
+    # creating (Engine) on/off trackbar 
+    Motors = 'Engine'
+    cv2.createTrackbar(Motors, 'CONFIG',False,True,nothing)
+
     # create switch for ON/OFF functionality
     debugging_SW = 'Debug'
     cv2.createTrackbar(debugging_SW, 'CONFIG',False,True,nothing)
@@ -31,12 +36,22 @@ class Debugging:
 
     def setDebugParameters(self):
         # get current positions of four trackbars
+        # get current positions of trackbar
+        Motors = cv2.getTrackbarPos(self.Motors,'CONFIG')
+
         debug = cv2.getTrackbarPos(self.debugging_SW,'CONFIG')
         debugLane = cv2.getTrackbarPos(self.debuggingLane_SW,'CONFIG')
         debugSign = cv2.getTrackbarPos(self.debuggingSigns_SW,'CONFIG')
         debugTrafficLights = cv2.getTrackbarPos(self.debuggingTL_SW,'CONFIG')
 
 
+
+        # If trackbar changed modify engines_on config parameter
+        if Motors:
+            config.engines_on = True
+        else:
+            config.engines_on = False
+            
         if debug:
             config.debugging = True
         else:

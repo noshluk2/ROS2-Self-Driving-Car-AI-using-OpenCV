@@ -13,7 +13,7 @@ Sat_Low = 0#61
 
 Hue_Low_Y = 30#30
 Hue_High_Y = 33#40
-Lit_Low_Y = 160#63
+Lit_Low_Y = 120#63
 Sat_Low_Y = 0#81
 
 def OnHueLowChange(val):
@@ -69,22 +69,7 @@ def MaskExtract():
 #cv2.namedWindow("Mid_ROI_mask",cv2.WINDOW_NORMAL)
 
 
-if (config.debugging_Lane and config.debugging and config.debugging_L_ColorSeg):
 
-    cv2.namedWindow("[Segment_Colour_final] mask")
-    cv2.namedWindow("[Segment_Colour_final] mask_Y")
-
-    cv2.createTrackbar("Hue_L","[Segment_Colour_final] mask",Hue_Low,255,OnHueLowChange)
-    cv2.createTrackbar("Lit_L","[Segment_Colour_final] mask",Lit_Low,255,OnLitLowChange)
-    cv2.createTrackbar("Sat_L","[Segment_Colour_final] mask",Sat_Low,255,OnSatLowChange)
-
-    cv2.createTrackbar("Hue_L","[Segment_Colour_final] mask_Y",Hue_Low_Y,255,OnHueLowChange_Y)
-    cv2.createTrackbar("Hue_H","[Segment_Colour_final] mask_Y",Hue_High_Y,255,OnHueHighChange_Y)
-    cv2.createTrackbar("Lit_L","[Segment_Colour_final] mask_Y",Lit_Low_Y,255,OnLitLowChange_Y)
-    cv2.createTrackbar("Sat_L","[Segment_Colour_final] mask_Y",Sat_Low_Y,255,OnSatLowChange_Y)
-else:
-    cv2.destroyWindow("[Segment_Colour_final] mask")
-    cv2.destroyWindow("[Segment_Colour_final] mask_Y")
 
 
 def clr_segment(HSL,lower_range,upper_range):
@@ -178,14 +163,30 @@ def Segment_Colour(frame,minArea):
     #cv2.imshow('Mid_ROI_mask',Mid_ROI_mask)
 
     if (config.debugging_Lane and config.debugging and config.debugging_L_ColorSeg):
-        cv2.imshow('[Segment_Colour_final] mask',mask)
-        cv2.imshow('[Segment_Colour_final] mask_Y',mask_Y)
+        # Debugging lane segmentation on colour only once......
+        if not config.clr_seg_dbg_created:            
+            config.clr_seg_dbg_created = True        
+            cv2.namedWindow("[Segment_Colour_final] mask")
+            cv2.namedWindow("[Segment_Colour_final] mask_Y")
+
+            cv2.createTrackbar("Hue_L","[Segment_Colour_final] mask",Hue_Low,255,OnHueLowChange)
+            cv2.createTrackbar("Lit_L","[Segment_Colour_final] mask",Lit_Low,255,OnLitLowChange)
+            cv2.createTrackbar("Sat_L","[Segment_Colour_final] mask",Sat_Low,255,OnSatLowChange)
+
+            cv2.createTrackbar("Hue_L","[Segment_Colour_final] mask_Y",Hue_Low_Y,255,OnHueLowChange_Y)
+            cv2.createTrackbar("Hue_H","[Segment_Colour_final] mask_Y",Hue_High_Y,255,OnHueHighChange_Y)
+            cv2.createTrackbar("Lit_L","[Segment_Colour_final] mask_Y",Lit_Low_Y,255,OnLitLowChange_Y)
+            cv2.createTrackbar("Sat_L","[Segment_Colour_final] mask_Y",Sat_Low_Y,255,OnSatLowChange_Y)
+
+            cv2.imshow('[Segment_Colour_final] mask',mask)
+            cv2.imshow('[Segment_Colour_final] mask_Y',mask_Y)
         cv2.imshow('Mid_edge_ROI',Mid_edge_ROI)
         cv2.imshow('Outer_edge_ROI',Outer_edge_ROI)
         cv2.imshow('OuterLane_Side_Seperated',OuterLane_SidesSeperated)
     else:
-        cv2.destroyWindow('[Segment_Colour_final] mask')
-        cv2.destroyWindow('[Segment_Colour_final] mask_Y')
+        if config.clr_seg_dbg_created:
+            cv2.destroyWindow('[Segment_Colour_final] mask')
+            cv2.destroyWindow('[Segment_Colour_final] mask_Y')
         cv2.destroyWindow('Mid_edge_ROI')
         cv2.destroyWindow('Outer_edge_ROI')
         cv2.destroyWindow('OuterLane_Side_Seperated')
