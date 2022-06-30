@@ -27,11 +27,13 @@ Date :
 import cv2
 
 from .bot_localization import bot_localizer
-# from .bot_mapping import bot_mapper
+from .bot_mapping import bot_mapper
 # from .bot_pathplanning import bot_pathplanner
 # from .bot_motionplanning import bot_motionplanner
 
-from .utilities import Debugging
+# importing utility functions for taking destination from user
+from .utilities import Debugging,click_event,find_point_in_FOR
+import sys
 from . import config
 
 class Navigator():
@@ -40,11 +42,16 @@ class Navigator():
         
         # Creating objects for each stage of the robot navigation
         self.bot_localizer = bot_localizer()
-        # self.bot_mapper = bot_mapper()
+        self.bot_mapper = bot_mapper()
         # self.bot_pathplanner = bot_pathplanner()
         # self.bot_motionplanner = bot_motionplanner()
 
         self.debugging = Debugging()
+
+        # [NEW]: Boolean to determine if we are taking destination from user or not
+        self.accquiring_destination = True
+        # [NEW]: Container to store destination selected by User
+        self.destination = []
 
 
 
@@ -58,8 +65,25 @@ class Navigator():
         # [Stage 1: Localization] Localizing robot at each iteration        
         self.bot_localizer.localize_bot(sat_view, frame_disp)
 
-        # # [Stage 2: Mapping] Converting Image to Graph
-        # self.bot_mapper.graphify(self.bot_localizer.maze_og)
+        # (NEW): Acquiring Destination from the User
+        if self.accquiring_destination:
+            cv2.imshow("Mark your destination!!!",sat_view)
+            cv2.setMouseCallback("Mark your destination!!!", click_event)
+            while(self.destination==[]):
+                self.destination = config.destination
+                cv2.waitKey(1)
+            if self.destination!=[]:
+                cv2.destroyWindow("Mark your destination!!!")
+                self.accquiring_destination = False
+                # Finding destination_pt in OccupencyGrid (Road Network as the new frame of Refrence)
+                self.destination = find_point_in_FOR(self.destination,self.bot_localizer.transform_arr,self.bot_localizer.rot_mat,sat_view.shape[1],sat_view.shape[0])
+                cv2.namedWindow("SatView (Live)",cv2.WINDOW_NORMAL)
+            else:
+                print("Destination not specified.... Exiting!!!")
+                sys.exit()
+
+        # [NEW] [Stage 2: Mapping] Converting Image to Graph with new Inputs of Start and destination provided by USer
+        self.bot_mapper.graphify(self.bot_localizer.maze_og,self.bot_localizer.loc_car,self.destination,self.bot_localizer.car_rect)
 
         # # [Stage 3: PathPlanning] Using {User Specified PathPlanner} to find path to goal        
         # start = self.bot_mapper.Graph.start
@@ -103,6 +127,6 @@ class Navigator():
         # frame_disp = cv2.rectangle(frame_disp, (20,bot_offset), (bot_view.shape[1]+20,(bot_view.shape[0]+bot_offset)), (0,0,255),12)
         # frame_disp[bot_offset:(bot_view.shape[0]+bot_offset),20:bot_view.shape[1]+20] = bot_view
  
-        cv2.imshow("Maze (Live)", frame_disp)
+        cv2.imshow("SatView (Live)", frame_disp)
         cv2.waitKey(1)
 

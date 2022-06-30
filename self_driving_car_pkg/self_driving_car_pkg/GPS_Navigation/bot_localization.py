@@ -53,6 +53,9 @@ class bot_localizer():
         self.orig_rot = 0
         self.rot_mat = 0
 
+        # [NEW]: Container to store rect bounding (localized) car
+        self.car_rect = []
+
 
     @staticmethod
     def ret_rois_boundinghull(rois_mask,cnts):
@@ -244,7 +247,11 @@ class bot_localizer():
 
         # e) Crop out only road_network from complete mask
         maze_occupencygrid = road_network_mask[Y:Y+H,X:X+W]
-        self.maze_og = cv2.rotate(maze_occupencygrid, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        maze_occupencygrid_rotated = cv2.rotate(maze_occupencygrid, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        
+        # [NEW] Zeroing Boundary to get rid of exception case where we have no walls at edges
+        rows,cols = maze_occupencygrid_rotated.shape
+        self.maze_og  = cv2.rectangle(maze_occupencygrid_rotated, (0,0), (cols-1,rows-1), 0,10)
 
         # Storing Crop and Rot Parameters required to maintain frame of refrence in the orig image
         self.update_frameofrefrence_parameters(X,Y,W,H,90)
@@ -255,6 +262,7 @@ class bot_localizer():
             cv2.imshow("1c. Ground_replica",Ground_replica)
             cv2.imshow("1d. bg_model",self.bg_model)
             cv2.imshow("2. maze_og",self.maze_og)
+            cv2.waitKey(0)
 
     @staticmethod
     def get_centroid(cnt):
@@ -300,6 +308,10 @@ class bot_localizer():
         change_gray = cv2.cvtColor(change, cv2.COLOR_BGR2GRAY)
         change_mask = cv2.threshold(change_gray, 15, 255, cv2.THRESH_BINARY)[1]
         car_mask, car_cnt = ret_largest_obj(change_mask)
+
+        # [NEW]: Storing Rectangle bounding the localized car for use as a Base Unit in Mapping
+        x,y,w,h = cv2.boundingRect(car_cnt)
+        self.car_rect = [x,y,w,h]
 
         # Step 3: Fetching the (relative) location of car.
         self.get_car_loc(car_cnt,car_mask)
