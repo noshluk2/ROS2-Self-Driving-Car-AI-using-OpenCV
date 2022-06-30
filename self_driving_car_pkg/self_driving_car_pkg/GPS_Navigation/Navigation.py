@@ -28,7 +28,7 @@ import cv2
 
 from .bot_localization import bot_localizer
 from .bot_mapping import bot_mapper
-# from .bot_pathplanning import bot_pathplanner
+from .bot_pathplanning import bot_pathplanner
 # from .bot_motionplanning import bot_motionplanner
 
 # importing utility functions for taking destination from user
@@ -43,7 +43,7 @@ class Navigator():
         # Creating objects for each stage of the robot navigation
         self.bot_localizer = bot_localizer()
         self.bot_mapper = bot_mapper()
-        # self.bot_pathplanner = bot_pathplanner()
+        self.bot_pathplanner = bot_pathplanner()
         # self.bot_motionplanner = bot_motionplanner()
 
         self.debugging = Debugging()
@@ -85,15 +85,15 @@ class Navigator():
         # [NEW] [Stage 2: Mapping] Converting Image to Graph with new Inputs of Start and destination provided by USer
         self.bot_mapper.graphify(self.bot_localizer.maze_og,self.bot_localizer.loc_car,self.destination,self.bot_localizer.car_rect)
 
-        # # [Stage 3: PathPlanning] Using {User Specified PathPlanner} to find path to goal        
-        # start = self.bot_mapper.Graph.start
-        # end = self.bot_mapper.Graph.end
-        # maze = self.bot_mapper.maze
+        # [Stage 3: PathPlanning] Using {User Specified PathPlanner} to find path to goal        
+        start = self.bot_mapper.Graph.start
+        end = self.bot_mapper.Graph.end
+        maze = self.bot_mapper.maze
 
-        # self.bot_pathplanner.find_path_nd_display(self.bot_mapper.Graph.graph, start, end, maze,method="dijisktra")
-        # self.bot_pathplanner.find_path_nd_display(self.bot_mapper.Graph.graph, start, end, maze,method="a_star")
-        # if config.debug and config.debug_pathplanning:
-        #     print("\nNodes Visited [Dijisktra V A-Star*] = [ {} V {} ]".format(self.bot_pathplanner.dijisktra.dijiktra_nodes_visited,self.bot_pathplanner.astar.astar_nodes_visited))
+        self.bot_pathplanner.find_path_nd_display(self.bot_mapper.Graph.graph, start, end, maze,method="dijisktra")
+        self.bot_pathplanner.find_path_nd_display(self.bot_mapper.Graph.graph, start, end, maze,method="a_star")
+        if config.debug and config.debug_pathplanning:
+            print("\nNodes Visited [Dijisktra V A-Star*] = [ {} V {} ]".format(self.bot_pathplanner.dijisktra.dijiktra_nodes_visited,self.bot_pathplanner.astar.astar_nodes_visited))
 
 
         # # [Stage 4: MotionPlanning] Reach the (maze exit) by navigating the path previously computed

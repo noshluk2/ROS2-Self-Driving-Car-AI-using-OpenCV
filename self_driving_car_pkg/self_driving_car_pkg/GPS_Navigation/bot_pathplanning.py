@@ -127,6 +127,7 @@ class bot_pathplanner():
                 self.draw_path_on_maze(maze,pathpts_to_display,method)
             else:
                 if config.debug and config.debug_pathplanning:
+                    cv2.namedWindow("maze (Found Path) [dijisktra]",cv2.WINDOW_NORMAL)
                     cv2.imshow("maze (Found Path) [dijisktra]", self.dijisktra.shortest_path_overlayed)
                 else:
                     try:
@@ -139,6 +140,7 @@ class bot_pathplanner():
                 self.draw_path_on_maze(maze,pathpts_to_display,method)
             else:
                 if config.debug and config.debug_pathplanning:
+                    cv2.namedWindow("maze (Found Path) [a_star]",cv2.WINDOW_NORMAL)
                     cv2.imshow("maze (Found Path) [a_star]", self.astar.shortest_path_overlayed)
                 else:
                     try:
@@ -357,7 +359,8 @@ class dijisktra():
         # Teaking the first item of the list created by list comprehension
         # Which is while looping over the key value pair of graph. Return the pairs_idx that match the start key
         start_idx = [idx for idx, key in enumerate(graph.items()) if key[0]==start][0]
-        print("Index of search key : {}".format(start_idx))
+        if (config.debug and config.debug_pathplanning):        
+            print("Index of search key : {}".format(start_idx))
 
         # Distanc list storing dist of each node
         dist = []       
@@ -403,7 +406,8 @@ class dijisktra():
                 # Ignore Case node
                 if v!= "case":
 
-                    print("Vertex adjacent to {} is {}".format(u,v))
+                    if (config.debug and config.debug_pathplanning):
+                        print("Vertex adjacent to {} is {}".format(u,v))
                     v_idx = self.vrtxs2idxs[v]
 
                     #if we have not found shortest distance to v + new found dist < known dist ==> Update dist for v
@@ -449,7 +453,8 @@ class a_star(dijisktra):
         # Teaking the first item of the list created by list comprehension
         # Which is while looping over the key value pair of graph. Return the pairs_idx that match the start key
         start_idx = [idx for idx, key in enumerate(graph.items()) if key[0]==start][0]
-        print("Index of search key : {}".format(start_idx))
+        if (config.debug and config.debug_pathplanning):
+            print("Index of search key : {}".format(start_idx))
 
         # Cost of reaching that node from start
         cost2node = []
@@ -500,8 +505,9 @@ class a_star(dijisktra):
             for v in graph[u]:
                 # Ignore Case node
                 if v!= "case":
-
-                    print("Vertex adjacent to {} is {}".format(u,v))
+                    
+                    if (config.debug and config.debug_pathplanning):
+                        print("Vertex adjacent to {} is {}".format(u,v))
                     v_idx = self.vrtxs2idxs[v]
 
                     #if we have not found shortest distance to v + new found cost2Node < known cost2node ==> Update Cost2node for neighbor node
