@@ -4,7 +4,26 @@ from .Detection.TrafficLights.TrafficLights_Detection import detect_TrafficLight
 import cv2
 from numpy import interp
 from .config import config
+# 4 Improvements that will be done in (Original) SDC control algorithm
+# a) lane assist had iregular steering predictions
+#    Solution : use rolling average filter
+# b) Considering road is barely 1.5 car wide. A quarter of Image width for distance from the road mid 
+#                                             from the predicted road center seems bit too harsh
+#    Solution:  Increase to half of image width
+# c) Car was drifting offroad in sharper turns causing it to lose track of road
+#    Solution: Increase weightage of distance (road_center <=> car front) from 50% to 65% 
+#              So steers more in case it drift offroad
+# d) Car not utilizing its full steering range causing it to drift offroad in sharp turns
+#    Solution: Increase car max turn capability
 
+# 2 additons to Drive_Bot.py
+# a) 1 control block added for enable/disable Sat_Nav feature
+# b) Track Traffic Light and Road Speed Limits (State)  ==> Essential for priority control mechanism 
+#                                                           That we will create for integrating Sat_Nav 
+#                                                           ability to the SDC
+
+
+from collections import deque
 class Debugging:
 
     def __init__(self):
@@ -15,6 +34,9 @@ class Debugging:
         pass
 
     cv2.namedWindow('CONFIG')
+
+    enable_SatNav = 'Sat-Nav'
+    cv2.createTrackbar(enable_SatNav, 'CONFIG',False,True,nothing)
 
     # creating (Engine) on/off trackbar 
     Motors = 'Engine'
@@ -37,6 +59,8 @@ class Debugging:
     def setDebugParameters(self):
         # get current positions of four trackbars
         # get current positions of trackbar
+        # get current positions of four trackbars
+        enable_SatNav = cv2.getTrackbarPos(self.enable_SatNav,'CONFIG')
         Motors = cv2.getTrackbarPos(self.Motors,'CONFIG')
 
         debug = cv2.getTrackbarPos(self.debugging_SW,'CONFIG')
@@ -45,6 +69,10 @@ class Debugging:
         debugTrafficLights = cv2.getTrackbarPos(self.debuggingTL_SW,'CONFIG')
 
 
+        if enable_SatNav:
+            config.enable_SatNav = True
+        else:
+            config.enable_SatNav = False
 
         # If trackbar changed modify engines_on config parameter
         if Motors:
@@ -135,9 +163,13 @@ class Control:
         self.GO_MODE_ACTIVATED = False
         self.STOP_MODE_ACTIVATED = False
 
+        # [NEW]: Deque member variable created for emulating rolling average filter to get smoothed Lane's ASsist 
+        self.angle_queue = deque(maxlen=10)
+
     def follow_Lane(self,Max_Sane_dist,distance,curvature , Mode , Tracked_class):
 
-        IncreaseTireSpeedInTurns = True
+        # [NEW]: Turning at normal speed is not much of a problem in simulation
+        IncreaseTireSpeedInTurns = False
 
         if((Tracked_class!=0) and (self.prev_Mode == "Tracking") and (Mode == "Detection")):
             if  (Tracked_class =="speed_sign_30"):
@@ -168,7 +200,9 @@ class Control:
             # Within allowed distance limits for car and lane
             # Interpolate distance to Angle Range
             Turn_angle_interpolated = interp(distance,[-Max_Sane_dist,Max_Sane_dist],[-90,90])
-            CarTurn_angle = Turn_angle_interpolated + curvature
+            #[NEW]: Modified to calculate carturn_angle based on following criteria
+            #             65% turn suggested by distance to the lane center + 35 % how much the lane is turning
+            CarTurn_angle = (0.65*Turn_angle_interpolated) + (0.35*curvature)
 
         # Handle Max Limit [if (greater then either limits) --> set to max limit]
         if( (CarTurn_angle > Max_turn_angle) or (CarTurn_angle < (-1 *Max_turn_angle) ) ):
@@ -178,7 +212,8 @@ class Control:
                 CarTurn_angle = -Max_turn_angle
 
         #angle = CarTurn_angle
-        angle = interp(CarTurn_angle,[-90,90],[-45,45])
+        # [NEW]: Increase car turning capability by 30 % to accomodate sharper turns
+        angle = interp(CarTurn_angle,[-90,90],[-60,60])
 
         curr_speed = self.car_speed
         
@@ -257,8 +292,15 @@ class Control:
         
         if((Distance != -1000) and (Curvature != -1000)):
 
-            self.angle_of_car , current_speed = self.follow_Lane(int(frame_disp.shape[1]/4), Distance,Curvature , Mode , Tracked_class )
-        
+            # [NEW]: Very Important: Minimum Sane Distance that a car can be from the perfect lane to follow is increased to half its fov.
+            #                        This means sharp turns only in case where we are way of target XD
+            self.angle_of_car , current_speed = self.follow_Lane(int(frame_disp.shape[1]/2), Distance,Curvature , Mode , Tracked_class )
+        # [NEW]: Keeping track of orig steering angle and smoothed steering angle using rolling average
+        config.angle_orig = self.angle_of_car
+        # Rolling average applied to get smoother steering angles for robot
+        self.angle_queue.append(self.angle_of_car)
+        self.angle_of_car = (sum(self.angle_queue)/len(self.angle_queue))
+        config.angle = self.angle_of_car
         if Inc_LT:
             self.angle_of_car,current_speed, Detected_LeftTurn, Activat_LeftTurn = self.Obey_LeftTurn(self.angle_of_car,current_speed,Mode,Tracked_class)
         else:
@@ -277,6 +319,9 @@ class Car:
         self.Control_ = Control()
         self.Inc_TL = Inc_TL
         self.Inc_LT = Inc_LT
+        # [NEW]: Containers to Keep track of current state of Signs and Traffic Light detection
+        self.Tracked_class = "Unknown"
+        self.Traffic_State = "Unknown"
 
     def display_state(self,frame_disp,angle_of_car,current_speed,Tracked_class,Traffic_State,Detected_LeftTurn, Activat_LeftTurn):
     
@@ -335,11 +380,16 @@ class Car:
         Current_State = [distance, Curvature, img, Mode, Tracked_class, Traffic_State, CloseProximity]
 
         Angle,Speed, Detected_LeftTurn, Activat_LeftTurn  = self.Control_.drive_car(Current_State,self.Inc_TL,self.Inc_LT)
+        
+        # [NEW]: Updating State Variable with current state 
+        self.Tracked_class = Tracked_class
+        self.Traffic_State = Traffic_State
 
         self.display_state(img,Angle,Speed,Tracked_class,Traffic_State, Detected_LeftTurn, Activat_LeftTurn)
 
+        # [NEW]: Interpolate increased car steering range to increased motor turning angle
         # Translate [ Real World angle and speed ===>> ROS Car Control Range ]
-        Angle=interp(Angle,[-45,45],[0.5,-0.5])
+        Angle=interp(Angle,[-60,60],[0.8,-0.8])
         if (Speed!=0):
             Speed=interp(Speed,[30,90],[1,2])
 

@@ -232,7 +232,7 @@ class TL_States:
                             center_cmp =(int(j[0])-1,int(j[1])-1)
                             radius_cmp = int(j[2] + 5)
                             point_Dist = self.dist( ( center[0],center[1] ) , ( center_cmp[0],center_cmp[1] ) )
-                            print("Distance between [ center = ", center, "center_cmp = ",center_cmp, " ] is  = ",point_Dist)
+                            #print("Distance between [ center = ", center, "center_cmp = ",center_cmp, " ] is  = ",point_Dist)
                             if ( (point_Dist>10) and (point_Dist<80) and ( abs(center[0]-center_cmp[0]) < 80 ) and ( abs(center[1]-center_cmp[1]) < 5 ) and (abs(radius - radius_cmp)<5) and (self.AreCircles_Intersecting(center,center_cmp,radius,radius_cmp)<0) ):
                                 Correct_Color_Comb = self.Check_Color_Cmb(center,center_cmp)
                                 if (Correct_Color_Comb):
@@ -544,7 +544,11 @@ class TL_Tracker:
             cnts = cv2.findContours(closing, cv2.RETR_EXTERNAL ,cv2.CHAIN_APPROX_NONE )[1]
             cnt = max(cnts, key=cv2.contourArea)
             x,y,w,h = cv2.boundingRect(cnt)
-            if ( abs( (x+w) - im_src.shape[1] ) < (0.3*im_src.shape[1]) ):
+
+            # [NEW]: Identifying (Prius < = Proximity = > Traffic Light) 
+            #        [ based on its location on left or right extrema  of image. ]
+            if ( (              (x+w)             < (0.5*im_src.shape[1]) ) or
+                 ( abs( (x+w) - im_src.shape[1] ) < (0.3*im_src.shape[1]) )    ):
                 self.CollisionIminent = True
                 
             rect = cv2.minAreaRect(cnt)

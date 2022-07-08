@@ -56,6 +56,9 @@ class bot_localizer():
         # [NEW]: Container to store rect bounding (localized) car
         self.car_rect = []
 
+        # [NEW]: Container to store location of Car in relation to road nework
+        self.loc_car_wrt_rdntwork = []
+
 
     @staticmethod
     def ret_rois_boundinghull(rois_mask,cnts):
@@ -281,6 +284,9 @@ class bot_localizer():
         bot_cntr_translated = np.zeros_like(bot_cntr_arr)
         bot_cntr_translated[0] = bot_cntr_arr[0] - self.orig_X
         bot_cntr_translated[1] = bot_cntr_arr[1]-self.orig_Y
+
+        # [NEW]: Updating car_loc_wrt_rdntwrk
+        self.loc_car_wrt_rdntwork = bot_cntr_translated
         # d) Applying rotation tranformation to bot_centroid to get bot location relative to maze
         bot_on_maze = (self.rot_mat @ bot_cntr_translated.T).T
 
@@ -326,6 +332,7 @@ class bot_localizer():
 
         if (config.debug and config.debug_localization):
             cv2.imshow("1d. bg_model",self.bg_model)
+            cv2.namedWindow("2. maze_og",cv2.WINDOW_NORMAL)
             cv2.imshow("2. maze_og",self.maze_og)
             
             cv2.imshow("car_localized", frame_disp)

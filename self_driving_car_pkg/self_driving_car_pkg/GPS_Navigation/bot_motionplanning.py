@@ -34,7 +34,6 @@ from numpy import interp
 import pygame
 import os
 pygame.mixer.init()
-pygame.mixer.music.load(os.path.abspath('src/maze_bot/resource/aud_chomp.mp3'))
 
 from . import config
 
@@ -67,25 +66,24 @@ class bot_motionplanner():
         # [Iterater] ==> Current Mini-Goal iteration
         self.path_iter = 0
 
-        # [Containers] Previous iteration Case [Angle or Dist or Mini_Goal]
-        self.prev_angle_to_turn = 0
-        self.Prev_distance_to_goal = 0
-        self.prev_path_iter = 0
+        # [NEW]: Delete Not required variables
+        # [NEW]: Modify curr_speed -> req_speed and angle
+        self.req_speed = 0
+        self.req_angle = 0
 
-        # [Iterators] Iterations elapsed since no change or backpeddling
-        self.angle_not_changed = 0
-        self.dist_not_changed = 0
-        self.goal_not_changed =0
-        self.goal_not_changed_long =0
-        self.backpeddling = 0
+        # [New]: Booelean to note when car is taking a sharp turn
+        # Handy when encountering turn at dcsn poitns
+        self.car_turning = False
 
-        # [State Variables] Stuck on Wall? Ready to backpeddle
-        self.trigger_backpeddling = False
-        # [State Variables] Can't reach goal? Try next appropriate one
-        self.trigger_nxtpt = False
+        # [New]: Containers to store vel and angle needed to published to velicity 
+        # publisher and instead are saved here .
+        # And decsn will be based on taking both info into account)
+        self.vel_linear_x = 1.0
+        self.vel_angular_z = 0.0
 
-        self.curr_speed = 0
-        self.curr_angle = 0
+        # [New]: Contaienrs to save speed and angle of car provided by sensors on motors
+        self.actual_speed = 0
+        self.actual_angle = 0
 
 
     @staticmethod
@@ -122,6 +120,15 @@ class bot_motionplanner():
         #              Bot Rotation 
         #      (OLD)        =>      (NEW) 
         #   [-180,180]             [0,360]
+        # [NEW]: 2) Retrieving Bot Current Speed from its odometry measurements
+        # We get the bot_turn_angle in simulation Using same method as Gotogoal.py
+        self.actual_speed = -(data.twist.twist.linear.x)
+
+        if self.actual_speed<0.005:
+            self.actual_speed = 0.00
+
+        self.actual_angle = data.twist.twist.angular.z
+
     @staticmethod
     def bck_to_orig(pt,transform_arr,rot_mat):
 
@@ -229,73 +236,8 @@ class bot_motionplanner():
         #      (OLD)        =>      (NEW) 
         #   [-180,180]             [0,360]
 
-    def check_gtg_status(self,angle_to_turn,distance_to_goal):
 
-        # ******** Computing change in (angle) over the past iteration ********
-        change_angle_to_turn = abs(angle_to_turn-self.prev_angle_to_turn)
-
-        # If angle is large and the its not changing verymuch and not already self.backpeddling
-        if( (abs(angle_to_turn) >5) and (change_angle_to_turn<0.4) and (not self.trigger_backpeddling) ):
-            self.angle_not_changed +=1
-            # For a significant time angle not changed ---> Trigger self.backpeddling [Move car Reverse]
-            if(self.angle_not_changed>200):
-                self.trigger_backpeddling = True
-        else:
-            self.angle_not_changed = 0
-        print("[prev,change,not_changed_iter,self.trigger_backpeddling] = [{:.1f},{:.1f},{},{}] ".format(self.prev_angle_to_turn,change_angle_to_turn,self.angle_not_changed,self.trigger_backpeddling))
-        self.prev_angle_to_turn = angle_to_turn
-
-        # ******** Computing change in (dist) over the past iteration ********
-        change_dist = abs(distance_to_goal-self.Prev_distance_to_goal)
-
-        # If dist is large and the its not changing verymuch and not already self.backpeddling
-        if( (abs(distance_to_goal) >5) and (change_dist<1.2) and (not self.trigger_backpeddling) ):
-            self.dist_not_changed +=1
-            # For a significant time dist not changed ---> Trigger self.backpeddling [Move car Reverse]
-            if(self.dist_not_changed>200):
-                self.trigger_backpeddling = True
-        else:
-            self.dist_not_changed = 0
-        print("[prev_d,change_d,not_changed_iter,self.trigger_backpeddling] = [{:.1f},{:.1f},{},{}] ".format(self.Prev_distance_to_goal,change_dist,self.dist_not_changed,self.trigger_backpeddling))
-        self.Prev_distance_to_goal = distance_to_goal
-
-        # ******** Computing change in (mini-goal) over the past iteration ********
-        change_goal = self.prev_path_iter - self.path_iter
-        # If mini-goal not changing and within reasonable distance
-        if( (change_goal==0) and (distance_to_goal<30) ):
-            self.goal_not_changed +=1
-            # For a significant time goal not changed ---> Trigger nxtPt [Maybe goal out of reach]
-            if(self.goal_not_changed>500):
-                self.trigger_nxtpt = True
-        # If mini-goal not changing for a long time
-        elif(change_goal==0):
-            self.goal_not_changed_long+=1
-            if(self.goal_not_changed_long>1500):
-                self.trigger_nxtpt = True
-        else:
-            self.goal_not_changed_long = 0
-            self.goal_not_changed = 0
-        print("[prev_g,change_g,not_changed_iter] = [{:.1f},{:.1f},{}] ".format(self.prev_path_iter,change_goal,self.goal_not_changed))
-        self.prev_path_iter = self.path_iter
-
-    @staticmethod
-    def dist(pt_a,pt_b):
-        error_x= pt_b[0] - pt_a[0]
-        error_y= pt_a[1] - pt_b[1]
-        return( sqrt(pow( (error_x),2 ) + pow( (error_y),2 ) ) )
-
-    def get_suitable_nxtpt(self,car_loc,path):
-        extra_i = 1
-        test_goal = path[self.path_iter+extra_i]
-        
-        while(self.dist(car_loc, test_goal)<20):
-            extra_i+=1
-            test_goal = path[self.path_iter+extra_i]
-        print("Loading {} pt ".format(extra_i))
-        self.path_iter = self.path_iter + extra_i -1
-
-
-    def go_to_goal(self,bot_loc,path,velocity,velocity_publisher):
+    def go_to_goal(self,bot_loc,path):
 
         # Finding the distance and angle between (current) bot location and the (current) mini-goal
         angle_to_goal,distance_to_goal = self.angle_n_dist(bot_loc, (self.goal_pose_x,self.goal_pose_y))
@@ -303,75 +245,59 @@ class bot_motionplanner():
         # Computing the angle the bot needs to turn to align with the mini goal
         angle_to_turn = angle_to_goal - self.bot_angle
 
-        # Setting speed of bot proportional to its distance to the goal
-        speed = interp(distance_to_goal,[0,100],[0.2,1.5])
-        self.curr_speed = speed
+        # [NEW]: Always turning in that direction where it takes less time to realign to goal
+        if angle_to_turn>180:
+            angle_to_turn = -360 + angle_to_turn
+        elif angle_to_turn<-180:
+            angle_to_turn =  360 + angle_to_turn
+
+        # [NEW]: Higher Upper Speed limit + Setting speed of bot proportional to its distance to the goal
+        speed = interp(distance_to_goal,[0,100],[0.4,2.5])
+        self.req_speed = speed
         # Setting steering angle of bot proportional to the amount of turn it is required to take
         angle = interp(angle_to_turn,[-360,360],[-4,4])
-        self.curr_angle = angle
-
-        print("angle to goal = {} Angle_to_turn = {} angle[Sim] {}".format(angle_to_goal,angle_to_turn,abs(angle)))
-        print("distance_to_goal = ",distance_to_goal)
-
-        if self.goal_not_reached_flag:
-            self.check_gtg_status(angle_to_turn, distance_to_goal)
-
-        # If car is far away , turn towards goal
-        if (distance_to_goal>=2):
-            velocity.angular.z = angle
-
-        # In view of limiation of differential drive, adjust speed of car with the amount of turn
-        # E.g [Larger the turn  ==> Less the speed]
-        if abs(angle) < 0.4:
-            velocity.linear.x = speed
-        elif((abs(angle) < 0.8)):
-            velocity.linear.x = 0.02
-        else:
-            velocity.linear.x = 0.0
-
-        # If  trigger_backpeddling ==> Make Car reverse [For a few moments]
-        if self.trigger_backpeddling:
-            print("###> backpeddling (",self.backpeddling,") <###")
-            if self.backpeddling==0:
-                self.trigger_nxtpt = True
-            # Making car reverse by setting linear component negative
-            velocity.linear.x = -0.16
-            velocity.angular.z = angle
-            self.backpeddling+=1
-            # Stop backpeddling after some time
-            if self.backpeddling == 100:
-                self.trigger_backpeddling = False
-                self.backpeddling = 0
-                print("###> backpeddling DONE <###")
+        self.req_angle = angle
         
-        # Keep publishing the updated velocity until Final goal not reached
-        if (self.goal_not_reached_flag) or (distance_to_goal<=1):
-            velocity_publisher.publish(velocity)
+        if (config.debug and config.debug_motionplanning):
+            print("angle to goal = {} Angle_to_turn = {} angle[Sim] {}".format(angle_to_goal,angle_to_turn,abs(angle)))
+            print("distance_to_goal = ",distance_to_goal)
 
-        # If car is within reasonable distance of mini-goal
-        if ((distance_to_goal<=8) or self.trigger_nxtpt):
-            if self.trigger_nxtpt:
-                if self.backpeddling:
-                    # [Stuck on a WAll?] ==> Look for appropriate next mini-goal
-                    self.get_suitable_nxtpt(bot_loc,path)
-                self.trigger_nxtpt = False
+
+        # [NEW]: Speed and angle will only be passed in two cases
+        #        1) Angle > 15 deg then car is turning sharply
+        #                   Go with a set speed and turn as required
+        #        2) Destination reached: then speed and gnle to zero
+        if self.goal_not_reached_flag:
+            if (abs(angle_to_turn)>=15):
+                self.car_turning = True
+
+                self.vel_linear_x = 1.0
+                self.vel_angular_z = angle
+            else:
+                self.vel_linear_x = speed
+                self.car_turning = False
+        else:
+            # Stop Car
+            self.vel_linear_x = 0.0
+            self.vel_angular_z = 0.0
+
+        
+
+        # [NEW]: Updated Reasonable distance + If car is within reasonable distance of mini-goal
+        if ((distance_to_goal<=40) ):
                 
 
-            velocity.linear.x = 0.0
-            velocity.angular.z = 0.0
-            # final goal not yet reached, stop moving
-            if self.goal_not_reached_flag:
-                velocity_publisher.publish(velocity)
+            self.velocity_linear_x = 0.0
+            self.velocity_angular_z = 0.0
 
             # Reached the final goal
             if self.path_iter==(len(path)-1):
-                # First Time?
-                if self.goal_not_reached_flag:
+                # [NEW]: Check if not already reahed and within reasomable distance to goal
+                if (self.goal_not_reached_flag and (distance_to_goal<=10)):
                     # Set goal_not_reached_flag to False
                     self.goal_not_reached_flag = False
-                    
-                    # Play the party song, Mention that reached goal
-                    pygame.mixer.music.load(os.path.abspath('src/maze_bot/resource/Goal_reached.wav'))
+                    # [NEW]: Play the party song, Mention that reached goal
+                    pygame.mixer.music.load(os.path.abspath('self_driving_car_pkg/self_driving_car_pkg/GPS_Navigation/resource/Goal_reached.wav'))
                     pygame.mixer.music.play()
             # Still doing mini-goals?
             else:
@@ -381,10 +307,11 @@ class bot_motionplanner():
                 self.goal_pose_y = path[self.path_iter][1]
                 #print("Current Goal (x,y) = ( {} , {} )".format(path[self.path_iter][0],path[self.path_iter][1]))
                 
-                if pygame.mixer.music.get_busy() == False:
-                    pygame.mixer.music.play()
 
-    def nav_path(self,bot_loc,path,velocity,velocity_publisher):
+    # [NEW]: Takes on 1 New input bot_loc_wrt_cropping
+    #        Removes 2 input as not required anymore
+    #               Veloctiy + velicity publisher
+    def nav_path(self,bot_loc,bot_loc_wrt_rdnetwrk,path):
 
         # If valid path Founds
         if (type(path)!=int):
@@ -397,9 +324,8 @@ class bot_motionplanner():
 
             if not self.angle_relation_computed:
 
-                velocity.linear.x = 0.0
-                # Stopping our car
-                velocity_publisher.publish(velocity)
+                self.velocity_linear_x = 0.0
+
                 # Extracting Car angle (Img) from car_InitLoc and car_FinalLoc after moving forward (50 iters)
                 self.bot_angle, _= self.angle_n_dist(self.init_loc, bot_loc)
                 self.bot_angle_init = self.bot_angle
@@ -411,23 +337,28 @@ class bot_motionplanner():
                 # [For noob luqman] : Extracting Car angle [From Simulation angle & S-I Relation]
                 self.bot_angle = self.bot_angle_s - self.bot_angle_rel
 
-                print("\n\nCar angle (Image From Relation) = {} I-S Relation {} Car angle (Simulation) = {}".format(self.bot_angle,self.bot_angle_rel,self.bot_angle_s))
-                print("Car angle_Initial (Image) = ",self.bot_angle_init)
-                print("Car loc {}".format(bot_loc))
+                if (config.debug and config.debug_motionplanning):
+                    print("\n\nCar angle (Image From Relation) = {} I-S Relation {} Car angle (Simulation) = {}".format(self.bot_angle,self.bot_angle_rel,self.bot_angle_s))
+                    print("Car angle_Initial (Image) = ",self.bot_angle_init)
+                    print("Car loc {}".format(bot_loc))
 
+                # [NEW]: GotoGoal now takes only 2 argunment
+                #        2 Arguemnts are removed velovity and velocity publisher
                 # Traversing through found path to reach goal
-                self.go_to_goal(bot_loc,path,velocity,velocity_publisher)
+                self.go_to_goal(bot_loc,path)
 
 
         else:
-            # If bot initial location not already taken
-            if not self.pt_i_taken:
-                # Set init_loc = Current bot location
-                self.init_loc = bot_loc
-                self.pt_i_taken = True
-                
-            # Keep moving forward for 20 iterations(count)
-            velocity.linear.x = 1.0
-            velocity_publisher.publish(velocity)
 
-            self.count+=1
+            # [NEW]: Only proceed if bot lies within the road network
+            if all(bot_loc_wrt_rdnetwrk>0):
+                # If bot initial location not already taken
+                if not self.pt_i_taken:
+                    # Set init_loc = Current bot location
+                    self.init_loc = bot_loc
+                    self.pt_i_taken = True
+                    
+                # Keep moving forward for 20 iterations(count)
+                self.velocity_linear_x = 1.0
+
+                self.count+=1

@@ -2,7 +2,43 @@ import cv2
 import numpy as np
 
 from . import config
+import os
 
+# [NEW]: find largest contour (max pixel amt)
+def ret_largest_reg(mask):
+    cnts = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[1]
+    max_cntr_pix = 0
+    Max_Cntr_idx= -1
+    for index, cnt in enumerate(cnts):
+        curr_cnt_pix = cnt.shape[0]
+        if curr_cnt_pix > max_cntr_pix:
+            max_cntr_pix = curr_cnt_pix
+            Max_Cntr_idx = index
+    
+    largst_reg_mask = np.zeros_like(mask)
+    largst_reg_mask = cv2.drawContours(largst_reg_mask, cnts, Max_Cntr_idx, 255,-1)
+    if Max_Cntr_idx!=-1:
+        return cnts[Max_Cntr_idx],largst_reg_mask
+    else:
+        cnts,mask
+
+# [NEW]: function to display provided screen on a device
+def disp_on_mydev(screen,device="tablet"):
+    resource_dir = "self_driving_car_pkg/self_driving_car_pkg/GPS_Navigation/resource"
+    device_path = os.path.join(resource_dir,device) + ".png"
+    device_view = cv2.imread(device_path)
+    device_hls = cv2.cvtColor(device_view, cv2.COLOR_BGR2HLS)
+
+    # Case : If the screen is the middle is brighter then everything else
+    mask = cv2.inRange(device_hls, np.array([0,150,0]), np.array([255,255,255]))
+    largst_reg_cnt,largst_reg_mask = ret_largest_reg(mask)
+    [x,y,w,h] = cv2.boundingRect(largst_reg_cnt)
+
+    dsize = (screen.shape[1]+ (2*x), screen.shape[0]+(2*y))
+    device_view = cv2.resize(device_view, dsize)
+
+    device_view[y:screen.shape[0]+y,x:screen.shape[1]+x] = screen
+    return device_view,x,y
 # [NEW]: Find closest point in a list of point to a specific position
 def closest_node(node, nodes):
     nodes = np.asarray(nodes)

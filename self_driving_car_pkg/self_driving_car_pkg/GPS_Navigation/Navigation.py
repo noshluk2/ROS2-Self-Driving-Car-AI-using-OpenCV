@@ -29,13 +29,16 @@ import cv2
 from .bot_localization import bot_localizer
 from .bot_mapping import bot_mapper
 from .bot_pathplanning import bot_pathplanner
-# from .bot_motionplanning import bot_motionplanner
+from .bot_motionplanning import bot_motionplanner
 
 # importing utility functions for taking destination from user
 from .utilities import Debugging,click_event,find_point_in_FOR
 import sys
 from . import config
-
+# functionality to provide on device prompt to user to select destination
+from .utilities import disp_on_mydev
+# motionplanning (Visualization) Imports
+from .utilities_disp import disp_SatNav
 class Navigator():
 
     def __init__(self):
@@ -44,7 +47,7 @@ class Navigator():
         self.bot_localizer = bot_localizer()
         self.bot_mapper = bot_mapper()
         self.bot_pathplanner = bot_pathplanner()
-        # self.bot_motionplanner = bot_motionplanner()
+        self.bot_motionplanner = bot_motionplanner()
 
         self.debugging = Debugging()
 
@@ -53,9 +56,16 @@ class Navigator():
         # [NEW]: Container to store destination selected by User
         self.destination = []
 
+        # [NEW]: Displays the satellite view inside the screen of a device
+        self.device_view = []
+        # [NEW]: Screen (start_x,start_y) for passing satellite view to display
+        self.screen_x = 0
+        self.screen_y = 0
 
 
-    def navigate_to_home(self,sat_view):
+
+    # [NEW]: Adding Car_dash view to the mix to see both the self drive and Sat-Nav at the same time
+    def navigate_to_home(self,sat_view,bot_view):
         
         self.debugging.setDebugParameters()
 
@@ -67,12 +77,18 @@ class Navigator():
 
         # (NEW): Acquiring Destination from the User
         if self.accquiring_destination:
-            cv2.imshow("Mark your destination!!!",sat_view)
+            # [NEW]: displaying satellite view on device
+            self.device_view,self.screen_x,self.screen_y = disp_on_mydev(sat_view)
+            cv2.namedWindow("Mark your destination!!!",cv2.WINDOW_NORMAL)
+            cv2.imshow("Mark your destination!!!",self.device_view)
             cv2.setMouseCallback("Mark your destination!!!", click_event)
             while(self.destination==[]):
                 self.destination = config.destination
                 cv2.waitKey(1)
+            # [NEW]: adjusting the effect of overlaying sat_view on device
             if self.destination!=[]:
+                self.destination = (self.destination[0]-self.screen_x,self.destination[1]-self.screen_y)
+                
                 cv2.destroyWindow("Mark your destination!!!")
                 self.accquiring_destination = False
                 # Finding destination_pt in OccupencyGrid (Road Network as the new frame of Refrence)
@@ -96,37 +112,27 @@ class Navigator():
             print("\nNodes Visited [Dijisktra V A-Star*] = [ {} V {} ]".format(self.bot_pathplanner.dijisktra.dijiktra_nodes_visited,self.bot_pathplanner.astar.astar_nodes_visited))
 
 
-        # # [Stage 4: MotionPlanning] Reach the (maze exit) by navigating the path previously computed
-        # bot_loc = self.bot_localizer.loc_car
-        # path = self.bot_pathplanner.path_to_goal
-        # self.bot_motionplanner.nav_path(bot_loc, path, self.vel_msg, self.velocity_publisher)
+        # [Stage 4: MotionPlanning] Reach the (maze exit) by navigating the path previously computed
+        bot_loc = self.bot_localizer.loc_car
+        path = self.bot_pathplanner.path_to_goal
+        # [NEW]: Retrieving bot location w.r.t road network (e.g bot is not withing bounds of road network)
+        bot_loc_wrt_rdntwork = self.bot_localizer.loc_car_wrt_rdntwork
+        # [NEW]: Added information of wether bot is within road_network or not is being passed
+        self.bot_motionplanner.nav_path(bot_loc, bot_loc_wrt_rdntwork, path)
+        # Displaying bot solving maze  (Live)
+        img_shortest_path = self.bot_pathplanner.img_shortest_path
+        self.bot_motionplanner.display_control_mechanism_in_action(bot_loc, path, img_shortest_path, self.bot_localizer, frame_disp)
+        # [NEW]: Displaying Satellite Navigaion
+        curr_speed = self.bot_motionplanner.actual_speed
+        curr_angle = self.bot_motionplanner.actual_angle
+        maze_IntrstPts = self.bot_mapper.maze_interestPts
+        choosen_route = self.bot_pathplanner.choosen_route
+        transform_arr = self.bot_localizer.transform_arr        
+        crp_amt = self.bot_mapper.crp_amt
+        disp_SatNav(frame_disp,bot_view,curr_speed,curr_angle,maze_IntrstPts,choosen_route,img_shortest_path,transform_arr,crp_amt)
 
-        # # Displaying bot solving maze  (Live)
-        # img_shortest_path = self.bot_pathplanner.img_shortest_path
-        # self.bot_motionplanner.display_control_mechanism_in_action(bot_loc, path, img_shortest_path, self.bot_localizer, frame_disp)
-        
-        # # View bot view on left to frame Display
-        # bot_view = cv2.resize(self.bot_view, (int(frame_disp.shape[0]/2),int(frame_disp.shape[1]/2)))
-        # bot_view = bot_view[0:int(bot_view.shape[0]/1.5),:]
-
-        # # Draw & Display [For better Understanding of current robot state]
-        # center_frame_disp = int(frame_disp.shape[0]/2)
-        # center_bot_view = int(bot_view.shape[0]/2)
-        # bot_offset = center_frame_disp - center_bot_view
-        # center_img_shortest_path = int(img_shortest_path.shape[0]/2)
-        # isp_offset = center_frame_disp - center_img_shortest_path
-
-        # bot_view = self.draw_bot_speedo(bot_view,self.bot_motionplanner.curr_speed)
-
-        # if config.debug_live:
-        #     self.overlay_live(frame_disp,img_shortest_path,self.bot_mapper.maze_interestPts,self.bot_pathplanner.choosen_route)
-
-        # orig_col = 40 + int(bot_view.shape[1]/4)
-        # orig = (orig_col,bot_offset-10)
-        # cv2.putText(frame_disp, "Bot View", orig, cv2.FONT_HERSHEY_PLAIN, 2, (255,0,0),3)
-        # frame_disp = cv2.rectangle(frame_disp, (20,bot_offset), (bot_view.shape[1]+20,(bot_view.shape[0]+bot_offset)), (0,0,255),12)
-        # frame_disp[bot_offset:(bot_view.shape[0]+bot_offset),20:bot_view.shape[1]+20] = bot_view
- 
-        cv2.imshow("SatView (Live)", frame_disp)
+        # [NEW]: Displaying whole Satellite Navigation System On Selected device
+        self.device_view[self.screen_y:frame_disp.shape[0]+self.screen_y,self.screen_x:frame_disp.shape[1]+self.screen_x] = frame_disp
+        cv2.imshow("SatView (Live)", self.device_view)
         cv2.waitKey(1)
 
