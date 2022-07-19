@@ -86,6 +86,24 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 ## Features
 * **Prius Hybrid Car**
   -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/the_car.gif)
+
+* **Satellite Navigation (NEW!)**
+    * **Stage 1: Localiation**
+
+      -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/Sat_Nav/1_localization.gif)
+
+    * **Stage 2: Mapping**
+
+      -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/Sat_Nav/2_mapping.gif)
+
+    * **Stage 3: Path-Planning**
+
+      -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/Sat_Nav/3_pathplanning.gif)
+
+    * **Stage 4: Motion-Planning**
+
+      -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/Sat_Nav/4_motionplanning.gif)
+  
 * **Lane Following**
   -  ![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/lane_detection.gif)
 * **Sign Board Detection**
