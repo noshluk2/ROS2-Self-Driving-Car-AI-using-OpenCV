@@ -23,6 +23,19 @@ debugging_L_LaneInfoExtraction= True
 debugging_Signs = True
 debugging_TrafficLights = True
 debugging_TL_Config = True
+# Adding functionality to toggle Sat_Nav on/off
+enable_SatNav = False
+
+# [NEW]: Control switch to turn steering animation on/off
+animate_steering = False
+
+# [NEW]: Containers to store the orignal vs Smoothed steering angle for visualizing the effect
+angle_orig = 0
+angle = 0
+# adding engines on/off control 
+engines_on = False
+# adding clr_seg_dbg control to create trackbars only once 
+clr_seg_dbg_created = False
 
 Detect_lane_N_Draw = True
 Training_CNN = False 
