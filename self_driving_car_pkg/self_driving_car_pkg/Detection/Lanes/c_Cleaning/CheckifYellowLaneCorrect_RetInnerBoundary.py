@@ -38,6 +38,21 @@ def IsPathCrossingMid(Midlane,Mid_cnts,Outer_cnts):
 		return False,is_Ref_to_path_Left
 
 def GetYellowInnerEdge(OuterLanes,MidLane,OuterLane_Points):
+	"""Fetching closest outer lane (side) to mid lane 
+
+	Args:
+		OuterLanes (numpy_1d_array): detected outerlane
+		MidLane (numpy_1d_array): estimated midlane trajectory
+		OuterLane_Points (list): points one from each side of detected outerlane
+
+	Returns:
+		numpy_1d_array: outerlane (side) closest to midlane
+		list[List[tuple]]: refined contours of outerlane
+		list[List[tuple]]: refined contours of midlane
+		int: Offset to compensate for **removal of either midlane or outerlane 
+			                 **(incase of false-positives)
+	"""	
+	
 	#  Fetching the closest outer lane to mid lane is the main goal here
 	if (config.debugging_Lane and config.debugging and config.debugging_L_Cleaning):
 		cv2.imshow("[GetYellowInnerEdge] OuterLanes",OuterLanes)

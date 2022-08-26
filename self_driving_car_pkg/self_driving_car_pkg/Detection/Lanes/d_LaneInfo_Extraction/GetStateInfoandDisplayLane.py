@@ -43,7 +43,22 @@ def LanePoints(MidLane,OuterLane,Offset_correction):
 		return (0,0),(0,0)
 
 def FetchInfoAndDisplay(Mid_lane_edge,Mid_lane,Outer_Lane,frame,Offset_correction):
+	"""Extracts the required data from the detected lane lines (outer and middle)
 
+	Args:
+		MidEdgeROi (numpy_1d_array): detected midlane edge
+		Mid_lane (numpy_1d_array): estimated midlane [mask]
+		Outer_Lane (numpy_1d_array): detected outerlane (closest side) [mask]
+		frame (numpy_3d_array): Prius front-cam view (BGR)
+		Offset_correction (int): offset to apply to computed lane information [incase either
+		                            midlane or outerlane was missing or removed (false-positives)]
+
+	Returns:
+		distance    (int): car_front <===distance===> ideal position on road 
+		curvature (angle): car <===angle===> roads_direction
+                           e.g. car approaching a right turn so road direction is around or less then 45 deg
+						   				cars direction is straight so it is around 90 deg
+	"""	
 	# 1. Using Both outer and middle information to create probable path
 	Traj_lowP,Traj_upP = LanePoints(Mid_lane,Outer_Lane,Offset_correction)
 

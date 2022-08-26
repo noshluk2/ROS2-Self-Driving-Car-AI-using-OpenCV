@@ -204,7 +204,17 @@ def SignDetection_Nd_Tracking(gray,cimg,frame_draw,model):
            
 
 def detect_Signs(frame,frame_draw):
-    
+    """Extract required data from the traffic signs on the road
+
+    Args:
+        frame (numpy nd array): Prius front-cam view
+        frame_draw (numpy nd array): for displaying detected signs
+
+    Returns:
+        string: Current mode of signtracker class
+        string: detected speed sign (e.g speed sign 70)
+    """    
+        
     global model_loaded
     if not model_loaded:
         print(tf.__version__)#2.4.1

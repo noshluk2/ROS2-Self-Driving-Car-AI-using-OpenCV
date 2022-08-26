@@ -285,6 +285,20 @@ class Control:
 
 
     def drive_car(self,Current_State,Inc_TL,Inc_LT):
+        """Act on extracted information based on the SDC control mechanism
+
+        Args:
+            Current_State (List): information extracted from SDC surroundings 
+                                    E.g. (Information regarding the lane boundaries for lane assist + 
+                                        Information regarding the traffic signs for cruise control)
+            Inc_TL (bool): Toggle [Intersection Navigation] ON | OFF 
+            Inc_LT (bool): Toggle [Obey Left Turn Sign] ON | OFF 
+        Returns:
+            angle_of_car  (int): required steering angle for the SDC
+            current_speed  (int): required cruise speed for the SDC 
+            Detected_LeftTurn  (bool): Indicates if SDC has detected a left turn sign
+            Activat_LeftTurn  (bool): Indicates if SDC Take_Left_Turn mechanism is activated
+        """    
 
         [Distance, Curvature, frame_disp , Mode , Tracked_class, Traffic_State, CloseProximity] = Current_State
 
@@ -361,6 +375,18 @@ class Car:
         cv2.putText(frame_disp,"Sign Detected ==> "+str(Tracked_class),(20,80),cv2.FONT_HERSHEY_COMPLEX,font_Scale,(0,255,255),1)
 
     def driveCar(self,frame):
+
+        """ Runs the complete Self Drive Mechanism in two sequential steps:
+            1) Detection : Extract all the required information from the surrounding using the sensor (camera)
+            2) Control   : Act on the extracted information based on the features the SDC is capable of.
+
+        Args:
+            frame (numpy nd array): Prius front-cam view
+        Returns:
+            Angle (float): required steering angle given the conditions 
+            Speed (float): required cruise speed given the conditions 
+            img   (numpy_nd_array): displays the self drive under-the-hood working by overlaying   
+        """        
         
         img = frame[0:640,238:1042]
         img = cv2.resize(img,(320,240))

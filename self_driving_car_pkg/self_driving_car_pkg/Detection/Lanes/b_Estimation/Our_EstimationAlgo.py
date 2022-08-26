@@ -40,6 +40,17 @@ def RetLargestContour(gray):
 
 
 def Estimate_MidLane(BW,MaxDistance):
+    """Estimate the mid-lane trajectory based on the detected midlane (patches) mask
+
+    Args:
+        BW (numpy_1d_array): Midlane (patches) mask extracted from the GetLaneROI()
+        MaxDistance (int): max distance for a patch to be considered part of the midlane 
+                                      else it is noise
+
+    Returns:
+        numpy_1d_array: estimated midlane trajectory (mask)
+    """
+    
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT,(2,2))
     BW = cv2.morphologyEx(BW,cv2.MORPH_DILATE,kernel)
     #cv2.namedWindow("BW_zero",cv2.WINDOW_NORMAL)

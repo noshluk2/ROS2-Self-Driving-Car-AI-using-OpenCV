@@ -24,7 +24,13 @@ class Video_feed_in(Node):
         self.publisher.publish(self.velocity)
         
     def process_data(self, data): 
+        """Processes the data stream from the sensor (camera) and passes on to the 
+           Self Drive Algorithm which computes and executes the appropriate control
+           (Steering and speed) commands.
 
+        Args:
+            data (img_msg): image data from the camera received as a ros message
+        """
         self.Debug.setDebugParameters()
 
         frame = self.bridge.imgmsg_to_cv2(data,'bgr8') # performing conversion

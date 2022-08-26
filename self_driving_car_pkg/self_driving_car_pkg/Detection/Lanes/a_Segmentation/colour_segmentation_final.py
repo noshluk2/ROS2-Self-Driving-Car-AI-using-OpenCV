@@ -145,6 +145,19 @@ def OuterLaneROI(frame,mask,minArea):
     return Lane_edge,Lane_TwoEdges,Outer_Points_list
 
 def Segment_Colour(frame,minArea):
+    """ Segment Lane-Lines (both outer and middle) from the road lane
+
+    Args:
+        frame (numpy nd array): Prius front-cam view
+        minArea (int): minimum area of an object required to be considered as a valid object
+
+    Returns:
+        numpy 2d array: Edges of white mid-lane
+        numpy 2d array: Mask  of white  mid-lane
+        numpy 2d array: Edges of yellow outer-lane
+        numpy 2d array: Edges of outer-lane (Seperated to get inner side later)
+                  List: Two points taken one each from outer-Lane edge seperated
+    """
     
     global HLS,src
 

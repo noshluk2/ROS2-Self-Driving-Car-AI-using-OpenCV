@@ -422,6 +422,15 @@ class Cascade_Detector:
     
 
     def detect(self,img):
+        """ Uses haar cascade (object detector) to detect traffic light and return its bbox and state
+
+        Args:
+            img (numpy nd array): Prius front-cam view
+
+        Returns:
+            (rect): Detected Traffic Light bounding box
+            (String): State of Traffic Light (Red | Green | Unknown)
+        """
         img_draw=img.copy()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         target = self.TrafficLight_cascade.detectMultiScale(gray)
@@ -627,7 +636,16 @@ TL_Track = TL_Tracker()
 Segment_On_Clr_ = Segment_On_Clr()
 
 def detect_TrafficLights(img,frame_draw):
+    """ Detect Traffic light (If-Present) and retrieve its state
 
+    Args:
+        img (numpy nd array): Prius front-cam view
+        frame_draw (numpy nd array): for displaying detected traffic light
+
+    Returns:
+        (String): State of the Traffic Light (Red | Green | Unknown) [Unknown: No Traffic Light found!]
+        (bool): SDC <== Close enough? ==> Traffic Light
+    """    
     Curr_TL_State = "Unknown"
     # 4. Checking if SignTrack Class mode is Tracking If yes Proceed
     if(TL_Track.mode == "Tracking"):
