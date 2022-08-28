@@ -79,6 +79,17 @@ class Video_feed_in(Node):
 
         
     def process_data(self, data): 
+        """Self Drive System with autonomous navigation system Integrated.
+        
+        What do I mean by that?
+        Well! The Prius can now go to any ROI (a.k.a house of your selection) on the map just like in the GPS
+
+        Limitation: The sad part :( Its vision based navigation so only the world thats in view of the satellite
+        will be navigatable (I am not sure, if its even a word :D)
+
+        Args:
+            data (img_msg): image data from the camera received as a ros message
+        """
 
         self.Debug.setDebugParameters()
 

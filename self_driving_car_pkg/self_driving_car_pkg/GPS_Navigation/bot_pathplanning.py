@@ -83,7 +83,18 @@ class bot_pathplanner():
         self.img_shortest_path = maze_bgr.copy()
 
     def find_path_nd_display(self,graph,start,end,maze,method = "DFS"):
-
+        """Performs pathplanning from source to destination using provided methods.
+                                                                         [DFS,DFS_Shortest,Dijisktra,Astar]
+        Args:
+            graph          (dict): Graph extracted in mapping stage
+            start         (tuple): Start where the user is (sort-of)
+            end           (tuple): Destination to where the user wants to go.
+            maze (numpy_nd_array): top-down view of the maze or area
+            method          (str): Method to Use [DFS,DFS_Shortest,Dijisktra,Astar].
+        Updates:
+            self.path_to_goal       => Computed Path from Source to destination [List of Cordinates]
+             self.img_shortest_path => Found path Overlayed (In Color) on Image
+        """
         Path_str = "Path"
         
         if method=="DFS":

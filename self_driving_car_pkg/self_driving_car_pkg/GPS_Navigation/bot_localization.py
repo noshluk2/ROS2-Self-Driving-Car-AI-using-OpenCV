@@ -303,7 +303,15 @@ class bot_localizer():
         self.loc_car = (int(bot_on_maze[0]),int(bot_on_maze[1]))
 
     def localize_bot(self,curr_frame,frame_disp):
+        """ Performs localization of robot using Background Subtraction.
         
+        Args:
+            curr_frame (numpy_nd_array): Extracted frame from video feed of (Satellite or DroneCam)
+            frame_disp (numpy_nd_array): Frame To display the localized robot
+        Updates:
+            self.car_loc => Cordinates (X,Y) of the localized car.  
+             self.maze_og => Occupancy Grid generated from the cropped maze or roi
+        """        
         # Step 1: Background Model Extraction
         if not self.is_bg_extracted:
             self.extract_bg(curr_frame.copy())

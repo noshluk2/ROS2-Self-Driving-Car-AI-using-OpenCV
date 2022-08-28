@@ -466,7 +466,19 @@ class bot_mapper():
    # (Graphify) :           Main function 
     #              [Usage : (Convert) Maze ==> Graph]
     def graphify(self,extracted_maze,bot_loc=[],destination=[],car_rect=[]):
+        """Performs mapping to convert [(top down) maze(roi) view ==> traversable graph.]
 
+        Args:
+            extracted_maze (numpy_1d_array): Occupancy Grid from localization stage [mask]
+            bot_loc        (tuple):          Localized robot location.
+            destination    (tuple):          User selected location (end).
+            car_rect        (list):          Boundingbox of robot,dimensions to be used for reference base size.
+            
+
+        Updates:
+            self.Graph.graph   => Generated graph from provided maze occupancy grid
+             self.maze          => Image displaying only pathways in maze or roi
+        """        
         # Check graph extracted or not from the maze
         if not self.graphified:
 

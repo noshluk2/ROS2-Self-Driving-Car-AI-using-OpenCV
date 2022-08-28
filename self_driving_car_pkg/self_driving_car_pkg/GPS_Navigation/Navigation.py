@@ -66,7 +66,12 @@ class Navigator():
 
     # [NEW]: Adding Car_dash view to the mix to see both the self drive and Sat-Nav at the same time
     def navigate_to_home(self,sat_view,bot_view):
-        
+        """ Performs Visual-Navigation (like GPS) by utilizing video-feed received from satellite.
+
+        Args:
+            sat_view (numpy_nd_array): Visual feed (curr_frame) from the satellite
+            bot_view (numpy_nd_array): Prius dash-cam view
+        """        
         self.debugging.setDebugParameters()
 
         # Creating frame to display current robot state to user        

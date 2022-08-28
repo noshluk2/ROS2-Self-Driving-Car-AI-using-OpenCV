@@ -312,7 +312,16 @@ class bot_motionplanner():
     #        Removes 2 input as not required anymore
     #               Veloctiy + velicity publisher
     def nav_path(self,bot_loc,bot_loc_wrt_rdnetwrk,path):
+        """Performs motionplanning to aid vehicle in navigating to the desired destination
 
+        Args:
+            bot_loc              (tuple): Robot Current location
+            bot_loc_wrt_rdnetwrk (tuple): Robot Current location adjusted to the road network
+            path           (List[tuple]): Found path to destination
+        Updates:
+            speed              => Speed with which the car travels at any given moment
+             angle              => Amount of turning the car needs to do at any moment
+        """        
         # If valid path Founds
         if (type(path)!=int):
             # Trying to reach first mini-goal
