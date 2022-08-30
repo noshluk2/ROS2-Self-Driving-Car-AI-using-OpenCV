@@ -9,7 +9,7 @@
     <li><a href="#Course-Workflow">Course Workflow</a></li>
     <li><a href="#Features">Features</a></li>
     <li><a href="#Pre-Course-Requirments">Pre-Course Requirments</a></li>
-    <li><a href="#Repository Tree">Repository Tree</a></li>
+    <li><a href="#Repository-Tree">Repository Tree</a></li>
     <li><a href="#Link-to-the-Course">Link to the Course</a></li>
     <li><a href="#Instructors">Instructors</a></li>
     <li><a href="#License">License</a></li>
