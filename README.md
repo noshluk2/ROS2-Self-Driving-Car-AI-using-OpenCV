@@ -9,6 +9,7 @@
     <li><a href="#Course-Workflow">Course Workflow</a></li>
     <li><a href="#Features">Features</a></li>
     <li><a href="#Pre-Course-Requirments">Pre-Course Requirments</a></li>
+    <li><a href="#Repository Tree">Repository Tree</a></li>
     <li><a href="#Link-to-the-Course">Link to the Course</a></li>
     <li><a href="#Instructors">Instructors</a></li>
     <li><a href="#License">License</a></li>
@@ -137,6 +138,14 @@ source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 * Basic OpenCV Usage
 * Motivated mind :)
 ---
+
+## Repository Tree
+> Explaining repository structure (i.e important files and their functions).
+
+![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/ROS2_SDC_Tree.png)
+
+----
+
 ## Link to the Course
 
 **[[Discounted Link]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/?couponCode=SAT_NAV)**
