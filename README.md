@@ -22,49 +22,15 @@ A tesla Like Car in ROS2 will follow lane , Use AI to classify Sign Boards and p
 [![alt text](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/Images_videos/thumbnail_1.png)](https://youtu.be/D5BkqDcfw2U "Click to Watch Intro Video on Youtube")
 ----
 ## Using this Repository
-* Clone the repository in you Home folder
-```
-git clone https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV.git
-```
-* Get into the downloaded repository
- ```
- cd path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/
-##e.g cd ~/ROS2-Self-Driving-Car-AI-using-OpenCV/
-  ```
+----
+**Docker**:
 
-* Bring all models into your **.gazebo/models** ( requires gazebo to be installed )
- ```
- cp /models/* ~/.gazebo/models
- ```
- or manually copy->paste them into ~/.gazebo/models/ ( if not avaible press ctrl + H  , a hidden foler )
+ [![alt text](https://github.com/HaiderAbasi/ROS2-Path-Planning-and-Maze-Solving/blob/master/images/linux.png)](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/docker/running_on_linux.md "Follow the guide to setup docker on Linux")&nbsp;&nbsp;
+ [![alt text](https://github.com/HaiderAbasi/ROS2-Path-Planning-and-Maze-Solving/blob/master/images/windows.png)](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/blob/main/docker/running_on_windows.md "Follow the guide to setup docker on Windows 10")&nbsp;&nbsp;
 
-* Perform Colcon Build ( if not installed refer to Repo_resources/How_to_run_the_project.txt )
-```
-colcon build
-```
-* Source your Workspace in any terminal you open to Run files from this workspace ( Basic thing of ROS )
-```
-source /path/to/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
-```
-* (Optional for Power USERs ) Add source to this workspace into bash file
- ```
-  echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
- ```
 
- * To Run the pathplanning world and saving Video
- ```
- ros2 launch  self_driving_car_pkg maze_solving_world.launch.py
- ```
-   * Next terminal
- ```
- ros2 run self_driving_car_pkg  upper_camera_recording
-
- ```
-
-  **NOTE:** This upper command is going to add the source file path into your ~/.bashrc file ( Only perform it once and you know what you are doing).This will save your time when running things from the Workspace
-* If the repository is not working for you. Watch the free preview video on our course page
- Where full explaination is given on setting up this repository.
-  * **[[How to Run the Project]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/learn/lecture/30013318#overview)**
+**Ubuntu-20.04**: 
+- Follow along the [Wiki](https://github.com/noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV/wiki/Ubuntu-20.04-Setup-Guide) guide to setup the project.
 ----
 ## Course Workflow
 #### **Ros Package**
