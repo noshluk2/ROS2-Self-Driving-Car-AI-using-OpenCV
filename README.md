@@ -114,7 +114,7 @@ A tesla Like Car in ROS2 will follow lane , Use AI to classify Sign Boards and p
 
 ## Link to the Course
 
-**[[Discounted Link]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/?couponCode=SAT_NAV)**
+**[[Discounted Link]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/?couponCode=ROS_SDC)**
 
 ----
 
