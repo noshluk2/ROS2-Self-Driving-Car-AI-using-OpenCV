@@ -4,15 +4,16 @@
 <details open="open">
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#About-this-Repository">About This Repository</a></li>
-    <li><a href="#Using-this-Repository">Using this Repository</a></li>
-    <li><a href="#Course-Workflow">Course Workflow</a></li>
-    <li><a href="#Features">Features</a></li>
-    <li><a href="#Pre-Course-Requirments">Pre-Course Requirments</a></li>
-    <li><a href="#Repository-Tree">Repository Tree</a></li>
-    <li><a href="#Link-to-the-Course">Link to the Course</a></li>
-    <li><a href="#Instructors">Instructors</a></li>
-    <li><a href="#License">License</a></li>
+    <li><a href="#About-this-Repository">🤝 About This Repository</a></li>
+    <li><a href="#Using-this-Repository">⚡ Using this Repository</a></li>
+    <li><a href="#Course-Workflow">🔄 Course Workflow</a></li>
+    <li><a href="#Features">⛲ Features</a></li>
+    <li><a href="#Pre-Course-Requirments">🧊 Pre-Course Requirements</a></li>
+    <li><a href="#Repository-Tree">🌳 Repository Tree</a></li>
+    <li><a href="#Star-History">🌟 Star History</a></li>
+    <li><a href="#Link-to-the-Course">🔗 Link to the Course</a></li>
+    <li><a href="#Instructors">👤 Instructors</a></li>
+    <li><a href="#License">📝 License</a></li>
   </ol>
 </details>
 
@@ -112,9 +113,15 @@ A tesla Like Car in ROS2 will follow lane , Use AI to classify Sign Boards and p
 
 ----
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV&type=Date)](https://star-history.com/#noshluk2/ROS2-Self-Driving-Car-AI-using-OpenCV&Date)
+
+---
+
 ## Link to the Course
 
-**[[Discounted Link]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/?couponCode=MAY_LEARN)**
+✨ Enroll Now with Special Discount ✨ **[[Discounted Link]](https://www.udemy.com/course/ros2-self-driving-car-with-deep-learning-and-computer-vision/?couponCode=STARTON)**
 
 ----
 
