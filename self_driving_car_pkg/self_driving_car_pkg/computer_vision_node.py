@@ -1,9 +1,11 @@
+#!/usr/bin/env python3
+
 import cv2
 from geometry_msgs.msg import Twist
-from rclpy.node import Node 
-from cv_bridge import CvBridge 
-from sensor_msgs.msg import Image 
-import rclpy 
+from rclpy.node import Node
+from cv_bridge import CvBridge
+from sensor_msgs.msg import Image
+import rclpy
 
 from .Drive_Bot import Car, Debugging
 
@@ -22,9 +24,9 @@ class Video_feed_in(Node):
 
     def send_cmd_vel(self):
         self.publisher.publish(self.velocity)
-        
-    def process_data(self, data): 
-        """Processes the data stream from the sensor (camera) and passes on to the 
+
+    def process_data(self, data):
+        """Processes the data stream from the sensor (camera) and passes on to the
            Self Drive Algorithm which computes and executes the appropriate control
            (Steering and speed) commands.
 
@@ -38,12 +40,12 @@ class Video_feed_in(Node):
         Angle,Speed,img = self.Car.driveCar(frame)
 
         self.velocity.angular.z = Angle
-        self.velocity.linear.x = Speed      
+        self.velocity.linear.x = Speed
 
         cv2.imshow("Frame",img)
         cv2.waitKey(1)
-        
- 
+
+
 def main(args=None):
   rclpy.init(args=args)
   image_subscriber = Video_feed_in()

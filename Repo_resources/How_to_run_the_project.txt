@@ -17,8 +17,6 @@ sudo apt install -y ros-foxy-gazebo-ros-pkgs
 
 ############################################# BUILDING THE PROJECT ######################################################################
 
-# Bring all models into your .gazebo/models
-cp -r self_driving_car_pkg/models/* ~/.gazebo/models
 # Notify Colcon to ignore ROS2SDC_VENV while build
 touch ROS2SDC_VENV/COLCON_IGNORE
 #Build repo
@@ -34,7 +32,7 @@ source ROS2SDC_VENV/bin/activate
 source /home/haiderabbasi/Development/HAD_LUQ/ROS2-Self-Driving-Car-AI-using-OpenCV/install/setup.bash
 source /opt/ros/foxy/setup.bash
 
-## once build you can run the simulation e.g [ ros2 launch (package_name) world(launch file) ] 
+## once build you can run the simulation e.g [ ros2 launch (package_name) world(launch file) ]
 ros2 launch self_driving_car_pkg world_gazebo.launch.py
 
 ## To activate the SelfDriving Car

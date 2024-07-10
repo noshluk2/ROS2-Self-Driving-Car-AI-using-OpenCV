@@ -7,19 +7,19 @@ from .config import config
 # 4 Improvements that will be done in (Original) SDC control algorithm
 # a) lane assist had iregular steering predictions
 #    Solution : use rolling average filter
-# b) Considering road is barely 1.5 car wide. A quarter of Image width for distance from the road mid 
+# b) Considering road is barely 1.5 car wide. A quarter of Image width for distance from the road mid
 #                                             from the predicted road center seems bit too harsh
 #    Solution:  Increase to half of image width
 # c) Car was drifting offroad in sharper turns causing it to lose track of road
-#    Solution: Increase weightage of distance (road_center <=> car front) from 50% to 65% 
+#    Solution: Increase weightage of distance (road_center <=> car front) from 50% to 65%
 #              So steers more in case it drift offroad
 # d) Car not utilizing its full steering range causing it to drift offroad in sharp turns
 #    Solution: Increase car max turn capability
 
 # 2 additons to Drive_Bot.py
 # a) 1 control block added for enable/disable Sat_Nav feature
-# b) Track Traffic Light and Road Speed Limits (State)  ==> Essential for priority control mechanism 
-#                                                           That we will create for integrating Sat_Nav 
+# b) Track Traffic Light and Road Speed Limits (State)  ==> Essential for priority control mechanism
+#                                                           That we will create for integrating Sat_Nav
 #                                                           ability to the SDC
 
 
@@ -38,7 +38,7 @@ class Debugging:
     enable_SatNav = 'Sat-Nav'
     cv2.createTrackbar(enable_SatNav, 'CONFIG',False,True,nothing)
 
-    # creating (Engine) on/off trackbar 
+    # creating (Engine) on/off trackbar
     Motors = 'Engine'
     cv2.createTrackbar(Motors, 'CONFIG',False,True,nothing)
 
@@ -79,26 +79,26 @@ class Debugging:
             config.engines_on = True
         else:
             config.engines_on = False
-            
+
         if debug:
             config.debugging = True
         else:
-            config.debugging = False            
+            config.debugging = False
         if debugLane:
             config.debugging_Lane = True
         else:
-            config.debugging_Lane = False    
+            config.debugging_Lane = False
         if debugSign:
             config.debugging_Signs = True
         else:
-            config.debugging_Signs = False           
+            config.debugging_Signs = False
         if debugTrafficLights:
             config.debugging_TrafficLights = True
         else:
             config.debugging_TrafficLights = False
 
         if config.debugging_TrafficLights:
-            
+
             debuggingTLConfig_SW = 'Debug Config'
             if not self.TL_Created:
                 self.TL_Created = True
@@ -116,9 +116,9 @@ class Debugging:
             self.TL_Created = False
             cv2.destroyWindow('CONFIG_TL')
 
-        
+
         if config.debugging_Lane:
-            
+
             debuggingLANEConfig_SW = 'Debug (Stage)'
             if not self.Lan_Created:
                 self.Lan_Created = True
@@ -129,20 +129,20 @@ class Debugging:
 
             if debugLane_Config == 0:
                 config.debugging_L_ColorSeg = True
-                config.debugging_L_Est = config.debugging_L_Cleaning = config.debugging_L_LaneInfoExtraction = False                    
+                config.debugging_L_Est = config.debugging_L_Cleaning = config.debugging_L_LaneInfoExtraction = False
             elif debugLane_Config == 1:
                 config.debugging_L_Est = True
-                config.debugging_L_ColorSeg = config.debugging_L_Cleaning = config.debugging_L_LaneInfoExtraction = False   
+                config.debugging_L_ColorSeg = config.debugging_L_Cleaning = config.debugging_L_LaneInfoExtraction = False
             elif debugLane_Config == 2:
                 config.debugging_L_Cleaning = True
-                config.debugging_L_ColorSeg = config.debugging_L_Est = config.debugging_L_LaneInfoExtraction = False   
+                config.debugging_L_ColorSeg = config.debugging_L_Est = config.debugging_L_LaneInfoExtraction = False
             elif debugLane_Config == 3:
                 config.debugging_L_LaneInfoExtraction = True
                 config.debugging_L_ColorSeg = config.debugging_L_Est = config.debugging_L_Cleaning = False
 
         else:
             self.Lan_Created = False
-            cv2.destroyWindow('CONFIG_LANE')        
+            cv2.destroyWindow('CONFIG_LANE')
 
 class Control:
 
@@ -157,13 +157,13 @@ class Control:
         self.Left_turn_iterations = 0
         self.Frozen_Angle = 0
         self.Detected_LeftTurn = False
-        self.Activat_LeftTurn = False        
+        self.Activat_LeftTurn = False
 
         self.TrafficLight_iterations = 0
         self.GO_MODE_ACTIVATED = False
         self.STOP_MODE_ACTIVATED = False
 
-        # [NEW]: Deque member variable created for emulating rolling average filter to get smoothed Lane's ASsist 
+        # [NEW]: Deque member variable created for emulating rolling average filter to get smoothed Lane's ASsist
         self.angle_queue = deque(maxlen=10)
 
     def follow_Lane(self,Max_Sane_dist,distance,curvature , Mode , Tracked_class):
@@ -180,9 +180,9 @@ class Control:
                 self.car_speed = 90
             elif(Tracked_class =="stop"):
                 self.car_speed = 0
-            
+
         self.prev_Mode = Mode # Set prevMode to current Mode
-        
+
         Max_turn_angle_neg = -90
         Max_turn_angle = 90
 
@@ -216,7 +216,7 @@ class Control:
         angle = interp(CarTurn_angle,[-90,90],[-60,60])
 
         curr_speed = self.car_speed
-        
+
         if (IncreaseTireSpeedInTurns and (Tracked_class !="left_turn")):
             if(angle>30):
                 car_speed_turn = interp(angle,[30,45],[80,100])
@@ -225,14 +225,14 @@ class Control:
                 car_speed_turn = interp(angle,[-45,-30],[100,80])
                 curr_speed = car_speed_turn
 
-        
+
         return angle , curr_speed
 
 
     def Obey_LeftTurn(self,Angle,Speed,Mode,Tracked_class):
-        
+
         if (Tracked_class == "left_turn"):
-            
+
             Speed = 50
 
             if ( (self.prev_Mode_LT =="Detection") and (Mode=="Tracking")):
@@ -244,7 +244,7 @@ class Control:
                 self.Activat_LeftTurn = True
 
                 if ( ((self.Left_turn_iterations % 20 ) ==0) and (self.Left_turn_iterations>100) ):
-                    self.Frozen_Angle = self.Frozen_Angle -7 # Move left by 1 degree 
+                    self.Frozen_Angle = self.Frozen_Angle -7 # Move left by 1 degree
                 if(self.Left_turn_iterations==250):
                     self.prev_Mode_LT = "Detection"
                     self.Activat_LeftTurn = False
@@ -274,7 +274,7 @@ class Control:
                     b = 0
 
                 elif(self.GO_MODE_ACTIVATED):
-                    a = 0.0                    
+                    a = 0.0
                     if(self.TrafficLight_iterations==200):
                         self.GO_MODE_ACTIVATED = False
                         print("Interchange Crossed !!!")
@@ -288,22 +288,22 @@ class Control:
         """Act on extracted information based on the SDC control mechanism
 
         Args:
-            Current_State (List): information extracted from SDC surroundings 
-                                    E.g. (Information regarding the lane boundaries for lane assist + 
+            Current_State (List): information extracted from SDC surroundings
+                                    E.g. (Information regarding the lane boundaries for lane assist +
                                         Information regarding the traffic signs for cruise control)
-            Inc_TL (bool): Toggle [Intersection Navigation] ON | OFF 
-            Inc_LT (bool): Toggle [Obey Left Turn Sign] ON | OFF 
+            Inc_TL (bool): Toggle [Intersection Navigation] ON | OFF
+            Inc_LT (bool): Toggle [Obey Left Turn Sign] ON | OFF
         Returns:
             angle_of_car  (int): required steering angle for the SDC
-            current_speed  (int): required cruise speed for the SDC 
+            current_speed  (int): required cruise speed for the SDC
             Detected_LeftTurn  (bool): Indicates if SDC has detected a left turn sign
             Activat_LeftTurn  (bool): Indicates if SDC Take_Left_Turn mechanism is activated
-        """    
+        """
 
         [Distance, Curvature, frame_disp , Mode , Tracked_class, Traffic_State, CloseProximity] = Current_State
 
         current_speed = 0
-        
+
         if((Distance != -1000) and (Curvature != -1000)):
 
             # [NEW]: Very Important: Minimum Sane Distance that a car can be from the perfect lane to follow is increased to half its fov.
@@ -322,14 +322,14 @@ class Control:
             Activat_LeftTurn = False
 
         if Inc_TL:
-            self.angle_of_car,current_speed = self.OBEY_TrafficLights(self.angle_of_car,current_speed,Traffic_State,CloseProximity)        
+            self.angle_of_car,current_speed = self.OBEY_TrafficLights(self.angle_of_car,current_speed,Traffic_State,CloseProximity)
 
 
-        return self.angle_of_car,current_speed, Detected_LeftTurn, Activat_LeftTurn 
+        return self.angle_of_car,current_speed, Detected_LeftTurn, Activat_LeftTurn
 
 class Car:
     def __init__( self,Inc_TL = True, Inc_LT = True ):
-        
+
         self.Control_ = Control()
         self.Inc_TL = Inc_TL
         self.Inc_LT = Inc_LT
@@ -338,7 +338,7 @@ class Car:
         self.Traffic_State = "Unknown"
 
     def display_state(self,frame_disp,angle_of_car,current_speed,Tracked_class,Traffic_State,Detected_LeftTurn, Activat_LeftTurn):
-    
+
         ###################################################  Displaying CONTROL STATE ####################################
 
         if (angle_of_car <-10):
@@ -363,7 +363,7 @@ class Car:
         cv2.putText(frame_disp,str(angle_speed_str),(20,20),cv2.FONT_HERSHEY_DUPLEX,0.4,(0,0,255),1)
 
         cv2.putText(frame_disp,"Traffic Light State = [ "+Traffic_State+" ] ",(20,60),cv2.FONT_HERSHEY_COMPLEX,0.35,255)
-        
+
         if (Tracked_class=="left_turn"):
             font_Scale = 0.32
             if (Detected_LeftTurn):
@@ -383,11 +383,11 @@ class Car:
         Args:
             frame (numpy nd array): Prius front-cam view
         Returns:
-            Angle (float): required steering angle given the conditions 
-            Speed (float): required cruise speed given the conditions 
-            img   (numpy_nd_array): displays the self drive under-the-hood working by overlaying   
-        """        
-        
+            Angle (float): required steering angle given the conditions
+            Speed (float): required cruise speed given the conditions
+            img   (numpy_nd_array): displays the self drive under-the-hood working by overlaying
+        """
+
         img = frame[0:640,238:1042]
         img = cv2.resize(img,(320,240))
 
@@ -406,8 +406,8 @@ class Car:
         Current_State = [distance, Curvature, img, Mode, Tracked_class, Traffic_State, CloseProximity]
 
         Angle,Speed, Detected_LeftTurn, Activat_LeftTurn  = self.Control_.drive_car(Current_State,self.Inc_TL,self.Inc_LT)
-        
-        # [NEW]: Updating State Variable with current state 
+
+        # [NEW]: Updating State Variable with current state
         self.Tracked_class = Tracked_class
         self.Traffic_State = Traffic_State
 

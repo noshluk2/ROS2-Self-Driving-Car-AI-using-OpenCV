@@ -1,2 +1,2 @@
-sudo apt-get install ros-foxy-gazebo-msgs
-sudo apt-get install ros-foxy-gazebo-plugins
+sudo apt-get install ros-humble-gazebo-msgs
+sudo apt-get install ros-humble-gazebo-plugins

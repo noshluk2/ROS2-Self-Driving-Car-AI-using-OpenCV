@@ -1,0 +1,2 @@
+pip install visualkeras
+pip install git+git://github.com/keplr-io/quiver.git

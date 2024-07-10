@@ -1,0 +1,225 @@
+PS D:\SelfDrive_Course> D:\CODES\OpenCV_S\Opencv_3.46\build\install\x64\vc16\bin\opencv_traincascade.exe -data TrafficLightCascade/ -vec pos.vec -bg neg.txt -precalcValBufSize 6000 -precalcIdxBufSize 6000 -numPos 200 -numNeg 400 -numStages 12 -w 72 -h 24 -maxFalseAlarmRate 0.08
+PARAMETERS:
+cascadeDirName: TrafficLightCascade/
+vecFileName: pos.vec
+bgFileName: neg.txt
+numPos: 200
+numNeg: 400
+numStages: 12
+precalcValBufSize[Mb] : 6000
+precalcIdxBufSize[Mb] : 6000
+acceptanceRatioBreakValue : -1
+stageType: BOOST
+featureType: HAAR
+sampleWidth: 72
+sampleHeight: 24
+boostType: GAB
+minHitRate: 0.995
+maxFalseAlarmRate: 0.08
+weightTrimRate: 0.95
+maxDepth: 1
+maxWeakCount: 100
+mode: BASIC
+Number of unique features given windowSize [72,24] : 1451232
+
+===== TRAINING 0-stage =====
+<BEGIN
+POS count : consumed   200 : 200
+NEG count : acceptanceRatio    400 : 1
+Precalculation time: 4.465
++----+---------+---------+
+|  N |    HR   |    FA   |
++----+---------+---------+
+|   1|        1|        1|
++----+---------+---------+
+|   2|        1|   0.0675|
++----+---------+---------+
+END>
+Training until now has taken 0 days 0 hours 0 minutes 17 seconds.
+
+===== TRAINING 1-stage =====
+<BEGIN
+POS count : consumed   200 : 200
+NEG count : acceptanceRatio    400 : 0.179453
+Precalculation time: 4.006
++----+---------+---------+
+|  N |    HR   |    FA   |
++----+---------+---------+
+|   1|        1|        1|
++----+---------+---------+
+|   2|        1|     0.13|
++----+---------+---------+
+|   3|        1|     0.01|
++----+---------+---------+
+END>
+Training until now has taken 0 days 0 hours 0 minutes 39 seconds.
+
+===== TRAINING 2-stage =====
+<BEGIN
+POS count : consumed   200 : 200
+NEG count : acceptanceRatio    400 : 0.00660982
+Precalculation time: 4.493
++----+---------+---------+
+|  N |    HR   |    FA   |
++----+---------+---------+
+|   1|        1|        1|
++----+---------+---------+
+|   2|        1|        1|
++----+---------+---------+
+|   3|        1|   0.2125|
++----+---------+---------+
+|   4|        1|    0.045|
++----+---------+---------+
+END>
+Training until now has taken 0 days 0 hours 1 minutes 9 seconds.
+
+===== TRAINING 3-stage =====
+<BEGIN
+POS count : consumed   200 : 200
+NEG count : acceptanceRatio    400 : 0.00152388
+Precalculation time: 4.535
++----+---------+---------+
+|  N |    HR   |    FA   |
++----+---------+---------+
+|   1|        1|        1|
++----+---------+---------+
+|   2|        1|        1|
++----+---------+---------+
+|   3|        1|    0.295|
++----+---------+---------+
+|   4|        1|   0.1325|
++----+---------+---------+
+|   5|        1|    0.045|
++----+---------+---------+
+END>
+Training until now has taken 0 days 0 hours 1 minutes 46 seconds.
+
+===== TRAINING 4-stage =====
+<BEGIN
+POS count : consumed   200 : 200
+NEG count : acceptanceRatio    400 : 0.000124987
+Precalculation time: 4.687
++----+---------+---------+
+|  N |    HR   |    FA   |
++----+---------+---------+
+|   1|        1|        1|
++----+---------+---------+
+|   2|        1|        1|
++----+---------+---------+
+|   3|        1|      0.5|
++----+---------+---------+
+|   4|        1|      0.5|
++----+---------+---------+
+|   5|        1|   0.2575|
++----+---------+---------+
+|   6|        1|   0.1375|
++----+---------+---------+
+|   7|        1|   0.0525|
++----+---------+---------+
+END>
+Training until now has taken 0 days 0 hours 3 minutes 1 seconds.
+
+===== TRAINING 5-stage =====
+<BEGIN
+POS count : consumed   200 : 200
+NEG count : acceptanceRatio    400 : 1.47122e-05
+Precalculation time: 4.42
++----+---------+---------+
+|  N |    HR   |    FA   |
++----+---------+---------+
+|   1|        1|        1|
++----+---------+---------+
+|   2|        1|        1|
++----+---------+---------+
+|   3|        1|   0.5325|
++----+---------+---------+
+|   4|        1|    0.275|
++----+---------+---------+
+|   5|        1|    0.205|
++----+---------+---------+
+|   6|        1|   0.0775|
++----+---------+---------+
+END>
+Training until now has taken 0 days 0 hours 5 minutes 52 seconds.
+
+===== TRAINING 6-stage =====
+<BEGIN
+POS count : consumed   200 : 200
+NEG count : acceptanceRatio    400 : 2.05127e-06
+Precalculation time: 4.433
++----+---------+---------+
+|  N |    HR   |    FA   |
++----+---------+---------+
+|   1|        1|        1|
++----+---------+---------+
+|   2|        1|        1|
++----+---------+---------+
+|   3|        1|   0.5075|
++----+---------+---------+
+|   4|        1|     0.69|
++----+---------+---------+
+|   5|        1|   0.2775|
++----+---------+---------+
+|   6|        1|   0.1025|
++----+---------+---------+
+|   7|        1|     0.04|
++----+---------+---------+
+END>
+Training until now has taken 0 days 0 hours 21 minutes 42 seconds.
+
+===== TRAINING 7-stage =====
+<BEGIN
+POS count : consumed   200 : 200
+NEG count : acceptanceRatio    400 : 1.71138e-07
+Precalculation time: 4.25
++----+---------+---------+
+|  N |    HR   |    FA   |
++----+---------+---------+
+|   1|        1|        1|
++----+---------+---------+
+|   2|        1|        1|
++----+---------+---------+
+|   3|        1|   0.6325|
++----+---------+---------+
+|   4|        1|   0.4175|
++----+---------+---------+
+|   5|        1|    0.165|
++----+---------+---------+
+|   6|        1|    0.275|
++----+---------+---------+
+|   7|        1|   0.0675|
++----+---------+---------+
+END>
+Training until now has taken 0 days 3 hours 20 minutes 38 seconds.
+
+===== TRAINING 8-stage =====
+POS count : consumed   200 : 200
+PS D:\SelfDrive_Course> D:\CODES\OpenCV_S\Opencv_3.46\build\install\x64\vc16\bin\opencv_traincascade.exe -data TrafficLightCascade/ -vec pos.vec -bg neg.txt -precalcValBufSize 6000 -precalcIdxBufSize 6000 -numPos 200 -numNeg 400 -numStages 8 -w 72 -h 24 -maxFalseAlarmRate 0.08 
+---------------------------------------------------------------------------------
+Training parameters are pre-loaded from the parameter file in data folder!
+Please empty this folder if you want to use a NEW set of training parameters.
+---------------------------------------------------------------------------------
+PARAMETERS:
+cascadeDirName: TrafficLightCascade/
+vecFileName: pos.vec
+bgFileName: neg.txt
+numPos: 200
+numNeg: 400
+numStages: 8
+precalcValBufSize[Mb] : 6000
+precalcIdxBufSize[Mb] : 6000
+acceptanceRatioBreakValue : -1
+stageType: BOOST
+featureType: HAAR
+sampleWidth: 72
+sampleHeight: 24
+boostType: GAB
+minHitRate: 0.995
+maxFalseAlarmRate: 0.08
+weightTrimRate: 0.95
+maxDepth: 1
+maxWeakCount: 100
+mode: BASIC
+Number of unique features given windowSize [72,24] : 1451232
+
+Stages 0-7 are loaded

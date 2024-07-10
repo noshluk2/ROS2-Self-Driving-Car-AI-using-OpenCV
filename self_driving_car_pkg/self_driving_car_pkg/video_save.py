@@ -1,42 +1,43 @@
-"""
- This File is a subscriber for the node "/camera/image_raw"
- The video stream will be saved into your home folder
+#!/usr/bin/env python3
+
+import rclpy
+from rclpy.node import Node
+
+import cv2
+from cv_bridge import CvBridge
+from sensor_msgs.msg import Image
 
 
- Date  : 9/7/2021
- Author:  M.Luqman
 
-"""
+class VisionSave(Node):
 
-import rclpy 
-import cv2 
-from rclpy.node import Node 
-from cv_bridge import CvBridge 
-from sensor_msgs.msg import Image 
+    def __init__(self):
+        super().__init__('vision_save_node')
+        self.subscriber = self.create_subscription(Image,'/camera/image_raw',self.process_data,10)
+        self.out = cv2.VideoWriter('/home/luqman/in_new.avi',cv2.VideoWriter_fourcc('M','J','P','G'),30,(1280,720))
+        self.get_logger().info('Subscribing Image Feed and video recording')
+        self.bridge = CvBridge()
 
 
-class Video_get(Node):
-  def __init__(self):
-    super().__init__('video_subscriber')# node name
-    ## Created a subscriber 
-    self.subscriber = self.create_subscription(Image,'/camera/image_raw',self.process_data,10)
-    ## setting for writing the frames into a video
-    self.out = cv2.VideoWriter('/home/luqman/output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 30, (1280,720))
-    self.bridge = CvBridge() # converting ros images to opencv data
- 
-  def process_data(self, data): 
-    frame = self.bridge.imgmsg_to_cv2(data,'bgr8') # performing conversion
-    self.out.write(frame)# write the frames to a video
-    cv2.imshow("output", frame) # displaying what is being recorded 
-    cv2.waitKey(1) # will save video until it is interrupted
-  
+    def process_data(self,data):
+        frame=self.bridge.imgmsg_to_cv2(data,'bgr8')
+        self.out.write(frame)
+        cv2.imshow("Frame",frame)
+        cv2.waitKey(1)
 
-  
+
+
+
 def main(args=None):
-  rclpy.init(args=args)
-  image_subscriber = Video_get()
-  rclpy.spin(image_subscriber)
-  rclpy.shutdown()
-  
+    rclpy.init(args=args)
+
+    vision_subcriber = VisionSave()
+
+    rclpy.spin(vision_subcriber)
+
+    vision_subcriber.destroy_node()
+    rclpy.shutdown()
+
+
 if __name__ == '__main__':
-  main()
+    main()
